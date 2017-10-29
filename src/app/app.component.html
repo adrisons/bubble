@@ -1,10 +1,18 @@
-<h1>
-    {{title}}
-</h1>
-<!--menú de navegación, sin href-->
-<nav>
-    <a [routerLink]="['/home']">Inicio</a>
-    <a [routerLink]="['/login']">Login</a>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="#">
+                <img src="./common/images/Bubble_Icon.png">
+            </a>
+            <span class="title"><a [routerLink]="['/home']">{{title}}</a></span>
+        </div>
+        <div class="nav navbar-nav">
+            <span>
+                <a [routerLink]="['/login']">Login</a>
+            </span>
+        </div>
+    </div>
 </nav>
-<!--Este componente nativo hace que el enrutador cargue una página dinámicamente-->
-<router-outlet></router-outlet>
+<div class="center">
+    <router-outlet></router-outlet>
+</div>

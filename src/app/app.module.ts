@@ -6,9 +6,13 @@ import { AppComponent } from './app.component';
 
 // importación de módulo de enrutado asociado
 import { AppRoutingModule } from './app-routing.module';
-import { HomeModule } from 'app/home/home.module';
-import { RegisterModule } from 'app/register/register.module';
-import { LoginModule } from 'app/login/login.module';
+import { HomeModule } from './home/home.module';
+import { RegisterModule } from './register/register.module';
+import { LoginModule } from './login/login.module';
+
+// Importación de elementos de bootstrap
+import { AppBootstrapModule } from './bootstrap/bootstrap.module';
+
 
 // decorador que define un módulo
 @NgModule({
@@ -17,6 +21,7 @@ import { LoginModule } from 'app/login/login.module';
   ],
   imports: [
     BrowserModule,
+    AppBootstrapModule,
     FormsModule,
     HttpModule,
     HomeModule,
