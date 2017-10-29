@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 /** Rutas asociadas a componentes */
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent }
 ];
 /** array de componentes enrutables */
 export const routableComponents = [

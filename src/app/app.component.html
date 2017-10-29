@@ -1,4 +1,10 @@
 <h1>
-  {{title}}
+    {{title}}
 </h1>
+<!--menú de navegación, sin href-->
+<nav>
+    <a [routerLink]="['/home']">Inicio</a>
+    <a [routerLink]="['/login']">Login</a>
+</nav>
+<!--Este componente nativo hace que el enrutador cargue una página dinámicamente-->
 <router-outlet></router-outlet>

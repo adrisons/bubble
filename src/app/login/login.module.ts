@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** Importación de las rutas y sus componentes */
-import { HomeRoutingModule, routableComponents } from './home-routing.module';
+
+import { LoginRoutingModule, routableComponents } from './login-routing.module';
+import { LoginComponent } from './login.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    HomeRoutingModule // el módulo que sabe enrutar
+    LoginRoutingModule
   ],
   declarations: [
     routableComponents // los componentes de enrutado
   ]
 })
-export class HomeModule { }
+export class LoginModule { }

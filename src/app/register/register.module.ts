@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** Importación de las rutas y sus componentes */
-import { HomeRoutingModule, routableComponents } from './home-routing.module';
+
+import { RegisterRoutingModule, routableComponents } from './register-routing.module';
+import { RegisterComponent } from './register.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    HomeRoutingModule // el módulo que sabe enrutar
+    RegisterRoutingModule
   ],
   declarations: [
     routableComponents // los componentes de enrutado
   ]
 })
-export class HomeModule { }
+export class RegisterModule { }

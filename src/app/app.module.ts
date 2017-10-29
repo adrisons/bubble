@@ -6,16 +6,22 @@ import { AppComponent } from './app.component';
 
 // importación de módulo de enrutado asociado
 import { AppRoutingModule } from './app-routing.module';
-// importación de otros módulos de funcionalidad
-import { HomeModule } from './home/home.module';
+import { HomeModule } from 'app/home/home.module';
+import { RegisterModule } from 'app/register/register.module';
+import { LoginModule } from 'app/login/login.module';
+
 // decorador que define un módulo
 @NgModule({
-  declarations: [ AppComponent ],
+  declarations: [
+    AppComponent
+  ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    HomeModule, // el módulo funcional para la 'página home'
+    HomeModule,
+    RegisterModule,
+    LoginModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
   providers: [],
