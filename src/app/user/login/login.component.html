@@ -1,0 +1,24 @@
+<div class="container">
+    <form #form="ngForm">
+        <h2>Por favor identifícate</h2>
+        <label for="email">E-mail</label>
+        <input type="email" name="email" [(ngModel)]="credentials.email">
+        <label for="password">Contraseña</label>
+        <input type="password" name="password" [(ngModel)]="credentials.password">
+        <button type="button" (click)="onRegister()">
+        Register
+    </button>
+        <button type="button" (click)="onLogin()">
+        Login
+    </button>
+    </form>
+</div>
+
+<nav class="navbar navbar-light bg-faded">
+    <form class="form-inline">
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">@</span>
+            <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+        </div>
+    </form>
+</nav>

@@ -7,11 +7,12 @@ import { AppComponent } from './app.component';
 // importación de módulo de enrutado asociado
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './home/home.module';
-import { RegisterModule } from './register/register.module';
-import { LoginModule } from './login/login.module';
+import { RegisterModule } from './user/register/register.module';
+// import { LoginModule } from './user/login/login.module';
 
 // Importación de elementos de bootstrap
 import { AppBootstrapModule } from './bootstrap/bootstrap.module';
+import { UserModule } from 'app/user/user.module';
 
 
 // decorador que define un módulo
@@ -26,7 +27,8 @@ import { AppBootstrapModule } from './bootstrap/bootstrap.module';
     HttpModule,
     HomeModule,
     RegisterModule,
-    LoginModule,
+    UserModule,
+    // LoginModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
   providers: [],
