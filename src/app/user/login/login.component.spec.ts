@@ -5,7 +5,7 @@ import { DebugElement } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './login.component';
 import { UserService } from './../user.service';
-import { UserServiceMock } from './../../shared/testing/UserServiceMock';
+import { UserServiceMock } from './../../shared/_testing/UserServiceMock';
 
 describe('LoginComponent', () => {
   let fixture: ComponentFixture<LoginComponent>;

@@ -1,9 +1,9 @@
-import { CrudService } from './../shared/crud.service';
+import { CrudService } from './../shared/_services/crud.service';
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserData } from './../shared/model/data.class';
-import { UserStoreService } from './../shared/user-store.service';
+import { UserData } from './../shared/_models/data.class';
+import { UserStoreService } from './../shared/_services/user-store.service';
 import 'rxjs/add/operator/map';
 import { Http } from '@angular/http';
 

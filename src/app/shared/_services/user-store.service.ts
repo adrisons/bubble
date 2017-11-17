@@ -1,6 +1,6 @@
 import { DataStoreService } from './data-store.service';
 import { Injectable } from '@angular/core';
-import { UserData } from './model/data.class';
+import { UserData } from '../_models/data.class';
 
 @Injectable()
 /**

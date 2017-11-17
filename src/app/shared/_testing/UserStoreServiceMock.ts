@@ -1,4 +1,4 @@
-import { UserData } from './../model/data.class';
+import { UserData } from './../_models/data.class';
 
 export class UserStoreServiceMock {
 

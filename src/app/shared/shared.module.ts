@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Http } from '@angular/http';
 import { HttpModule } from '@angular/http';
-import { HttpService } from './http.service';
+import { HttpService } from './_services/http.service';
 import { NgModule } from '@angular/core';
-import { UserStoreService } from './user-store.service';
+import { UserStoreService } from './_services/user-store.service';
 /**
  * El módulo compartido se importa en todos los demás módulos
  * Con dos propósitos:

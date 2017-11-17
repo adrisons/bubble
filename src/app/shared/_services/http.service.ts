@@ -8,7 +8,7 @@ import { CrudService } from './crud.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-import { UserData } from './model/data.class';
+import { UserData } from '../_models/data.class';
 import { UserStoreService } from './user-store.service';
 
 @Injectable()

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UserRoutingModule, routableComponents } from './user-routing.module';
 import { UserService } from './user.service';
 import { FormsModule } from '@angular/forms';
-import { UserStoreService } from 'app/shared/user-store.service';
+import { UserStoreService } from 'app/shared/_services/user-store.service';
 
 @NgModule({
   imports: [
