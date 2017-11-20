@@ -1,7 +1,7 @@
 import { Response, ResponseOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import { UserData } from './../_models/data.class';
+import { UserData } from './../_models/data';
 
 export class UserServiceMock {
   private token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';

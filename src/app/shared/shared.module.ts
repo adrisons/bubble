@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { HttpService } from './_services/http.service';
 import { NgModule } from '@angular/core';
 import { UserStoreService } from './_services/user-store.service';
+import { AlertComponent } from './_directives/alert/alert.component';
 /**
  * El módulo compartido se importa en todos los demás módulos
  * Con dos propósitos:
@@ -27,6 +28,7 @@ import { UserStoreService } from './_services/user-store.service';
   exports: [// Lo que aquí se exporte se importará en los módulos funcionales
     CommonModule,
     FormsModule
-  ]
+  ],
+  declarations: [AlertComponent]
 })
 export class SharedModule { }

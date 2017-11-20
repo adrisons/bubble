@@ -7,12 +7,13 @@ import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   // { path: 'user', component: UserComponent, data: { title: 'Current User' } }, // profile
-  { path: 'user/login', component: LoginComponent, data: { title: 'Log In' } } // Log in screen
+  { path: 'user/login', component: LoginComponent, data: { title: 'Log In' } }, // Log in screen
+  { path: 'user/register', component: RegisterComponent, data: { title: 'Register In' } } // Register in screen
 ];
 
 export const routableComponents = [
-  LoginComponent
-  // UserComponent
+  LoginComponent,
+  RegisterComponent
 ];
 
 

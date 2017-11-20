@@ -7,7 +7,7 @@ export class UserData {
   isLogged?: boolean;
 }
 
-export class ServerResponse {
+export class ServerResponseData {
   code: number;
   message?: string;
 }

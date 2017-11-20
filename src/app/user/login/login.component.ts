@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
-import { ServerResponse } from 'app/shared/_models/data.class';
+import { ServerResponseData } from 'app/shared/_models/data';
+import { AlertService } from 'app/shared/_services/alert.service';
+
 
 @Component({
   selector: 'app-login',
@@ -18,9 +20,10 @@ export class LoginComponent implements OnInit {
     password: ''
   };
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private alertService: AlertService) { }
 
   ngOnInit() {
+    this.alertService.error('Error ocurred');
   }
 
   onRegister() {
@@ -33,22 +36,20 @@ export class LoginComponent implements OnInit {
     .subscribe(this.httpResCtrl);
   }
 
-  showError(control) {
-    return control.errors && (control.dirty || control.touched);
-  }
-
-
-
-  private httpResCtrl = function(res: ServerResponse) {
+  private httpResCtrl = (res: ServerResponseData) => {
     switch (res.code) {
       case 400:
-        return 'Error ocurred';
+        this.alertService.error('Error ocurred');
+        break;
       case 401:
-        return 'Password is not correct';
+        this.alertService.error('Password is not correct');
+        break;
       case 403:
-        return 'User does not exist';
+        this.alertService.error('User does not exist');
+        break;
       case 200:
-        return 'Sucessfull';
+        this.alertService.success('Welcome!');
+        break;
       default:
         break;
     }

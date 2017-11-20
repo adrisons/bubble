@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { UserData } from '../_models/data.class';
+import { UserData } from '../_models/data';
 import { UserStoreService } from './user-store.service';
 
 describe(('UserStoreService'), () => {
