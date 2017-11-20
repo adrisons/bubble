@@ -1,8 +1,8 @@
 <nav class="navbar fixed-top navbar-dark bg-dark justify-content-between">
 
     <a class="navbar-brand col-11" href="#" [routerLink]="['/home']">
-            {{title}}
-        </a>
+        <img class="logo" src="/assets/images/Bubble_Icon.png" height="20px"> {{title}}
+    </a>
 
     <ul class="navbar-nav">
         <li *ngIf="needsLogin">

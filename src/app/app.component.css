@@ -15,3 +15,9 @@
     position: sticky;
     float: right;
 }
+
+.logo {
+    position: relative;
+    float: left;
+    margin-right: 5px;
+}

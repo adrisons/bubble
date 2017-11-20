@@ -8,7 +8,7 @@ import { Http } from '@angular/http';
  * Servicio genérico para operaciones CRUD simples
  * */
 export class CrudService {
-    public apiEndPoint = '/api';
+    public apiEndPoint = '';
 
     constructor(protected http: Http) { }
 

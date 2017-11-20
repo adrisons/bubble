@@ -3,6 +3,7 @@ import { UserService } from '../user.service';
 import { ServerResponseData } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -16,9 +17,9 @@ import { Router } from '@angular/router';
  * */
 export class LoginComponent implements OnInit {
 
-  private credentials = {
-    email: null,
-    password: null
+  private model = {
+    email: undefined,
+    password: undefined
   };
 
 
@@ -29,9 +30,9 @@ export class LoginComponent implements OnInit {
   }
 
 
-
-  onLogin() {
-    this.userService.login(this.credentials)
+  onLogin(f: NgForm) {
+    // Check form
+    this.userService.login(this.model)
     .subscribe(this.httpResCtrl);
   }
 

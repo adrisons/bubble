@@ -5,12 +5,14 @@ import { UserRoutingModule, routableComponents } from './user-routing.module';
 import { UserService } from './user.service';
 import { FormsModule } from '@angular/forms';
 import { UserStoreService } from 'app/shared/_services/user-store.service';
+import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    UserRoutingModule
+    UserRoutingModule,
+    SharedModule
   ],
   declarations: [
     routableComponents

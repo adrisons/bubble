@@ -18,8 +18,10 @@ import { UserStoreService } from './user-store.service';
  * Captura todas las respuestas dando oportunidad a procesos centralizados
  * */
 export class HttpService extends Http {
-  public apiProxyUrl = 'http://localhost:3030/api/';
+  public apiProxyUrl = 'http://localhost:3000/api';
   private authorization = '';
+  private contentType = 'application/json';
+
 
   constructor(
     backend: XHRBackend,
@@ -70,7 +72,12 @@ export class HttpService extends Http {
 
   private setHeaders(objectToSetHeadersTo: Request | RequestOptionsArgs) {
     const headers = objectToSetHeadersTo.headers;
-    headers.set('Authorization', this.authorization);
+    // headers.set('Authorization', this.authorization);
+    headers.set('Content-Type', this.contentType);
+    // headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+    // headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // headers.set('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // headers.set('Access-Control-Allow-Credentials', 'true');
   }
 
   private onCatch() {

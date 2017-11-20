@@ -12,9 +12,10 @@ import { HomeModule } from './home/home.module';
 // Importación de elementos de bootstrap
 import { AppBootstrapModule } from './bootstrap/bootstrap.module';
 import { UserModule } from 'app/user/user.module';
-import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { AuthService } from 'app/shared/_services/auth.service';
+import { SharedModule } from 'app/shared/shared.module';
+import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
 
 
 // decorador que define un módulo
@@ -30,6 +31,7 @@ import { AuthService } from 'app/shared/_services/auth.service';
     HttpModule,
     HomeModule,
     UserModule,
+    SharedModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
   providers: [ AlertService, AuthService ],
