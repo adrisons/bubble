@@ -1,8 +1,53 @@
-<nav class="navbar navbar-light bg-faded">
-    <form class="form-inline">
-        <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">@</span>
-            <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-login">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a class="nav-link" href="#" [routerLink]="['/user/login']">Login</a>
+                        </div>
+                        <div class="col-xs-6">
+                            <a class="nav-link selected" href="#" [routerLink]="['/user/register']">Register</a>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form role="form">
+                                <!-- First Name -->
+                                <div class="form-group">
+                                    <input type="first_name" name="first_name" id="first_name" [(ngModel)]="registerData.first_name" tabindex="1" class="form-control" placeholder="First Name" value="" required>
+                                </div>
+                                <!-- Last Name -->
+                                <div class="form-group">
+                                    <input type="last_name" name="last_name" id="last_name" [(ngModel)]="registerData.last_name" tabindex="1" class="form-control" placeholder="Last Name" value="" required>
+                                </div>
+                                <!-- Email -->
+                                <div class="form-group">
+                                    <input type="email" name="email" id="email" [(ngModel)]="registerData.email" tabindex="1" class="form-control" placeholder="Email Address" value="" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
+                                </div>
+                                <!-- Password -->
+                                <div class="form-group">
+                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required>
+                                </div>
+                                <!-- Repeat Password -->
+                                <div class="form-group">
+                                    <input type="password" name="confirm-password" id="confirm-password" [(ngModel)]="registerData.password" tabindex="2" class="form-control" placeholder="Confirm Password" required>
+                                </div>
+                                <!-- Submit button -->
+                                <div class="form-group">
+
+                                    <input type="submit" class="form-control button-right" value="Register!" (click)="onRegister()">
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
-</nav>
+    </div>
+</div>

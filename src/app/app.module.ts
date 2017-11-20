@@ -14,6 +14,7 @@ import { AppBootstrapModule } from './bootstrap/bootstrap.module';
 import { UserModule } from 'app/user/user.module';
 import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
 import { AlertService } from 'app/shared/_services/alert.service';
+import { AuthService } from 'app/shared/_services/auth.service';
 
 
 // decorador que define un módulo
@@ -31,7 +32,7 @@ import { AlertService } from 'app/shared/_services/alert.service';
     UserModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
-  providers: [ AlertService ],
+  providers: [ AlertService, AuthService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -1,12 +1,15 @@
 <nav class="navbar fixed-top navbar-dark bg-dark justify-content-between">
 
-    <a class="navbar-brand" href="#" [routerLink]="['/home']">
+    <a class="navbar-brand col-11" href="#" [routerLink]="['/home']">
             {{title}}
         </a>
 
     <ul class="navbar-nav">
-        <li class="">
-            <a class="nav-link" href="#" [routerLink]="['user/login']">Login</a>
+        <li *ngIf="needsLogin">
+            <a class="nav-link" href="#" [routerLink]="['user/login']">Log in</a>
+        </li>
+        <li *ngIf="!needsLogin">
+            <a class="nav-link" href="#">Log out</a>
         </li>
     </ul>
 

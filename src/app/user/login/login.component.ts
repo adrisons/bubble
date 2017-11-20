@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { ServerResponseData } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,20 +17,18 @@ import { AlertService } from 'app/shared/_services/alert.service';
 export class LoginComponent implements OnInit {
 
   private credentials = {
-    email: '',
-    password: ''
+    email: null,
+    password: null
   };
+
 
   constructor(private userService: UserService, private alertService: AlertService) { }
 
   ngOnInit() {
-    this.alertService.error('Error ocurred');
+
   }
 
-  onRegister() {
-    this.userService.register(this.credentials)
-    .subscribe(this.httpResCtrl);
-  }
+
 
   onLogin() {
     this.userService.login(this.credentials)
@@ -53,5 +52,6 @@ export class LoginComponent implements OnInit {
       default:
         break;
     }
-  };
+  }
+
 }
