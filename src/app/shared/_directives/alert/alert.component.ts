@@ -11,7 +11,6 @@ import { AlertService } from '../../_services/alert.service';
 
 export class AlertComponent implements OnInit {
     alerts: Alert[] = [];
-
     constructor(private alertService: AlertService) { }
 
     ngOnInit() {
@@ -22,6 +21,7 @@ export class AlertComponent implements OnInit {
                 return;
             }
 
+            setTimeout(() => this.removeAlert(alert), 5000);
             // add alert to array
             this.alerts.push(alert);
         });

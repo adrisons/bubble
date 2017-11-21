@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   };
 
 
-  constructor(private userService: UserService, private alertService: AlertService) { }
+  constructor(private userService: UserService, private alertService: AlertService, private router: Router) { }
 
   ngOnInit() {
 
@@ -32,8 +32,12 @@ export class LoginComponent implements OnInit {
 
   onLogin(f: NgForm) {
     // Check form
-    this.userService.login(this.model)
-    .subscribe(this.httpResCtrl);
+    if (f.valid) {
+      this.userService.login(this.model)
+      .subscribe(this.httpResCtrl);
+    } else {
+      this.alertService.error('Error: please check the form');
+    }
   }
 
   private httpResCtrl = (res: ServerResponseData) => {
@@ -49,6 +53,7 @@ export class LoginComponent implements OnInit {
         break;
       case 200:
         this.alertService.success('Welcome!');
+        this.router.navigate(['']);
         break;
       default:
         break;

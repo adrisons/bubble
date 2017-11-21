@@ -13,7 +13,7 @@ import { Http } from '@angular/http';
  * */
 export class UserService extends CrudService {
 
-  constructor(private userStoreService: UserStoreService, http: Http, private router: Router) {
+  constructor(private userStoreService: UserStoreService, http: Http) {
     super(http);
     this.apiEndPoint = this.apiEndPoint + '/user';
   }
@@ -27,7 +27,6 @@ export class UserService extends CrudService {
       .map(r => {
         const token = r.json();
         this.userStoreService.logIn({ email: credenciales.email }, token);
-        this.router.navigate(['']);
         return token;
       });
   }
@@ -41,7 +40,6 @@ export class UserService extends CrudService {
       .map(r => {
         const token = r.json();
         this.userStoreService.logIn({ email: credenciales.email }, token);
-        this.router.navigate(['']);
         return token;
       });
   }
