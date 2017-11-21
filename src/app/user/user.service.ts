@@ -26,7 +26,9 @@ export class UserService extends CrudService {
       .post(this.apiEndPoint + '/login', credenciales)
       .map(r => {
         const token = r.json();
-        this.userStoreService.logIn({ email: credenciales.email }, token);
+        if (token.code === 200) {
+          this.userStoreService.logIn(token.data, token);
+        }
         return token;
       });
   }
@@ -39,7 +41,9 @@ export class UserService extends CrudService {
       .post(this.apiEndPoint + '/register', credenciales)
       .map(r => {
         const token = r.json();
-        this.userStoreService.logIn({ email: credenciales.email }, token);
+        if (token.code === 200) {
+          this.userStoreService.logIn(token.data, token);
+        }
         return token;
       });
   }

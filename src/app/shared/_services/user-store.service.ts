@@ -17,15 +17,17 @@ export class UserStoreService extends DataStoreService {
   }
 
 
-  public logIn(user, token) {
+  logIn(user, token) {
     super.setData({ user: user, token: token, isLogged: true });
   }
-  public logOut(user, token) {
+
+  logOut() {
     super.setData({ user: null, token: null, isLogged: false });
   }
 
-  public getProfile(): UserData {
+  getProfile(): UserData {
     // To Do: refresh form API
     return super.getData();
   }
+
 }

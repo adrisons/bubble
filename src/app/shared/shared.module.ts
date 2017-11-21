@@ -7,7 +7,6 @@ import { NgModule } from '@angular/core';
 import { UserStoreService } from './_services/user-store.service';
 import { AlertComponent } from './_directives/alert/alert.component';
 import { AlertService } from 'app/shared/_services/alert.service';
-import { AuthService } from 'app/shared/_services/auth.service';
 import { CrudService } from 'app/shared/_services/crud.service';
 /**
  * El módulo compartido se importa en todos los demás módulos
@@ -28,7 +27,6 @@ import { CrudService } from 'app/shared/_services/crud.service';
     },
     UserStoreService,
     AlertService,
-    AuthService,
     CrudService
   ],
   exports: [// Lo que aquí se exporte se importará en los módulos funcionales

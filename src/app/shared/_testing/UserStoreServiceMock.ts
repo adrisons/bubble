@@ -12,7 +12,7 @@ export class UserStoreServiceMock {
 
   public getProfile(): UserData {
     const userData: UserData = new UserData();
-    userData.user = 'testUser';
+    // userData.user = 'testUser';
     userData.token = 'eyJhbGciOiJIUzI1NiIsInR9';
     userData.isLogged = false;
     return userData;

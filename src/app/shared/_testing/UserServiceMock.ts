@@ -24,7 +24,7 @@ export class UserServiceMock {
 
   public getProfile(): UserData {
     const user: UserData = new UserData();
-    user.user = 'testingUser';
+    // user.user = 'testingUser';
     user.token = this.token;
     user.isLogged = false;
     return user;

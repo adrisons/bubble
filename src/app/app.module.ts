@@ -13,9 +13,10 @@ import { HomeModule } from './home/home.module';
 import { AppBootstrapModule } from './bootstrap/bootstrap.module';
 import { UserModule } from 'app/user/user.module';
 import { AlertService } from 'app/shared/_services/alert.service';
-import { AuthService } from 'app/shared/_services/auth.service';
+
 import { SharedModule } from 'app/shared/shared.module';
 import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
+import { UserStoreService } from 'app/shared/_services/user-store.service';
 
 
 // decorador que define un módulo
@@ -34,7 +35,7 @@ import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
     SharedModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
-  providers: [ AlertService, AuthService ],
+  providers: [ AlertService, UserStoreService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 <nav class="navbar fixed-top navbar-dark bg-dark justify-content-between">
 
-    <a class="navbar-brand col-11" href="#" [routerLink]="['/home']">
+    <a class="navbar-brand col-10" href="#" [routerLink]="['/home']">
         <img class="logo" src="/assets/images/Bubble_Icon.png" height="20px"> {{title}}
     </a>
 
@@ -9,7 +9,7 @@
             <a class="nav-link" href="#" [routerLink]="['user/login']">Log in</a>
         </li>
         <li *ngIf="!needsLogin">
-            <a class="nav-link" href="#">Log out</a>
+            <a class="nav-link" href="#" (click)="logOut()">{{userName}} - Log out</a>
         </li>
     </ul>
 
@@ -20,7 +20,6 @@
 <div class="center">
     <app-alert class="notification"></app-alert>
 
-    <!-- <div class="center"> -->
     <router-outlet></router-outlet>
-    <!-- </div> -->
+
 </div>

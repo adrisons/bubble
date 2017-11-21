@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'app/user/user.service';
 import { AlertService } from 'app/shared/_services/alert.service';
-import { ServerResponseData } from 'app/shared/_models/data';
+import { ServerResponseData, UserData } from 'app/shared/_models/data';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -24,7 +24,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-
+  // Check form data to see if its correct
+  // Return: Promise with error message
   checkRegisterData(f: NgForm): Promise<string> {
     return new Promise((resolve, reject) => {
       if (f.valid) {
@@ -39,9 +40,7 @@ export class RegisterComponent implements OnInit {
 
   }
 
-  /**
-   * User clicks on the register button
-   */
+  // User clicks on the register button
   onRegister(f: NgForm) {
     // Check if register data is ok
     this.checkRegisterData(f)
@@ -55,6 +54,7 @@ export class RegisterComponent implements OnInit {
     ;
   }
 
+  // Process server response and shows corresponding messages
   private httpResCtrl = (res: ServerResponseData) => {
     switch (res.code) {
       case 400:
@@ -64,11 +64,12 @@ export class RegisterComponent implements OnInit {
         this.alertService.error('Password is not correct');
         break;
       case 403:
-        this.alertService.error('User does not exist');
+        this.alertService.error('User already exists');
         break;
       case 200:
         this.router.navigate(['']);
-        this.alertService.success('Welcome!');
+        const userData: UserData = this.userService.getProfile();
+        this.alertService.success('Welcome' + (userData.user ? ' ' + userData.user.first_name : '') + '!');
         break;
       default:
         break;
