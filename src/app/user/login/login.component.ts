@@ -17,7 +17,7 @@ import { NgForm } from '@angular/forms';
  * */
 export class LoginComponent implements OnInit {
 
-  private model = {
+  private loginData = {
     email: undefined,
     password: undefined
   };
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   onLogin(f: NgForm) {
     // Check form
     if (f.valid) {
-      this.userService.login(this.model)
+      this.userService.login(this.loginData)
       .subscribe(this.httpResCtrl);
     } else {
       this.alertService.error('Error: please check the form');
@@ -52,8 +52,8 @@ export class LoginComponent implements OnInit {
         this.alertService.error('User does not exist');
         break;
       case 200:
-        this.alertService.success('Welcome!');
         this.router.navigate(['']);
+        this.alertService.success('Welcome!');
         break;
       default:
         break;

@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'app/user/user.service';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { ServerResponseData } from 'app/shared/_models/data';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-register',
@@ -15,15 +19,22 @@ export class RegisterComponent implements OnInit {
     email: null,
     password: null
   };
-  constructor(private userService: UserService, private alertService: AlertService) { }
+  constructor(private userService: UserService, private alertService: AlertService, private router: Router) { }
 
   ngOnInit() {
   }
 
 
-  checkRegisterData(): Promise<string> {
+  checkRegisterData(f: NgForm): Promise<string> {
     return new Promise((resolve, reject) => {
-      resolve('');
+      if (f.valid) {
+        if (this.registerData.password.length < 8) {
+          reject('Password length must be > 8!');
+        }
+        resolve();
+      } else {
+        reject('Check the fields!');
+      }
     } );
 
   }
@@ -31,17 +42,17 @@ export class RegisterComponent implements OnInit {
   /**
    * User clicks on the register button
    */
-  onRegister() {
+  onRegister(f: NgForm) {
     // Check if register data is ok
-    this.checkRegisterData()
-    .then (error => {
-      if (!error) {
+    this.checkRegisterData(f)
+    .then (() => {
       this.userService.register(this.registerData)
       .subscribe(this.httpResCtrl);
-      } else {
-        this.alertService.warn(error);
-      }
-    });
+    })
+    .catch(error => {
+      this.alertService.warn(error);
+    })
+    ;
   }
 
   private httpResCtrl = (res: ServerResponseData) => {
@@ -56,6 +67,7 @@ export class RegisterComponent implements OnInit {
         this.alertService.error('User does not exist');
         break;
       case 200:
+        this.router.navigate(['']);
         this.alertService.success('Welcome!');
         break;
       default:

@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { RegisterComponent } from './user/register/register.component';
 import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './user/login/login.component';
 
 // Array con las rutas de este módulo
 const routes: Routes = [
