@@ -6,8 +6,7 @@ import { AppComponent } from './app.component';
 
 // importación de módulo de enrutado asociado
 import { AppRoutingModule } from './app-routing.module';
-import { HomeModule } from './home/home.module';
-// import { RegisterModule } from './user/register/register.module';
+import { HomeComponent } from './home/home.component';
 
 // Importación de elementos de bootstrap
 import { AppBootstrapModule } from './bootstrap/bootstrap.module';
@@ -17,25 +16,26 @@ import { AlertService } from 'app/shared/_services/alert.service';
 import { SharedModule } from 'app/shared/shared.module';
 import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
 import { UserStoreService } from 'app/shared/_services/user-store.service';
+import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard';
 
 
 // decorador que define un módulo
 @NgModule({
   declarations: [
     AppComponent,
-    AlertComponent
+    AlertComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
     AppBootstrapModule,
     FormsModule,
     HttpModule,
-    HomeModule,
     UserModule,
     SharedModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
-  providers: [ AlertService, UserStoreService ],
+  providers: [ AlertService, UserStoreService, OnlyLoggedInUsersGuard ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
