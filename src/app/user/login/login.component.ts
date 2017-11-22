@@ -9,7 +9,7 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 /**
  * Preguntar las credenciales al usuario
@@ -21,7 +21,6 @@ export class LoginComponent implements OnInit {
     email: undefined,
     password: undefined
   };
-
 
   constructor(private userService: UserService, private alertService: AlertService, private router: Router) { }
 

@@ -1,17 +1,21 @@
-<nav class="navbar fixed-top navbar-dark bg-dark justify-content-between">
+<nav class="top-bar">
 
     <div class="brand" href="#" [routerLink]="['/home']">
-        <img class="logo" src="/assets/images/Bubble_Icon.png" height="20px"> {{title}}
+        <img class="logo" src="/assets/images/Bubble_Icon.png">
+        <label>{{title}}</label>
     </div>
 
-    <ul class="menu">
-        <li *ngIf="needsLogin">
-            <div class="user" href="#" [routerLink]="['user/login']">Log in</div>
-        </li>
-        <li *ngIf="!needsLogin">
-            <div class="user" href="#" (click)="logOut()">{{userName}} - Log out</div>
-        </li>
-    </ul>
+    <div class="menu">
+
+        <a *ngIf="needsLogin" [routerLink]="['user/login']">Log in</a>
+
+        <a *ngIf="!needsLogin" [routerLink]="['user/config']">
+            <label class="user">{{userName}}</label>
+            <span class="fa fa-user-circle fa-2x"></span>
+
+        </a>
+
+    </div>
 
 </nav>
 

@@ -1,0 +1,55 @@
+.top-bar {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 50px;
+    background-color: #343a40!important;
+    z-index: 100;
+    border: 1px solid black;
+    .brand {
+        position: absolute;
+        left: 0;
+        height: 50px;
+        padding: 15px 15px;
+        font-size: 18px;
+        line-height: 20px;
+        color: white;
+        .logo {
+            position: relative;
+            float: left;
+            height: 20px;
+            margin-right: 5px;
+        }
+    }
+    .menu {
+        position: relative;
+        float: right;
+        height: 100%;
+        padding: 10px 15px;
+        &>a {
+            color: white;
+        }
+        .user {
+            position: relative;
+            float: left;
+            padding: 5px;
+        }
+    }
+}
+
+.center {
+    position: relative;
+    float: left;
+    text-align: center;
+    width: 100%;
+    .notification {
+        position: absolute;
+        right: 0px;
+        opacity: 0.80;
+        z-index: 10;
+        width: 25%;
+        &:hover {
+            opacity: 1.0;
+        }
+    }
+}
