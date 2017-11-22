@@ -1,15 +1,15 @@
 <nav class="navbar fixed-top navbar-dark bg-dark justify-content-between">
 
-    <a class="navbar-brand col-10" href="#" [routerLink]="['/home']">
+    <div class="brand" href="#" [routerLink]="['/home']">
         <img class="logo" src="/assets/images/Bubble_Icon.png" height="20px"> {{title}}
-    </a>
+    </div>
 
-    <ul class="navbar-nav">
+    <ul class="menu">
         <li *ngIf="needsLogin">
-            <a class="nav-link" href="#" [routerLink]="['user/login']">Log in</a>
+            <div class="user" href="#" [routerLink]="['user/login']">Log in</div>
         </li>
         <li *ngIf="!needsLogin">
-            <a class="nav-link" href="#" (click)="logOut()">{{userName}} - Log out</a>
+            <div class="user" href="#" (click)="logOut()">{{userName}} - Log out</div>
         </li>
     </ul>
 

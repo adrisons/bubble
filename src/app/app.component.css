@@ -22,6 +22,27 @@
     opacity: 1.0;
 }
 
+.brand {
+    position: absolute;
+    left: 0;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+    display: inline-block;
+    color: white;
+}
+
+.menu {
+    position: absolute;
+    right: 0;
+    padding-right: 20px;
+}
+
+.user {
+    color: rgba(255, 255, 255, .5);
+}
+
 .logo {
     position: relative;
     float: left;
