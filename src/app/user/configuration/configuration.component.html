@@ -27,30 +27,34 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form (ngSubmit)="onSave(configForm)" #configForm="ngForm">
+                                    <form (ngSubmit)="onSave(configForm)" #configForm="ngForm" class="keyValueList">
                                         <!-- First Name -->
-                                        <div class="form-group">
-                                            <input type="text" name="first_name" [(ngModel)]="userData.user.first_name" #first_name="ngModel" class="form-control" placeholder="First Name" value="" required>
+                                        <div>
+                                            <label class="key">First name</label>
+                                            <input class="form-control value" type="text" name="first_name" [(ngModel)]="userData.user.first_name" #first_name="ngModel" placeholder="First Name" value="" required>
                                         </div>
                                         <!-- Last Name -->
-                                        <div class="form-group">
-                                            <input type="text" name="last_name" [(ngModel)]="userData.user.last_name" #last_name="ngModel" class="form-control" placeholder="Last Name" value="" required>
+                                        <div>
+                                            <label class="key">Last name</label>
+                                            <input type="text" name="last_name" [(ngModel)]="userData.user.last_name" #last_name="ngModel" class="form-control value" placeholder="Last Name" value="" required>
                                         </div>
                                         <!-- Email -->
-                                        <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="Email Address" [(ngModel)]="userData.user.email" name="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
+                                        <div>
+                                            <label class="key">Email</label>
+                                            <input type="email" class="form-control value" placeholder="Email Address" [(ngModel)]="userData.user.email" name="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
                                         </div>
                                         <!-- Password -->
-                                        <div class="form-group">
-                                            <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="userData.user.password" #password="ngModel" required>
+                                        <div>
+                                            <label class="key">Password</label>
+                                            <input type="password" class="form-control value" name="password" placeholder="Password" [(ngModel)]="userData.user.password" #password="ngModel" required>
                                         </div>
                                         <!-- Repeat Password -->
-                                        <div class="form-group">
-                                            <input type="password" name="confirm-password" class="form-control" placeholder="Confirm Password" #repeatPasswordModel="ngModel" pattern="{{userData.user.password}}" [(ngModel)]="repeatPassword" required>
-
-                                        </div>
+                                        <!-- <div>
+                                            <label class="key">Repeat password</label>
+                                            <input type="password" name="confirm-password" class="form-control value" placeholder="Confirm Password" #repeatPasswordModel="ngModel" pattern="{{userData.user.password}}" [(ngModel)]="repeatPassword" required>
+                                        </div> -->
                                         <!-- Submit button -->
-                                        <div class="form-group">
+                                        <div>
                                             <button type="submit" [ngClass]="{'form-control button-right btn': true, 'btn-success': configForm.form.valid}" [disabled]="!configForm.form.valid || !configForm.form.dirty">Save</button>
                                         </div>
                                     </form>

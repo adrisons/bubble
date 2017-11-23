@@ -18,3 +18,11 @@ h2 {
     border-bottom: 1px solid #dfdfdf;
     width: 100%;
 }
+
+.title {
+    font: 15px $typography;
+    text-transform: uppercase;
+    position: relative;
+    float: left;
+    width: 100%;
+}

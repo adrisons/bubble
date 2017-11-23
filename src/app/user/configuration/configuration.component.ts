@@ -29,7 +29,7 @@ export class ConfigurationComponent implements OnInit {
     // Check if register data is ok
     this.userService.checkRegisterData(f)
     .then (() => {
-      this.userService.save(this.userData.user)
+      this.userService.update(this.userData.user)
       .subscribe(this.httpResCtrl);
     })
     .catch(error => {
@@ -52,9 +52,7 @@ export class ConfigurationComponent implements OnInit {
           this.alertService.error('User already exists');
           break;
         case 200:
-          this.router.navigate(['']);
-          const userData: UserData = this.userService.getProfile();
-          this.alertService.success('Welcome' + (userData.user ? ' ' + userData.user.first_name : '') + '!');
+          this.alertService.success('User updated successfully!');
           break;
         default:
           break;

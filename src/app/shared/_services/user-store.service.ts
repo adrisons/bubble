@@ -1,6 +1,6 @@
 import { DataStoreService } from './data-store.service';
 import { Injectable } from '@angular/core';
-import { UserData } from '../_models/data';
+import { UserData, User } from '../_models/data';
 
 @Injectable()
 /**
@@ -17,7 +17,7 @@ export class UserStoreService extends DataStoreService {
   }
 
 
-  logIn(user, token) {
+  logIn(user: User, token: string) {
     super.setData({ user: user, token: token, isLogged: true });
   }
 

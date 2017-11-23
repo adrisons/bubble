@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'app/user/user.service';
 import { AlertService } from 'app/shared/_services/alert.service';
-import { ServerResponseData, UserData } from 'app/shared/_models/data';
+import { ServerResponseData, UserData, User } from 'app/shared/_models/data';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -13,12 +13,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  private registerData = {
-    first_name: null,
-    last_name: null,
-    email: null,
-    password: null
-  };
+  private registerData: User = new User();
+
   constructor(private userService: UserService, private alertService: AlertService, private router: Router) { }
 
   ngOnInit() {
