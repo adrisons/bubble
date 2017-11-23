@@ -6,6 +6,7 @@ import { UserData } from './../shared/_models/data';
 import { UserStoreService } from './../shared/_services/user-store.service';
 import 'rxjs/add/operator/map';
 import { Http } from '@angular/http';
+import { NgForm } from '@angular/forms';
 
 @Injectable()
 /**
@@ -19,7 +20,7 @@ export class UserService extends CrudService {
   }
 
   /**
-   * Enviar credenciales y guardar token
+   * Logueo de usuarios. Enviar credenciales y guardar token
    * */
   public login(credenciales) {
     return this.http
@@ -33,8 +34,15 @@ export class UserService extends CrudService {
       });
   }
 
+   /**
+   * Deslogueo de usuarios.
+   * */
+  public logOut() {
+    this.userStoreService.logOut();
+  }
+
   /**
-   * Enviar credenciales y guardar token
+   * Registro usuario. Enviar datos y hacer login
    * */
   public register(credenciales) {
     return this.http
@@ -53,6 +61,26 @@ export class UserService extends CrudService {
    * */
   public getProfile(): UserData {
     return this.userStoreService.getProfile();
+  }
+
+    // Check form data to see if its correct
+  // Return: Promise with error message
+  public checkRegisterData(f: NgForm): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (f.valid) {
+        const formData = f.form['_value'];
+        if (formData.password !== formData['confirm-password']){
+          reject('Passwords don\'t match!');
+        }
+        if (formData.password.length < 8) {
+          reject('Password length must be > 8!');
+        }
+        resolve();
+      } else {
+        reject('Check the fields!');
+      }
+    } );
+
   }
 
 }

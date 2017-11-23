@@ -1,2 +1,32 @@
 @import "forms.scss";
 @import "variables.scss";
+@import "title.scss";
+.button-right {
+    position: relative;
+    float: right;
+    width: 25%;
+}
+
+.center {
+    position: relative;
+    float: left;
+    width: 50%;
+    margin-left: 25%;
+    text-align: center;
+}
+
+.selected {
+    font-weight: bold
+}
+
+label {
+    font-family: $typography;
+}
+
+a {
+    cursor: pointer;
+    font-family: $typography;
+    &:hover {
+        font-weight: bold;
+    }
+}

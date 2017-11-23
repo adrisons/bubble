@@ -1,0 +1,20 @@
+h1 {
+    font: 30px $typography;
+    margin-top: 15px;
+    text-transform: uppercase;
+    position: relative;
+    text-align: center;
+    float: left;
+    width: 100%;
+}
+
+h2 {
+    font: 20px $typography;
+    margin-top: 30px;
+    text-transform: uppercase;
+    position: relative;
+    text-align: left;
+    float: left;
+    border-bottom: 1px solid #dfdfdf;
+    width: 100%;
+}

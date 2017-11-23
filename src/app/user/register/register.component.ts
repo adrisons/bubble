@@ -24,26 +24,11 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  // Check form data to see if its correct
-  // Return: Promise with error message
-  checkRegisterData(f: NgForm): Promise<string> {
-    return new Promise((resolve, reject) => {
-      if (f.valid) {
-        if (this.registerData.password.length < 8) {
-          reject('Password length must be > 8!');
-        }
-        resolve();
-      } else {
-        reject('Check the fields!');
-      }
-    } );
-
-  }
 
   // User clicks on the register button
   onRegister(f: NgForm) {
     // Check if register data is ok
-    this.checkRegisterData(f)
+    this.userService.checkRegisterData(f)
     .then (() => {
       this.userService.register(this.registerData)
       .subscribe(this.httpResCtrl);
