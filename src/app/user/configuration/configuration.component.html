@@ -15,16 +15,14 @@
                 <div class="user-settings">
                     <!-- Settings -->
                     <div class="panel-heading">
-                        <!-- <div class="col-md-9 personal-info"> -->
-                        <!-- Personal Info -->
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <h2>Personal Info</h2>
-                            </div>
-                        </div>
-
 
                         <div class="panel-body">
+                            <!-- Personal Info -->
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <h2>Personal Info</h2>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <form (ngSubmit)="onSave(configForm)" #configForm="ngForm" class="keyValueList">
@@ -58,6 +56,41 @@
                                             <button type="submit" [ngClass]="{'form-control button-right btn': true, 'btn-success': configForm.form.valid}" [disabled]="!configForm.form.valid || !configForm.form.dirty">Save</button>
                                         </div>
                                     </form>
+                                </div>
+                            </div>
+                            <!-- Social Networks -->
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <h2>Social</h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <!-- Twitter -->
+                                    <div class="social-list">
+                                        <div class="input-group first">
+                                            <span class="input-group-addon"><i class="fa fa-twitter"></i></span>
+                                            <input class="form-control" type="text" placeholder="Twitter account">
+                                        </div>
+                                        <div class="second">
+                                            <button type="button" class="btn btn-light">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- Facebook -->
+                                    <div class="social-list">
+                                        <div class="input-group first">
+                                            <span class="input-group-addon"><i class="fa fa-facebook"></i></span>
+                                            <input class="form-control" type="text" placeholder="Facebook account">
+                                        </div>
+                                        <div class="second">
+                                            <button type="button" class="btn btn-light">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
