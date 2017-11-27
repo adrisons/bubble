@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserStoreService } from 'app/shared/_services/user-store.service';
-import { UserData, Session } from 'app/shared/_models/data';
+import { UserSession, Session } from 'app/shared/_models/data';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   constructor(private userStoreService: UserStoreService) { }
 
   ngOnInit() {
-    this.userStoreService.getDataObservable().subscribe((sessionData: UserData) => {
+    this.userStoreService.getDataObservable().subscribe((sessionData: UserSession) => {
       this.needsLogin = !sessionData.isLogged;
       if (sessionData.isLogged) {
         this.userName = sessionData.user.first_name + ' ' + sessionData.user.last_name;

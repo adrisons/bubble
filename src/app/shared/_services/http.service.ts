@@ -8,7 +8,7 @@ import { CrudService } from './crud.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-import { UserData } from '../_models/data';
+import { UserSession } from '../_models/data';
 import { UserStoreService } from './user-store.service';
 
 @Injectable()
@@ -30,9 +30,9 @@ export class HttpService extends Http {
     private userStore: UserStoreService
   ) {
     super(backend, defaultOptions);
-    this.userStore
-      .getDataObservable()
-      .subscribe((data: UserData) => this.authorization = 'Basic ' + data.token);
+    // this.userStore
+    //   .getDataObservable()
+    //   .subscribe((data: UserSession) => this.authorization = 'Basic ' + data.token);
   }
 
   /**
@@ -54,6 +54,22 @@ export class HttpService extends Http {
       this.setHeaders(request);
     }
   }
+
+  private addJwt(options?: RequestOptionsArgs): RequestOptionsArgs {
+    // ensure request options and headers are not null
+    options = options || new RequestOptions();
+    options.headers = options.headers || new Headers();
+
+    // add authorization header with jwt token
+    const currentUser = JSON.parse(localStorage.getItem('user-data'));
+    if (currentUser && currentUser.token) {
+        options.headers.append('Authorization', 'Bearer ' + currentUser.token);
+    }
+
+    return options;
+}
+
+
   private interceptResponse(request: string | Request, options: RequestOptionsArgs): Observable<Response> {
     const observableRequest = super
       .request(request, options)
@@ -78,6 +94,7 @@ export class HttpService extends Http {
     // headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     // headers.set('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     // headers.set('Access-Control-Allow-Credentials', 'true');
+    objectToSetHeadersTo = this.addJwt(objectToSetHeadersTo);
   }
 
   private onCatch() {

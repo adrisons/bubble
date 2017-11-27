@@ -29,27 +29,27 @@
                                         <!-- First Name -->
                                         <div>
                                             <label class="key">First name</label>
-                                            <input class="form-control value" type="text" name="first_name" [(ngModel)]="userData.user.first_name" #first_name="ngModel" placeholder="First Name" value="" required>
+                                            <input class="form-control value" type="text" name="first_name" [(ngModel)]="user.first_name" #first_name="ngModel" placeholder="First Name" value="" required>
                                         </div>
                                         <!-- Last Name -->
                                         <div>
                                             <label class="key">Last name</label>
-                                            <input type="text" name="last_name" [(ngModel)]="userData.user.last_name" #last_name="ngModel" class="form-control value" placeholder="Last Name" value="" required>
+                                            <input type="text" name="last_name" [(ngModel)]="user.last_name" #last_name="ngModel" class="form-control value" placeholder="Last Name" value="" required>
                                         </div>
                                         <!-- Email -->
                                         <div>
                                             <label class="key">Email</label>
-                                            <input type="email" class="form-control value" placeholder="Email Address" [(ngModel)]="userData.user.email" name="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
+                                            <input type="email" class="form-control value" placeholder="Email Address" [(ngModel)]="user.email" name="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
                                         </div>
                                         <!-- Password -->
                                         <div>
                                             <label class="key">Password</label>
-                                            <input type="password" class="form-control value" name="password" placeholder="Password" [(ngModel)]="userData.user.password" #password="ngModel" required>
+                                            <input type="password" class="form-control value" name="password" placeholder="Password" [(ngModel)]="user.password" #password="ngModel" required>
                                         </div>
                                         <!-- Repeat Password -->
                                         <!-- <div>
                                             <label class="key">Repeat password</label>
-                                            <input type="password" name="confirm-password" class="form-control value" placeholder="Confirm Password" #repeatPasswordModel="ngModel" pattern="{{userData.user.password}}" [(ngModel)]="repeatPassword" required>
+                                            <input type="password" name="confirm-password" class="form-control value" placeholder="Confirm Password" #repeatPasswordModel="ngModel" pattern="{{user.password}}" [(ngModel)]="repeatPassword" required>
                                         </div> -->
                                         <!-- Submit button -->
                                         <div>
@@ -68,27 +68,37 @@
                                 <div class="col-lg-12">
                                     <!-- Twitter -->
                                     <div class="social-list">
-                                        <div class="input-group first">
-                                            <span class="input-group-addon"><i class="fa fa-twitter"></i></span>
-                                            <input class="form-control" type="text" placeholder="Twitter account">
+                                        <div *ngIf="user.social.twitter">
+                                            <div class="input-group first">
+                                                <a class="input-group-addon"><i class="fa fa-twitter"></i></a>
+                                                <input type="text" class="form-control" disabled placeholder="{{user.social.twitter}}">
+                                            </div>
+                                            <div class="second">
+                                                <button type="button" class="btn btn-light">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                            </div>
                                         </div>
-                                        <div class="second">
-                                            <button type="button" class="btn btn-light">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
+
+                                        <a *ngIf="!user.social.twitter" class="input-group-addon" (click)="fbLogin()"><i class="fa fa-twitter"></i></a>
+
                                     </div>
                                     <!-- Facebook -->
                                     <div class="social-list">
-                                        <div class="input-group first">
-                                            <span class="input-group-addon"><i class="fa fa-facebook"></i></span>
-                                            <input class="form-control" type="text" placeholder="Facebook account">
-                                        </div>
-                                        <div class="second">
-                                            <button type="button" class="btn btn-light">
+                                        <div *ngIf="user.social.facebook">
+                                            <div class="input-group first">
+                                                <a class="input-group-addon"><i class="fa fa-facebook"></i></a>
+                                                <input type="text" class="form-control" disabled placeholder="{{user.social.facebook}}">
+                                            </div>
+                                            <div class="second">
+                                                <button type="button" (click)="fbLogout()" class="btn btn-light">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
+                                            </div>
                                         </div>
+
+                                        <a *ngIf="!user.social.facebook" class="input-group-addon" (click)="fbLogin()"><i class="fa fa-facebook"></i></a>
+
                                     </div>
 
                                 </div>

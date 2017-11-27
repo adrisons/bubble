@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'app/user/user.service';
 import { AlertService } from 'app/shared/_services/alert.service';
-import { ServerResponseData, UserData, User } from 'app/shared/_models/data';
+import { ServerResponseData, UserSession, User } from 'app/shared/_models/data';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -49,8 +49,8 @@ export class RegisterComponent implements OnInit {
         break;
       case 200:
         this.router.navigate(['']);
-        const userData: UserData = this.userService.getProfile();
-        this.alertService.success('Welcome' + (userData.user ? ' ' + userData.user.first_name : '') + '!');
+        const UserSession: UserSession = this.userService.getProfile();
+        this.alertService.success('Welcome' + (UserSession.user ? ' ' + UserSession.user.first_name : '') + '!');
         break;
       default:
         break;

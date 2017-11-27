@@ -2,7 +2,7 @@ import { CrudService } from './../shared/_services/crud.service';
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserData, User } from './../shared/_models/data';
+import { UserSession, User } from './../shared/_models/data';
 import { UserStoreService } from './../shared/_services/user-store.service';
 import 'rxjs/add/operator/map';
 import { Http } from '@angular/http';
@@ -25,16 +25,23 @@ export class UserService extends CrudService {
   /**
    * Logueo de usuarios. Enviar credenciales y guardar token
    * */
-  public login(credenciales): Observable<any> {
+  public login(credenciales: { email: string, password: string }): Observable<any> {
     return this.http
       .post(this.apiEndPoint + '/login', credenciales)
-      .map(this.mapResponseForLogin)
+      .map(r => {
+        const response = r.json();
+        if (response.code === 200) {
+          const token = response.data.token;
+          this.userStoreService.logIn(response.data, token);
+        }
+        return response;
+      })
       .catch(this.handleError);
   }
 
-   /**
-   * Deslogueo de usuarios.
-   * */
+  /**
+  * Deslogueo de usuarios.
+  * */
   public logOut() {
     this.userStoreService.logOut();
   }
@@ -42,25 +49,31 @@ export class UserService extends CrudService {
   /**
    * Registro usuario. Enviar datos y hacer login
    * */
-  public register(userData: User): Observable<any> {
+  public register(user: User): Observable<any> {
     return this.http
-      .post(this.apiEndPoint + '/register', userData)
-      .map(this.mapResponseForLogin)
+      .post(this.apiEndPoint + '/register', user)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
   /** Update */
   public update(user: User): Observable<any> {
     return this.http
-        .put(this.apiEndPoint, user)
-        .map(this.mapResponseForLogin)
-        .catch(this.handleError);
+      .put(this.apiEndPoint, user)
+      .map(r => {
+        const response = r.json();
+        if (response.code === 200) {
+          this.userStoreService.update(response.data);
+        }
+        return response;
+      })
+      .catch(this.handleError);
   };
 
   /**
    * Obtener el usuario actual
    * */
-  public getProfile(): UserData {
+  public getProfile(): UserSession {
     return this.userStoreService.getProfile();
   }
 
@@ -70,7 +83,7 @@ export class UserService extends CrudService {
     return new Promise((resolve, reject) => {
       if (f.valid) {
         const formData = f.form['_value'];
-        if (formData['confirm-password'] && formData.password !== formData['confirm-password']){
+        if (formData['confirm-password'] && formData.password !== formData['confirm-password']) {
           reject('Passwords don\'t match!');
         }
         if (formData.password.length < 8) {
@@ -80,20 +93,19 @@ export class UserService extends CrudService {
       } else {
         reject('Check the fields!');
       }
-    } );
+    });
 
+  }
+
+
+  public addSocialNetwork(name: string, token: string): UserSession {
+    return this.userStoreService.addSocialNetwork(name, token);
   }
 
   // =================
   // PRIVATE FUNCTIONS
   // =================
-  private mapResponseForLogin = r => {
-    const token = r.json();
-    if (token.code === 200) {
-      this.userStoreService.logIn(token.data, token);
-    }
-    return token;
-  }
+  
 
   private handleError = (error: Response) => {
     this.alertService.error('Error ocurred contacting server');

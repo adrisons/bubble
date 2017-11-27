@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
-import { ServerResponseData, UserData } from 'app/shared/_models/data';
+import { ServerResponseData, UserSession } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
@@ -52,8 +52,8 @@ export class LoginComponent implements OnInit {
         break;
       case 200:
         this.router.navigate(['']);
-        const userData: UserData = this.userService.getProfile();
-        this.alertService.success('Welcome' + (userData.user ? ' ' + userData.user.first_name : '') + '!');
+        const UserSession: UserSession = this.userService.getProfile();
+        this.alertService.success('Welcome' + (UserSession.user ? ' ' + UserSession.user.first_name : '') + '!');
         break;
       default:
         break;

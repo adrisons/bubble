@@ -1,7 +1,7 @@
 import { Response, ResponseOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import { UserData } from './../_models/data';
+import { UserSession } from './../_models/data';
 
 export class UserServiceMock {
   private token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
@@ -22,8 +22,8 @@ export class UserServiceMock {
     return Observable.of(new Response(options));
   }
 
-  public getProfile(): UserData {
-    const user: UserData = new UserData();
+  public getProfile(): UserSession {
+    const user: UserSession = new UserSession();
     // user.user = 'testingUser';
     user.token = this.token;
     user.isLogged = false;

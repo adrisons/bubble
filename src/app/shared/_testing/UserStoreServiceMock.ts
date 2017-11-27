@@ -1,4 +1,4 @@
-import { UserData } from './../_models/data';
+import { UserSession } from './../_models/data';
 
 export class UserStoreServiceMock {
 
@@ -10,11 +10,11 @@ export class UserStoreServiceMock {
 
   }
 
-  public getProfile(): UserData {
-    const userData: UserData = new UserData();
-    // userData.user = 'testUser';
-    userData.token = 'eyJhbGciOiJIUzI1NiIsInR9';
-    userData.isLogged = false;
-    return userData;
-  }
+  // public getProfile(): UserSession {
+    // const UserSession: UserSession = new UserSession();
+    // UserSession.user = 'testUser';
+    // UserSession.token = 'eyJhbGciOiJIUzI1NiIsInR9';
+    // UserSession.isLogged = false;
+    // return UserSession;
+  // }
 }
