@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ConfigurationComponent } from 'app/user/configuration/configuration.component';
+import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard';
 // import { UserComponent } from './user.component';
 
 const routes: Routes = [
@@ -12,10 +13,10 @@ const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent, pathMatch: 'full' }, // Log in
       { path: 'register', component: RegisterComponent, pathMatch: 'full' }, // Register
-      { path: 'config', component: ConfigurationComponent, pathMatch: 'full' } // Configuration
+      { path: 'config', component: ConfigurationComponent, pathMatch: 'full', canActivate: [OnlyLoggedInUsersGuard] } // Configuration
     ]
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
+  { path: '**', redirectTo: 'home' }
 ];
 
 export const routableComponents = [

@@ -7,13 +7,11 @@ import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard
 
 // Array con las rutas de este módulo
 const routes: Routes = [
-  {
-    path: '',
-    children: [
-      { path: 'home', component: HomeComponent, pathMatch: 'full', canActivate: [OnlyLoggedInUsersGuard] }
-    ]
-  },
-  { path: '**', redirectTo: ''}
+  { path: '', redirectTo: 'home', pathMatch: 'full'},
+  { path: '', children: [
+    { path: 'home', component: HomeComponent, pathMatch: 'full', canActivate: [OnlyLoggedInUsersGuard] }
+  ]},
+  { path: '**', redirectTo: 'user/login'}
 
 ];
 

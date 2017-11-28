@@ -43,7 +43,7 @@ export class UserStoreService extends DataStoreService {
   }
 
   isLoggedIn(): boolean {
-    return this.data ? this.data.isLoggedIn : false;
+    return this.data ? this.data.isLogged : false;
   }
 
 }
