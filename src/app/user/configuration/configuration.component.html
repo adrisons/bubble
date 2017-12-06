@@ -66,39 +66,29 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <!-- Twitter -->
-                                    <div class="social-list">
-                                        <div *ngIf="user.social.twitter">
-                                            <div class="input-group first">
-                                                <a class="input-group-addon"><i class="fa fa-twitter"></i></a>
-                                                <input type="text" class="form-control" disabled placeholder="{{user.social.twitter}}">
-                                            </div>
-                                            <div class="second">
-                                                <button type="button" class="btn btn-light">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                            </div>
-                                        </div>
 
-                                        <a *ngIf="!user.social.twitter" class="input-group-addon" (click)="fbLogin()"><i class="fa fa-twitter"></i></a>
+                                    <div *ngFor="let social of user.social" class="social-list">
+
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <a *ngIf="social.type.name === 'twitter'"><i class="fa fa-twitter"></i></a>
+                                                <a *ngIf="social.type.name === 'facebook'"><i class="fa fa-facebook"></i></a>
+
+                                            </div>
+                                            <input type="text" class="form-control" disabled placeholder="{{social.login ? social.login : social.email}}">
+                                            <a (click)="removeSocial(social)" class="input-group-addon btn btn-light">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
 
                                     </div>
                                     <!-- Facebook -->
-                                    <div class="social-list">
-                                        <div *ngIf="user.social.facebook">
-                                            <div class="input-group first">
-                                                <a class="input-group-addon"><i class="fa fa-facebook"></i></a>
-                                                <input type="text" class="form-control" disabled placeholder="{{user.social.facebook}}">
-                                            </div>
-                                            <div class="second">
-                                                <button type="button" (click)="fbLogout()" class="btn btn-light">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <a *ngIf="!user.social.facebook" class="input-group-addon" (click)="fbLogin()"><i class="fa fa-facebook"></i></a>
-
+                                    <div class="social-list" title="Link Facebook">
+                                        <a class="input-group-addon" (click)="addFacebook()"><i class="fa fa-facebook"></i></a>
+                                    </div>
+                                    <!-- Twitter -->
+                                    <div class="social-list" title="Link Twitter">
+                                        <a class="input-group-addon" (click)="addTwitter()"><i class="fa fa-twitter"></i></a>
                                     </div>
 
                                 </div>

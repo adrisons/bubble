@@ -9,7 +9,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import { UserSession } from '../_models/data';
-import { UserStoreService } from './user-store.service';
+import { UserSessionService } from 'app/shared/_services/user-session.service';
+
 
 @Injectable()
 /**
@@ -27,10 +28,10 @@ export class HttpService extends Http {
     backend: XHRBackend,
     defaultOptions: RequestOptions,
     private router: Router,
-    private userStore: UserStoreService
+    private userSessionService: UserSessionService
   ) {
     super(backend, defaultOptions);
-    // this.userStore
+    // this.userSessionService
     //   .getDataObservable()
     //   .subscribe((data: UserSession) => this.authorization = 'Basic ' + data.token);
   }

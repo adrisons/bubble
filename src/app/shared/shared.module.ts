@@ -4,10 +4,14 @@ import { Http } from '@angular/http';
 import { HttpModule } from '@angular/http';
 import { HttpService } from './_services/http.service';
 import { NgModule } from '@angular/core';
-import { UserStoreService } from './_services/user-store.service';
+
 import { AlertComponent } from './_directives/alert/alert.component';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { CrudService } from 'app/shared/_services/crud.service';
+import { UserSessionService } from 'app/shared/_services/user-session.service';
+import { FacebookService } from 'app/shared/_services/facebook.service';
+import { TwitterService } from 'app/shared/_services/twitter.service';
+import { SocialService } from 'app/shared/_services/social.service';
 /**
  * El módulo compartido se importa en todos los demás módulos
  * Con dos propósitos:
@@ -25,9 +29,12 @@ import { CrudService } from 'app/shared/_services/crud.service';
       provide: Http, // remplaza el servicio original de angular
       useClass: HttpService // con nuestra extensión personalizada
     },
-    UserStoreService,
+    UserSessionService,
     AlertService,
-    CrudService
+    CrudService,
+    SocialService,
+    FacebookService,
+    TwitterService
   ],
   exports: [// Lo que aquí se exporte se importará en los módulos funcionales
     CommonModule,

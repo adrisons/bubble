@@ -2,13 +2,14 @@ import { CrudService } from './../shared/_services/crud.service';
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserSession, User } from './../shared/_models/data';
-import { UserStoreService } from './../shared/_services/user-store.service';
+import { UserSession, User, UserSocial, SocialType } from './../shared/_models/data';
+
 import 'rxjs/add/operator/map';
 import { Http } from '@angular/http';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { AlertService } from 'app/shared/_services/alert.service';
+import { UserSessionService } from 'app/shared/_services/user-session.service';
 
 @Injectable()
 /**
@@ -16,7 +17,7 @@ import { AlertService } from 'app/shared/_services/alert.service';
  * */
 export class UserService extends CrudService {
 
-  constructor(private userStoreService: UserStoreService, http: Http, private alertService: AlertService) {
+  constructor(private sessionService: UserSessionService, http: Http, private alertService: AlertService) {
     super(http);
     this.apiEndPoint = this.apiEndPoint + '/user';
   }
@@ -32,7 +33,7 @@ export class UserService extends CrudService {
         const response = r.json();
         if (response.code === 200) {
           const token = response.data.token;
-          this.userStoreService.logIn(response.data, token);
+          this.sessionService.logIn(response.data, token);
         }
         return response;
       })
@@ -43,7 +44,7 @@ export class UserService extends CrudService {
   * Deslogueo de usuarios.
   * */
   public logOut() {
-    this.userStoreService.logOut();
+    this.sessionService.logOut();
   }
 
   /**
@@ -52,7 +53,14 @@ export class UserService extends CrudService {
   public register(user: User): Observable<any> {
     return this.http
       .post(this.apiEndPoint + '/register', user)
-      .map(r => r.json())
+      .map(r => {
+        const response = r.json();
+        if (response.code === 200) {
+          const token = response.data.token;
+          this.sessionService.logIn(response.data, token);
+        }
+        return response;
+      })
       .catch(this.handleError);
   }
 
@@ -63,7 +71,7 @@ export class UserService extends CrudService {
       .map(r => {
         const response = r.json();
         if (response.code === 200) {
-          this.userStoreService.update(response.data);
+          this.sessionService.update(response.data);
         }
         return response;
       })
@@ -74,7 +82,7 @@ export class UserService extends CrudService {
    * Obtener el usuario actual
    * */
   public getProfile(): UserSession {
-    return this.userStoreService.getProfile();
+    return this.sessionService.getProfile();
   }
 
   // Check form data to see if its correct
@@ -98,14 +106,19 @@ export class UserService extends CrudService {
   }
 
 
-  public addSocialNetwork(name: string, token: string): UserSession {
-    return this.userStoreService.addSocialNetwork(name, token);
+  public addSocialNetwork(us: UserSocial): UserSession {
+    return this.sessionService.addSocialNetwork(us);
   }
+
+  public removeSocialNetwork(type: SocialType, token: string): UserSession {
+    return this.sessionService.removeSocialNetwork(type, token);
+  }
+
 
   // =================
   // PRIVATE FUNCTIONS
   // =================
-  
+
 
   private handleError = (error: Response) => {
     this.alertService.error('Error ocurred contacting server');

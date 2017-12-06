@@ -6,9 +6,9 @@ export class User {
   first_name: string;
   last_name: string;
   email: string;
-  create_time: string;
-  modify_time: string;
-  social?: Social;
+  create_date: string;
+  update_date: string;
+  social: UserSocial[] = [];
 }
 
 export class UserSession implements Session {
@@ -28,7 +28,14 @@ export interface Session {
   user?: User;
 }
 
-export interface Social {
-  twitter?: string;
-  facebook?: string;
+export class UserSocial {
+  type: SocialType;
+  login?: string;
+  email?: string;
+  token: string;
+}
+
+export interface SocialType {
+  id: number;
+  name: string;
 }

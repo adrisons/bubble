@@ -15,8 +15,10 @@ import { AlertService } from 'app/shared/_services/alert.service';
 
 import { SharedModule } from 'app/shared/shared.module';
 import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
-import { UserStoreService } from 'app/shared/_services/user-store.service';
+
 import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard';
+import { UserSessionService } from 'app/shared/_services/user-session.service';
+import { SocialService } from 'app/shared/_services/social.service';
 
 
 // decorador que define un módulo
@@ -35,7 +37,7 @@ import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard
     SharedModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
-  providers: [ AlertService, UserStoreService, OnlyLoggedInUsersGuard ],
+  providers: [ OnlyLoggedInUsersGuard ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

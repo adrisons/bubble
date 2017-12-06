@@ -12,22 +12,4 @@
     float: left;
     width: 100%;
     margin-bottom: 10px;
-    .first {
-        position: relative;
-        float: left;
-        width: 80%;
-        text-align: left;
-        .input-group-addon {
-            width: 40px;
-        }
-    }
-    .second {
-        position: relative;
-        float: right;
-        width: 20%;
-        text-align: left;
-        button {
-            float: right;
-        }
-    }
 }

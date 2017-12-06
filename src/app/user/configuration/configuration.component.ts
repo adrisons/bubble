@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserSession, ServerResponseData, User } from 'app/shared/_models/data';
+import { UserSession, ServerResponseData, User, UserSocial, SocialType } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { NgForm } from '@angular/forms';
 import { UserService } from 'app/user/user.service';
-import { SocialAuthService } from 'app/shared/_services/social-auth.service';
+import { SocialService } from 'app/shared/_services/social.service';
 
 @Component({
   selector: 'app-configuration',
@@ -14,16 +14,13 @@ import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 export class ConfigurationComponent implements OnInit {
   private user: User;
   constructor(private userService: UserService, private router: Router, private alertService: AlertService,
-    private socialAuthService: SocialAuthService) { }
+    private socialService: SocialService) { }
 
   ngOnInit() {
     this.user = this.userService.getProfile().user;
-    this.user.social = {
-      // twitter: 'twitter',
-      facebook: 'facebook'
-    };
   }
 
+  // Log out user
   logOut() {
     this.userService.logOut();
     this.router.navigate(['user/login']);
@@ -44,16 +41,45 @@ export class ConfigurationComponent implements OnInit {
       ;
   }
 
-  fbLogin() {
-    this.socialAuthService.fbLogin().then(() => {
-      this.alertService.success('Facebook linked!');
-    });
+  // =================
+  // SOCIAL
+  // =================
+  // Link new social account to user
+  addSocial(type: SocialType) {
+    this.socialService.login(type)
+      .then((res) => {
+        this.alertService.success(type.name + ' linked!');
+        this.updateUser();
+      })
+      .catch(() => this.alertService.error('Error linking ' + type.name));
   }
-  fbLogout() {
-    this.socialAuthService.fbLogout().then(() => {
-      this.alertService.success('Facebook logout!');
-    });
+  // Remove social account from user
+  removeSocial(social: UserSocial) {
+    this.socialService.logout(social.type, social.token)
+      .then(() => {
+        this.alertService.success(social.type.name + ' logout!');
+        this.updateUser();
+      })
+      .catch(() => this.alertService.error('Error removing ' + social.type.name));
   }
+  // Add facebook account to user
+  private addFacebook() {
+    const st: SocialType = { id: 0, name: 'facebook' };
+    this.addSocial(st);
+  }
+  // Add twitter account to user
+  private addTwitter() {
+    const st: SocialType = { id: 1, name: 'twitter' };
+    this.addSocial(st);
+  }
+
+  // =================
+  // PRIVATE FUNCTIONS
+  // =================
+
+  private updateUser() {
+    this.user = this.userService.getProfile().user;
+  };
 
   // Process server response and shows corresponding messages
   private httpResCtrl = (res: ServerResponseData) => {
