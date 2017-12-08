@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserSession, ServerResponseData, User, UserSocial, SocialType } from 'app/shared/_models/data';
+import { UserSession, ServerResponseData, User, UserSocial, SocialType, SocialAuthResult } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { NgForm } from '@angular/forms';
 import { UserService } from 'app/user/user.service';
+import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { SocialService } from 'app/shared/_services/social.service';
+
 
 @Component({
   selector: 'app-configuration',
@@ -14,7 +16,10 @@ import { SocialService } from 'app/shared/_services/social.service';
 export class ConfigurationComponent implements OnInit {
   private user: User;
   constructor(private userService: UserService, private router: Router, private alertService: AlertService,
-    private socialService: SocialService) { }
+    private socialAuth: SocialAuthService, private socialService: SocialService) {
+    this.socialAuth.handleAuthentication();
+    
+  }
 
   ngOnInit() {
     this.user = this.userService.getProfile().user;
@@ -45,33 +50,26 @@ export class ConfigurationComponent implements OnInit {
   // SOCIAL
   // =================
   // Link new social account to user
-  addSocial(type: SocialType) {
-    this.socialService.login(type)
-      .then((res) => {
-        this.alertService.success(type.name + ' linked!');
-        this.updateUser();
-      })
-      .catch(() => this.alertService.error('Error linking ' + type.name));
+  addSocial() {
+    this.socialAuth.login();
   }
   // Remove social account from user
   removeSocial(social: UserSocial) {
-    this.socialService.logout(social.type, social.token)
-      .then(() => {
-        this.alertService.success(social.type.name + ' logout!');
-        this.updateUser();
-      })
-      .catch(() => this.alertService.error('Error removing ' + social.type.name));
+    // this.socialAuth.logout(social);
   }
+
   // Add facebook account to user
-  private addFacebook() {
-    const st: SocialType = { id: 0, name: 'facebook' };
-    this.addSocial(st);
-  }
-  // Add twitter account to user
-  private addTwitter() {
-    const st: SocialType = { id: 1, name: 'twitter' };
-    this.addSocial(st);
-  }
+  // private addFacebook() {
+  //   const st: SocialType = { id: 0, name: 'facebook' };
+  //   this.addSocial(st);
+  // }
+  // // Add twitter account to user
+  // private addTwitter() {
+  //   const st: SocialType = { id: 1, name: 'twitter' };
+  //   this.addSocial(st);
+  //   // this.auth.login();
+  // }
+
 
   // =================
   // PRIVATE FUNCTIONS

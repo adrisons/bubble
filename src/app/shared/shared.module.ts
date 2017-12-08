@@ -12,6 +12,7 @@ import { UserSessionService } from 'app/shared/_services/user-session.service';
 import { FacebookService } from 'app/shared/_services/facebook.service';
 import { TwitterService } from 'app/shared/_services/twitter.service';
 import { SocialService } from 'app/shared/_services/social.service';
+import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 /**
  * El módulo compartido se importa en todos los demás módulos
  * Con dos propósitos:
@@ -34,7 +35,9 @@ import { SocialService } from 'app/shared/_services/social.service';
     CrudService,
     SocialService,
     FacebookService,
-    TwitterService
+    TwitterService,
+    SocialAuthService,
+    SocialService
   ],
   exports: [// Lo que aquí se exporte se importará en los módulos funcionales
     CommonModule,

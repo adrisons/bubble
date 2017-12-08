@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserSession, Session } from 'app/shared/_models/data';
 import { Observable } from 'rxjs/Observable';
 import { UserSessionService } from 'app/shared/_services/user-session.service';
+import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 
 
 @Component({
@@ -15,7 +16,9 @@ export class AppComponent implements OnInit {
   private needsLogin = true;
   private userName = '';
 
-  constructor(private userSessionService: UserSessionService) { }
+  constructor(private userSessionService: UserSessionService, private auth: SocialAuthService) { 
+    
+  }
 
   ngOnInit() {
     this.userSessionService.getDataObservable().subscribe((sessionData: UserSession) => {

@@ -39,3 +39,9 @@ export interface SocialType {
   id: number;
   name: string;
 }
+export class SocialAuthResult {
+  'network_name': string;
+  'access_token': string;
+  'id_token': string;
+  'expires_at': string;
+}
