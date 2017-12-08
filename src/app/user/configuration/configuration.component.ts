@@ -18,7 +18,6 @@ export class ConfigurationComponent implements OnInit {
   constructor(private userService: UserService, private router: Router, private alertService: AlertService,
     private socialAuth: SocialAuthService, private socialService: SocialService) {
     this.socialAuth.handleAuthentication();
-    
   }
 
   ngOnInit() {
@@ -55,7 +54,7 @@ export class ConfigurationComponent implements OnInit {
   }
   // Remove social account from user
   removeSocial(social: UserSocial) {
-    // this.socialAuth.logout(social);
+    this.socialAuth.logout(social);
   }
 
   // Add facebook account to user

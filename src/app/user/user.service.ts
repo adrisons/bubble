@@ -110,8 +110,8 @@ export class UserService extends CrudService {
     return this.sessionService.addSocialNetwork(us);
   }
 
-  public removeSocialNetwork(type: SocialType, token: string): UserSession {
-    return this.sessionService.removeSocialNetwork(type, token);
+  public removeSocialNetwork(us: UserSocial): UserSession {
+    return this.sessionService.removeSocialNetwork(us);
   }
 
 

@@ -16,7 +16,7 @@ export class SocialAuthService {
     responseType: 'token id_token',
     audience: 'https://pepino.eu.auth0.com/userinfo',
     redirectUri: 'http://localhost:4200/user/config',
-    scope: 'openid'
+    scope: 'openid profile'
   });
 
   constructor(public router: Router, private alertService: AlertService, private socialService: SocialService) { }
@@ -31,19 +31,30 @@ export class SocialAuthService {
         const socialNetworkName = authResult.idTokenPayload.sub.split('|')[0];
         // Set the time that the access token will expire at
         const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-        // Guardar token en bbdd
-        // Guardar token en session
-        const socialAuthResult: SocialAuthResult = {
-          'network_name': socialNetworkName,
-          'access_token': authResult.accessToken,
-          'id_token': authResult.idToken,
-          'expires_at': expiresAt
+
+        const userSocial: UserSocial = {
+          type: {
+            id: this.getSocialNetworkType(socialNetworkName),
+            name: socialNetworkName
+          },
+          login: null,
+          email: null,
+          access_token: authResult.accessToken,
+          id_token: authResult.idToken,
+          expires_at: expiresAt
         };
+        // Get user information
+        this.auth0.client.userInfo(userSocial.access_token, (profile_err, profile) => {
+          if (profile_err) {
+            console.log('(social-auth) Error getting profile: ' + err);
+            return;
+          }
+          this.setProfile(userSocial, profile);
 
-        this.socialService.save(socialAuthResult).then().catch((error) =>
-          console.log('(social-auth) Error saving auth: ' + error)
-        );
-
+          this.socialService.save(userSocial).catch((error) =>
+            console.log('(social-auth) Error saving auth: ' + error)
+          );
+        });
 
       } else if (err) {
         this.router.navigate(['/home']);
@@ -54,14 +65,14 @@ export class SocialAuthService {
   }
 
   // Remove the authentication information from one social media
-  // public logout(social: UserSocial): void {
-  //   // Remove tokens and expiry time from localStorage
-  //   this.socialService.logout(social.type, social.token)
-  //     .then(() => {
-  //       this.alertService.success(social.type.name + ' logout!');
-  //     })
-  //     .catch(() => this.alertService.error('Error removing ' + social.type.name));
-  // }
+  public logout(us: UserSocial): void {
+    // Remove tokens and expiry time from localStorage
+    this.socialService.remove(us)
+      .then(() => {
+        this.alertService.success(us.type.name + ' logout!');
+      })
+      .catch(() => this.alertService.error('Error removing ' + us.type.name));
+  }
 
   // public isAuthenticated(): boolean {
   //   // Check whether the current time is past the
@@ -69,5 +80,32 @@ export class SocialAuthService {
   //   const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
   //   return new Date().getTime() < expiresAt;
   // }
+
+  private getSocialNetworkType(name: string): number {
+    switch (name) {
+      case 'facebook':
+        return 0;
+      case 'twitter':
+        return 1;
+      default:
+        break;
+    }
+  }
+
+  // Sets user profile from social network
+  private setProfile(userSocial: UserSocial, profile) {
+    switch (userSocial.type.name) {
+      case 'facebook':
+        userSocial.login = profile.name;
+        break;
+      case 'twitter':
+        userSocial.login = profile.nickname;
+        break;
+      default:
+        break;
+    }
+  }
+
+
 
 }

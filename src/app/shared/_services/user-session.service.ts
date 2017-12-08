@@ -42,8 +42,8 @@ export class UserSessionService extends DataStoreService {
   }
 
   // Delete the social network authentification from the user's social information
-  removeSocialNetwork(type: SocialType, token: string) {
-    this.data.user.social = this.data.user.social.filter(s => (type.id !== s.type.id || s.token !== token));
+  removeSocialNetwork(us: UserSocial) {
+    this.data.user.social = this.data.user.social.filter(s => (s.id !== us.id));
     const session = { user: this.data.user, token: this.data.token, isLogged: this.data.isLogged };
     super.setData(session);
     return session;

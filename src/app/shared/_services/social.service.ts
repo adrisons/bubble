@@ -7,7 +7,7 @@ import { UserService } from 'app/user/user.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { AuthHttp } from 'angular2-jwt';
 
-const apiEndPoint = '/social/';
+const apiEndPoint = '/social';
 @Injectable()
 export class SocialService {
 
@@ -28,21 +28,23 @@ export class SocialService {
   //   }
   // }
 
+
   // Register the social network for the user
-  save(auth_res: SocialAuthResult) {
+  save(userSocial: UserSocial) {
     return new Promise((resolve, reject) => {
       // Save social network in BBDD
-      return this.http.post(apiEndPoint, { user_id: this.userId, access_token: auth_res.access_token, id_token: auth_res.id_token })
+      return this.http.post(apiEndPoint, {
+        user_id: this.userId, type_id: userSocial.type.id,
+        access_token: userSocial.access_token, id_token: userSocial.id_token, login: userSocial.login
+      })
         .toPromise()
-        .then( r => {
+        .then(r => {
           const res = r.json();
           if (res.code === 200) {
-            const userSocial: UserSocial = res.data;
-            if (userSocial !== null) {
-              // Save in session
-              this.userService.addSocialNetwork(userSocial);
-              resolve();
-            }
+            userSocial.id = res.data.id;
+            // Save in session
+            this.userService.addSocialNetwork(userSocial);
+            resolve();
           }
           reject();
         })
@@ -56,21 +58,22 @@ export class SocialService {
 
 
   // Remove the social network for the user
-  // logout(type: SocialType, token: string) {
-  //   return new Promise((resolve, reject) => {
-  //     this.getStrategy(type).logout(this.userId, token)
-  //       .then(res => {
-  //         // Social network removed
-  //         if (res.code === 200) {
-  //           this.userService.removeSocialNetwork(type, token);
-  //           resolve();
-  //         }
-  //         reject();
-  //       })
-  //       .catch(error => {
-  //         console.log('(social logout) Error: ' + error);
-  //         reject();
-  //       });
-  //   });
-  // }
+  remove(userSocial: UserSocial) {
+    return new Promise((resolve, reject) => {
+      return this.http.delete(apiEndPoint + '/' + userSocial.id)
+        .toPromise()
+        .then(res => {
+          // Social network removed
+          if (res.json().code === 200) {
+            this.userService.removeSocialNetwork(userSocial);
+            resolve();
+          }
+          reject();
+        })
+        .catch(error => {
+          console.log('(social logout) Error: ' + error);
+          reject();
+        });
+    });
+  }
 }

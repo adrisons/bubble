@@ -29,10 +29,13 @@ export interface Session {
 }
 
 export class UserSocial {
+  id?: number;
   type: SocialType;
   login?: string;
   email?: string;
-  token: string;
+  access_token: string;
+  id_token: string;
+  expires_at: string;
 }
 
 export interface SocialType {
