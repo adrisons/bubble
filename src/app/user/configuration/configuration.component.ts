@@ -48,20 +48,24 @@ export class ConfigurationComponent implements OnInit {
   // =================
   // SOCIAL
   // =================
-  // Link new social account to user
-  addSocial() {
-    this.socialAuth.login();
-  }
+
   // Remove social account from user
-  removeSocial(social: UserSocial) {
-    this.socialAuth.logout(social);
+  removeSocial(us: UserSocial) {
+    // this.socialAuth.logout(social);
+    // Remove tokens and expiry time from localStorage
+    this.socialService.remove(us)
+      .then(() => {
+        this.alertService.success(us.type.name + ' logout!');
+      })
+      .catch(() => this.alertService.error('Error removing ' + us.type.name));
   }
 
   // Add facebook account to user
-  // private addFacebook() {
-  //   const st: SocialType = { id: 0, name: 'facebook' };
-  //   this.addSocial(st);
-  // }
+  addFacebook() {
+    this.socialService.login('facebook')
+    .then(() => this.updateUser())
+    .catch(() => this.alertService.error('Error linking facebook'));
+  }
   // // Add twitter account to user
   // private addTwitter() {
   //   const st: SocialType = { id: 1, name: 'twitter' };

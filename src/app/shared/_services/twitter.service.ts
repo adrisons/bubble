@@ -13,16 +13,16 @@ export class TwitterService implements SocialServiceInterface {
   }
 
 
-  // login(userId: number) {
-  //   return new Promise((resolve, reject) => {
-  //     return this.http.post(this.apiEndPoint, { user_id: userId, access_token: 'test_twitter_access_token' })
-  //       .toPromise()
-  //       .then(res => {
-  //         resolve(res.json());
-  //       })
-  //       .catch(() => reject());
-  //   });
-  // }
+  login(): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      return this.http.post(this.apiEndPoint, {  access_token: 'test_twitter_access_token' })
+        .toPromise()
+        .then(res => {
+          resolve(res.json());
+        })
+        .catch(() => reject());
+    });
+  }
 
 
   // logout(userId: number, token: string) {

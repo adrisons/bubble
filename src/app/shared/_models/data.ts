@@ -28,20 +28,42 @@ export interface Session {
   user?: User;
 }
 
-export class UserSocial {
-  id?: number;
+export interface UserSocial {
+  social_id?: string;
+  bd_id?: string;
   type: SocialType;
-  login?: string;
-  email?: string;
   access_token: string;
-  id_token: string;
   expires_at: string;
-}
+  email?: string;
+  login?: string;
 
+}
 export interface SocialType {
   id: number;
   name: string;
 }
+
+// -------------------
+// Facebook
+// -------------------
+
+export class FacebookSocial implements UserSocial {
+  social_id?: string;
+  bd_id?: string;
+  type: SocialType;
+  access_token: string;
+  expires_at: string;
+  email?: string;
+  login?: string;
+  grantedScopes: string;
+  signedRequest: string;
+}
+
+export class FacebookProfile {
+  id: number;
+  name: string;
+}
+
 export class SocialAuthResult {
   'network_name': string;
   'access_token': string;

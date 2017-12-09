@@ -8,6 +8,7 @@ import { UserSocial, SocialAuthResult } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { auth0_secret } from 'app/shared/_config/auth';
 
+
 @Injectable()
 export class SocialAuthService {
 
@@ -34,7 +35,7 @@ export class SocialAuthService {
           login: null,
           email: null,
           access_token: authResult.accessToken,
-          id_token: authResult.idToken,
+          // id_token: authResult.idToken,
           expires_at: expiresAt
         };
         // Get user information

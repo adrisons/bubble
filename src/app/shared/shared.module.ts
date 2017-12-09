@@ -9,10 +9,11 @@ import { AlertComponent } from './_directives/alert/alert.component';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { CrudService } from 'app/shared/_services/crud.service';
 import { UserSessionService } from 'app/shared/_services/user-session.service';
-import { FacebookService } from 'app/shared/_services/facebook.service';
+
 import { TwitterService } from 'app/shared/_services/twitter.service';
 import { SocialService } from 'app/shared/_services/social.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
+import { FacebookService } from 'app/shared/_services/facebook.service';
 /**
  * El módulo compartido se importa en todos los demás módulos
  * Con dos propósitos:
