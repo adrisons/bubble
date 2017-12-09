@@ -6,27 +6,21 @@ import * as auth0 from 'auth0-js';
 import { SocialService } from 'app/shared/_services/social.service';
 import { UserSocial, SocialAuthResult } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
+import { auth0_secret } from 'app/shared/_config/auth';
 
 @Injectable()
 export class SocialAuthService {
 
-  auth0 = new auth0.WebAuth({
-    clientID: 'MHoFMOs24vBj8T-xbZT5GTGWU_GeRLPS',
-    domain: 'pepino.eu.auth0.com',
-    responseType: 'token id_token',
-    audience: 'https://pepino.eu.auth0.com/userinfo',
-    redirectUri: 'http://localhost:4200/user/config',
-    scope: 'openid profile'
-  });
+  private auth = new auth0.WebAuth(auth0_secret);
 
   constructor(public router: Router, private alertService: AlertService, private socialService: SocialService) { }
 
   public login(): void {
-    this.auth0.authorize();
+    this.auth.authorize();
   }
 
   public handleAuthentication(): void {
-    this.auth0.parseHash((err, authResult) => {
+    this.auth.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         const socialNetworkName = authResult.idTokenPayload.sub.split('|')[0];
         // Set the time that the access token will expire at
@@ -44,7 +38,7 @@ export class SocialAuthService {
           expires_at: expiresAt
         };
         // Get user information
-        this.auth0.client.userInfo(userSocial.access_token, (profile_err, profile) => {
+        this.auth.client.userInfo(userSocial.access_token, (profile_err, profile) => {
           if (profile_err) {
             console.log('(social-auth) Error getting profile: ' + err);
             return;
