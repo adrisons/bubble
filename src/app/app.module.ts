@@ -17,10 +17,6 @@ import { SharedModule } from 'app/shared/shared.module';
 import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
 
 import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard';
-import { FacebookService } from 'ngx-facebook/dist/esm/providers/facebook';
-
-
-
 
 // decorador que define un módulo
 @NgModule({
@@ -38,7 +34,7 @@ import { FacebookService } from 'ngx-facebook/dist/esm/providers/facebook';
     SharedModule,
     AppRoutingModule // el módulo de rutas ya configurado
   ],
-  providers: [ OnlyLoggedInUsersGuard, FacebookService ],
+  providers: [ OnlyLoggedInUsersGuard ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

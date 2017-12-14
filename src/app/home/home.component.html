@@ -1,9 +1,53 @@
-<p>
-    home works!
-</p>
+<button type="submit" class="form-control btn btn-danger" (click)="getTimeline()">Refresh</button>
+<div class="home-dashboard">
 
-<div class="btn-group">
-    <button class="btn btn-primary" btnRadio="Left">Left</button>
-    <button class="btn btn-primary" btnRadio="Middle">Middle</button>
-    <button class="btn btn-primary" btnRadio="Right">Right</button>
+
+    <div class="center">
+        <button type="button" class="btn btn-light post "><i class="fa fa-plus" aria-hidden="true"></i></button>
+
+        <div *ngFor="let message of timeline">
+            <div class="message_card">
+                <div class="header">
+
+                    <img class="img" src={{message.user.img}} alt="Card image cap">
+
+                    <div class="info">
+                        <label class="title user">{{message.user.name}}</label>
+                        <label class="subtitle date">{{message.date}}</label>
+                    </div>
+
+                    <div class="social-logo">
+                        <a [ngClass]="{'fa fa-facebook fa-1x': message.social.name === 'facebook'}"></a>
+                        <a [ngClass]="{'fa fa-twitter fa-1x': message.social.name === 'twitter'}"></a>
+                    </div>
+
+                </div>
+                <div class="body">
+                    <p class="comment">{{message.text}}</p>
+                </div>
+                <div class="buttons">
+                    <a class="card-link" (click)="likeToggle(message)"><i [ngClass]="{'liked': message.flags.like, 'fa fa-heart': true}" aria-hidden="true"></i></a>
+
+                    <a class="card-link" (click)="share(message)"><i [ngClass]="{'shared': message.shared, 'fa fa-retweet': true}" aria-hidden="true"></i></a>
+                    <a class="card-link" (click)="commentToggle(message)"><i [ngClass]="{'comment': message.flags.comment, 'fa fa-comment': true}"  aria-hidden="true"></i></a>
+
+                </div>
+                <div *ngIf="message.flags.comment" class="reply">
+
+                    <div class="input-group">
+                        <textarea class="form-control custom-control" rows="3" style="resize:none" placeholder="Message" required></textarea>
+                        <span class="input-group-addon btn btn-primary" (click)="reply(message)">SEND</span>
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+
 </div>

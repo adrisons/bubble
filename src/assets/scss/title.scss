@@ -20,9 +20,18 @@ h2 {
 }
 
 .title {
-    font: 15px $typography;
+    font: 20px $typography;
     text-transform: uppercase;
     position: relative;
     float: left;
     width: 100%;
+    text-align: left;
+}
+
+.subtitle {
+    font: 12px $typography;
+    position: relative;
+    float: left;
+    width: 100%;
+    text-align: left;
 }

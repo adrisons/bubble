@@ -2,7 +2,7 @@
 // This class acts like proxy between client and specific social network services
 
 import { Injectable } from '@angular/core';
-import { UserSocial, SocialAuthResult } from 'app/shared/_models/data';
+import { UserSocial, SocialType, User } from 'app/shared/_models/data';
 import { UserService } from 'app/user/user.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { AuthHttp } from 'angular2-jwt';
@@ -10,11 +10,12 @@ import { FacebookService } from 'app/shared/_services/facebook.service';
 import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.interface';
 import { TwitterService } from 'app/shared/_services/twitter.service';
 
+
 const apiEndPoint = '/social';
 @Injectable()
 export class SocialService {
 
-  private userId = this.userService.getProfile().user ? this.userService.getProfile().user.id : null;
+  private user: User = this.userService.getProfile().user;
 
   constructor(private http: AuthHttp, private userService: UserService, private facebookService: FacebookService,
     private twitterService: TwitterService) {
@@ -35,7 +36,7 @@ export class SocialService {
 
   login(social_name: string): Promise<{}> {
     return this.getStrategy(social_name)
-    .login()
+      .login()
       .then((userSocial: UserSocial) => this.save(userSocial));
   }
 
@@ -44,7 +45,7 @@ export class SocialService {
     return new Promise((resolve, reject) => {
       // Save social network in BBDD
       return this.http.post(apiEndPoint, {
-        user_id: this.userId, type_id: userSocial.type.id,
+        user_id: this.user.id, type_id: userSocial.type.id,
         access_token: userSocial.access_token
       })
         .toPromise()
@@ -86,4 +87,56 @@ export class SocialService {
         });
     });
   }
+
+  getFriends(socialType: string) {
+    return this.getStrategy(socialType)
+      .getFriends()
+      .then(friends =>
+        console.log(friends));
+  }
+
+  getTimeline(): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      const social = this.userService.getProfile().user.social;
+      let promises = [];
+      for (let i = 0; i < social.length; i++) {
+        const s: UserSocial = social[i];
+        promises.push(this.getStrategy(s.type.name)
+          .getTimeline(s.social_id));
+      }
+      Promise.all(promises)
+        .then(values => {
+          console.log('(getTimeline) values:' + values[0]);
+          // TODO: Aquí pongo esto para las pruebas, pero hay que hacer un 
+          // merge de el array of arrays para convertirlo a array
+          const timeline = values[0].data;
+          console.log('(getTimeline) timeline:' + timeline);
+          resolve(timeline);
+        });
+
+
+      // resolve(timeline);
+    });
+
+    // return new Promise((resolve, reject) => {
+    //   const user = this.userService.getProfile().user;
+    //   const promises = [];
+    //   for (let i = 0; i < user.social.length; i++) {
+    //     const s: UserSocial = user.social[i];
+    //     promises.push(this.getStrategy(s.type.name).getTimeline(s.social_id));
+    //   }
+
+    //   Promise.all([promises]).then(timelines => {
+    //     for (const timeline in timelines) {
+    //       if (timeline !== null) {
+    //         console.log('Timeline: ' + timeline);
+    //         resolve(timeline);
+    //       }
+    //     }
+    //   });
+
+    // });
+  }
+
+
 }

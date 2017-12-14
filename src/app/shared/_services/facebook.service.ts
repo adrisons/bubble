@@ -3,8 +3,8 @@ import { AuthHttp } from 'angular2-jwt';
 import { UserSocial, SocialType, FacebookSocial, FacebookProfile } from 'app/shared/_models/data';
 import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.interface';
 import { facebook_secret } from 'app/shared/_config/auth';
-import { FacebookService as ngxFbService, LoginResponse, LoginOptions, UIResponse, UIParams, FBVideoComponent } from 'ngx-facebook';
-// declare const FB: any;
+import { FacebookService as ngxFbService, LoginResponse, LoginOptions, UIResponse, UIParams } from 'ng2-facebook-sdk';
+
 @Injectable()
 export class FacebookService implements SocialServiceInterface {
   private apiEndPoint = '/social/fb';
@@ -33,10 +33,7 @@ export class FacebookService implements SocialServiceInterface {
               signedRequest: res.authResponse.signedRequest,
               login: profile.name
             }
-
-
             resolve(fs);
-
           });
         })
         .catch((error) => {
@@ -75,9 +72,9 @@ export class FacebookService implements SocialServiceInterface {
           console.log('Got the users profile', res);
           resolve(res);
         })
-        .catch((error) => { 
-          console.error('(getprofile-facebook) Error: ', error); 
-          reject(); 
+        .catch((error) => {
+          console.error('(getprofile-facebook) Error: ', error);
+          reject();
         });
     });
 
@@ -91,9 +88,24 @@ export class FacebookService implements SocialServiceInterface {
     this.fb.api('/me/friends')
       .then((res: any) => {
         console.log('Got the users friends', res);
+        return res;
       })
       .catch((error) => console.error('(getfriends-facebook) Error: ', error));
   }
+
+  getTimeline(user_id) {
+    return new Promise((resolve, reject) => {
+      this.fb.api('/' + user_id + '/feed')
+        .then((res: any) => {
+          console.log('Got the user timeline', res);
+          resolve(res);
+        })
+        .catch((error) => {
+          console.error('(gettimeline-facebook) Error: ', error);
+          reject(error);
+        });
+    });
+}
 
 
   /**

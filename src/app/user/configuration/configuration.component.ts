@@ -48,7 +48,10 @@ export class ConfigurationComponent implements OnInit {
   // =================
   // SOCIAL
   // =================
-
+  // Link new social account to user
+  addSocial() {
+    this.socialAuth.login();
+  }
   // Remove social account from user
   removeSocial(us: UserSocial) {
     // this.socialAuth.logout(social);

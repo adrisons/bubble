@@ -14,6 +14,7 @@ import { TwitterService } from 'app/shared/_services/twitter.service';
 import { SocialService } from 'app/shared/_services/social.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { FacebookService } from 'app/shared/_services/facebook.service';
+import { FacebookModule } from 'ng2-facebook-sdk';
 /**
  * El módulo compartido se importa en todos los demás módulos
  * Con dos propósitos:
@@ -24,7 +25,8 @@ import { FacebookService } from 'app/shared/_services/facebook.service';
   imports: [// Módulos necesarios
     CommonModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    FacebookModule.forRoot()
   ],
   providers: [
     {

@@ -10,17 +10,24 @@
 .center {
     position: relative;
     float: left;
-    width: 50%;
-    margin-left: 25%;
+    width: 80%;
+    padding-left: 20%;
     text-align: center;
+}
+
+@media (max-width:800px) {
+    .center {
+        position: relative;
+        float: left;
+        width: 100%;
+        padding-left: 0;
+        text-align: center;
+        /*The width is 100%, when the viewport is 800px or smaller*/
+    }
 }
 
 .selected {
     font-weight: bold
-}
-
-label {
-    font-family: $typography;
 }
 
 a {
@@ -29,6 +36,14 @@ a {
     &:hover {
         font-weight: bold;
     }
+}
+
+textarea,
+p,
+input,
+label,
+span {
+    font-family: $typography;
 }
 
 .keyValueList {

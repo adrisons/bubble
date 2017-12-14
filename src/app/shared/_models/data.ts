@@ -36,7 +36,6 @@ export interface UserSocial {
   expires_at: string;
   email?: string;
   login?: string;
-
 }
 export interface SocialType {
   id: number;

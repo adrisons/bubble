@@ -1,8 +1,11 @@
 <nav class="top-bar">
 
-    <div class="brand title" href="#" [routerLink]="['home']">
-        <img class="logo" src="/assets/images/Bubble_Icon.png">
-        <label>{{title}}</label>
+    <div class="brand title">
+
+        <a href="#" [routerLink]="['home']">
+            <img class="logo" src="/assets/images/Bubble_Icon.png">
+            <label>{{title}}</label>
+        </a>
     </div>
 
     <div class="menu">
@@ -12,7 +15,6 @@
         <a *ngIf="!needsLogin" [routerLink]="['user/config']">
             <label class="user">{{userName}}</label>
             <span class="fa fa-user-circle fa-2x"></span>
-
         </a>
 
     </div>
