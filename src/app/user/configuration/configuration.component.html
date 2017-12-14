@@ -1,7 +1,7 @@
-<button type="submit" class="form-control btn btn-danger" (click)="logOut()">Log out</button>
 <div class="dashboard">
     <!-- Log out button -->
     <div class="center">
+        <button type="button" class="form-control" (click)="logOut()">Log out</button>
 
         <div class="user-info">
             <!-- Header -->
@@ -47,7 +47,7 @@
                                         </div> -->
                             <!-- Submit button -->
                             <div>
-                                <button type="submit" [ngClass]="{'form-control button-right btn': true, 'btn-success': configForm.form.valid}" [disabled]="!configForm.form.valid || !configForm.form.dirty">Save</button>
+                                <button type="submit" [ngClass]="{' button-right btn': true, 'btn-success': configForm.form.valid}" [disabled]="!configForm.form.valid || !configForm.form.dirty">Save</button>
                             </div>
                         </form>
 
