@@ -1,12 +1,16 @@
-<button type="submit" class="form-control btn btn-danger" (click)="getTimeline()">Refresh</button>
-<div class="home-dashboard">
+<div class="dashboard">
 
 
     <div class="center">
-        <button type="button" class="btn btn-light post "><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <button type="button" (click)="showPost = !showPost" class="post"><i class="fa fa-plus fa-1x" aria-hidden="true"></i></button>
+        <div *ngIf="showPost" class="post">
+            <app-post></app-post>
+        </div>
 
+
+        <button type="button" class="refresh " (click)="getTimeline()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
         <div *ngFor="let message of timeline">
-            <div class="message_card">
+            <div class="card">
                 <div class="header">
 
                     <img class="img" src={{message.user.img}} alt="Card image cap">
@@ -17,8 +21,8 @@
                     </div>
 
                     <div class="social-logo">
-                        <a [ngClass]="{'fa fa-facebook fa-1x': message.social.name === 'facebook'}"></a>
-                        <a [ngClass]="{'fa fa-twitter fa-1x': message.social.name === 'twitter'}"></a>
+                        <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-facebook fa-1x facebook': message.social.name === 'facebook'}"></a>
+                        <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-twitter fa-1x twitter': message.social.name === 'twitter'}"></a>
                     </div>
 
                 </div>
@@ -33,17 +37,14 @@
 
                 </div>
                 <div *ngIf="message.flags.comment" class="reply">
+                    <form (ngSubmit)="onReply(replyForm)" #replyForm="ngForm">
+                        <div class="form-group input-group">
+                            <textarea type="text" name="comment" class="form-control custom-control" style="resize:none" rows="3" placeholder="Message" [(ngModel)]="comment" required></textarea>
+                            <span class="input-group-addon"><button type="submit" [ngClass]="{'form-control': true, 'btn-success': replyForm.form.valid}" [disabled]="!replyForm.form.valid || !replyForm.form.dirty">Reply</button> </span>
+                        </div>
 
-                    <div class="input-group">
-                        <textarea class="form-control custom-control" rows="3" style="resize:none" placeholder="Message" required></textarea>
-                        <span class="input-group-addon btn btn-primary" (click)="reply(message)">SEND</span>
-                    </div>
-
-
+                    </form>
                 </div>
-
-
-
 
             </div>
 

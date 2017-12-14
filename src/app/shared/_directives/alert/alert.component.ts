@@ -29,6 +29,7 @@ export class AlertComponent implements OnInit {
 
     removeAlert(alert: Alert) {
         this.alerts = this.alerts.filter(x => x !== alert);
+
     }
 
     cssClass(alert: Alert) {
@@ -39,13 +40,13 @@ export class AlertComponent implements OnInit {
         // return css class based on alert type
         switch (alert.type) {
             case AlertType.Success:
-                return 'alert alert-success';
+                return 'alert-success';
             case AlertType.Error:
-                return 'alert alert-danger';
+                return 'alert-danger';
             case AlertType.Info:
-                return 'alert alert-info';
+                return 'alert-info';
             case AlertType.Warning:
-                return 'alert alert-warning';
+                return 'alert-warning';
         }
     }
 }

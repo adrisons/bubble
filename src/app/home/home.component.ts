@@ -8,8 +8,7 @@ import { SocialService } from 'app/shared/_services/social.service';
 })
 export class HomeComponent implements OnInit {
   
-  private comment_flag = false;
-  private like_flag = false;
+  private comment: String;
 
   private message1 = {
     id : 1,
@@ -27,8 +26,8 @@ export class HomeComponent implements OnInit {
     social : {
       name : 'facebook'
     },
-    shared : false
-
+    shared : false,
+    url : 'https://www.facebook.com'
   };
 
   private message2 = {
@@ -47,7 +46,8 @@ export class HomeComponent implements OnInit {
     social : {
       name : 'twitter'
     },
-    shared : false
+    shared : false,
+    url : 'https://www.twitter.com'
   };
 
   private message3 = {
@@ -66,7 +66,8 @@ export class HomeComponent implements OnInit {
     social : {
       name : 'facebook'
     },
-    shared : false
+    shared : false,
+    url : 'https://www.facebook.com'
   };
 
 
@@ -114,7 +115,9 @@ export class HomeComponent implements OnInit {
   commentToggle(m) {
     m.flags.comment = !m.flags.comment;
   }
-  reply(m) {
+  onReply(m) {
 
   }
+
+
 }

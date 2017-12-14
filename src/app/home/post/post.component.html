@@ -1,0 +1,9 @@
+<div class="card">
+    <form (ngSubmit)="onPost(postForm)" #postForm="ngForm">
+        <div class="form-group">
+            <textarea type="text" name="comment" class="form-control custom-control" rows="3" placeholder="What are you thinking?" [(ngModel)]="comment" required></textarea>
+            <button type="submit" [ngClass]="{'form-control button-right btn': true, 'btn-success': postForm.form.valid}" [disabled]="!postForm.form.valid || !postForm.form.dirty">Save</button>
+        </div>
+    </form>
+
+</div>

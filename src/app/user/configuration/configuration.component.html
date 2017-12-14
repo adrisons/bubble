@@ -1,87 +1,92 @@
-<!-- Log out button -->
 <button type="submit" class="form-control btn btn-danger" (click)="logOut()">Log out</button>
-<div class="center">
+<div class="dashboard">
+    <!-- Log out button -->
+    <div class="center">
 
-    <div class="user-info">
-        <!-- Header -->
-        <div class="page-header">
+        <div class="user-info">
+            <!-- Header -->
+            <div class="page-header">
 
-            <h1>Edit Profile</h1>
+                <h1>Edit Profile</h1>
 
-        </div>
-        <div class="page-body">
-            <!-- Personal Info -->
-
-            <div class="panel-heading">
-                <h2>Personal Info</h2>
             </div>
+            <div class="page-body">
+                <!-- Personal Info -->
+                <div class="panel-heading">
+                    <h2>Personal Info</h2>
+                </div>
+                <div class="card">
 
-            <div class="panel-body">
+                    <div class="panel-body">
 
-                <form (ngSubmit)="onSave(configForm)" #configForm="ngForm" class="keyValueList">
-                    <!-- First Name -->
-                    <div>
-                        <label class="key">First name</label>
-                        <input class="form-control value" type="text" name="first_name" [(ngModel)]="user.first_name" #first_name="ngModel" placeholder="First Name" value="" required>
-                    </div>
-                    <!-- Last Name -->
-                    <div>
-                        <label class="key">Last name</label>
-                        <input type="text" name="last_name" [(ngModel)]="user.last_name" #last_name="ngModel" class="form-control value" placeholder="Last Name" value="" required>
-                    </div>
-                    <!-- Email -->
-                    <div>
-                        <label class="key">Email</label>
-                        <input type="email" class="form-control value" placeholder="Email Address" [(ngModel)]="user.email" name="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
-                    </div>
-                    <!-- Password -->
-                    <div>
-                        <label class="key">Password</label>
-                        <input type="password" class="form-control value" name="password" placeholder="Password" [(ngModel)]="user.password" #password="ngModel" required>
-                    </div>
-                    <!-- Repeat Password -->
-                    <!-- <div>
+                        <form (ngSubmit)="onSave(configForm)" #configForm="ngForm" class="keyValueList">
+                            <!-- First Name -->
+                            <div>
+                                <label class="key">First name</label>
+                                <input class="form-control value" type="text" name="first_name" [(ngModel)]="user.first_name" #first_name="ngModel" placeholder="First Name" value="" required>
+                            </div>
+                            <!-- Last Name -->
+                            <div>
+                                <label class="key">Last name</label>
+                                <input type="text" name="last_name" [(ngModel)]="user.last_name" #last_name="ngModel" class="form-control value" placeholder="Last Name" value="" required>
+                            </div>
+                            <!-- Email -->
+                            <div>
+                                <label class="key">Email</label>
+                                <input type="email" class="form-control value" placeholder="Email Address" [(ngModel)]="user.email" name="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
+                            </div>
+                            <!-- Password -->
+                            <div>
+                                <label class="key">Password</label>
+                                <input type="password" class="form-control value" name="password" placeholder="Password" [(ngModel)]="user.password" #password="ngModel" required>
+                            </div>
+                            <!-- Repeat Password -->
+                            <!-- <div>
                                             <label class="key">Repeat password</label>
                                             <input type="password" name="confirm-password" class="form-control value" placeholder="Confirm Password" #repeatPasswordModel="ngModel" pattern="{{user.password}}" [(ngModel)]="repeatPassword" required>
                                         </div> -->
-                    <!-- Submit button -->
-                    <div>
-                        <button type="submit" [ngClass]="{'form-control button-right btn': true, 'btn-success': configForm.form.valid}" [disabled]="!configForm.form.valid || !configForm.form.dirty">Save</button>
+                            <!-- Submit button -->
+                            <div>
+                                <button type="submit" [ngClass]="{'form-control button-right btn': true, 'btn-success': configForm.form.valid}" [disabled]="!configForm.form.valid || !configForm.form.dirty">Save</button>
+                            </div>
+                        </form>
+
                     </div>
-                </form>
+                </div>
+                <!-- Social Networks -->
 
-            </div>
-            <!-- Social Networks -->
-
-            <div class="panel-heading">
-                <h2>Social</h2>
-            </div>
-            <div class="panel-body">
+                <div class="panel-heading">
+                    <h2>Social</h2>
+                </div>
+                <div class="card">
+                    <div class="panel-body">
 
 
-                <div *ngFor="let social of user.social" class="social-list">
+                        <div *ngFor="let social of user.social" class="social-list">
 
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <a *ngIf="social.type.name === 'twitter'"><i class="fa fa-twitter"></i></a>
-                            <a *ngIf="social.type.name === 'facebook'"><i class="fa fa-facebook"></i></a>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <a *ngIf="social.type.name === 'twitter'"><i class="fa fa-twitter"></i></a>
+                                    <a *ngIf="social.type.name === 'facebook'"><i class="fa fa-facebook"></i></a>
+
+                                </div>
+                                <input type="text" class="form-control" disabled placeholder="{{social.login ? social.login : social.email}}">
+                                <a (click)="removeSocial(social)" class="input-group-addon btn btn-light">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
 
                         </div>
-                        <input type="text" class="form-control" disabled placeholder="{{social.login ? social.login : social.email}}">
-                        <a (click)="removeSocial(social)" class="input-group-addon btn btn-light">
-                            <i class="fa fa-trash"></i>
-                        </a>
+                        <!-- Add Facebook -->
+                        <div class="social-list" title="Link facebook">
+                            <a class="input-group-addon" (click)="addFacebook()"><i class="fa fa-facebook"></i></a>
+                        </div>
+
                     </div>
-
                 </div>
-                <!-- Add Facebook -->
-                <div class="social-list" title="Link facebook">
-                    <a class="input-group-addon" (click)="addFacebook()"><i class="fa fa-facebook"></i></a>
-                </div>
-
             </div>
+
         </div>
 
     </div>
-
 </div>

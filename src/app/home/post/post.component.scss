@@ -1,0 +1,11 @@
+@import "src/assets/scss/variables.scss";
+@import "src/assets/scss/main.scss";
+@import "src/assets/scss/forms.scss";
+textarea {
+    resize: none;
+    margin-bottom: 10px;
+}
+
+.button {
+    background-color: $lightgrey;
+}

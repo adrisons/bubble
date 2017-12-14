@@ -42,6 +42,7 @@ textarea,
 p,
 input,
 label,
+button,
 span {
     font-family: $typography;
 }
@@ -66,4 +67,44 @@ span {
         width: 75%;
         text-align: left;
     }
+}
+
+button {
+    position: relative;
+    float: left;
+    width: 100%;
+    box-shadow: 1px 1px 5px $color-1;
+    color: white;
+    background: #45ADA8;
+    border: 1px solid #9DE0AD;
+}
+
+.card {
+    position: relative;
+    float: left;
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 1px 1px 5px $color-1;
+    background: white;
+    button {
+        position: relative;
+        float: left;
+        width: 100%;
+        box-shadow: 1px 1px 5px $color-1;
+        color: white;
+        background: #45ADA8;
+        border: 1px solid #9DE0AD;
+    }
+}
+
+.dashboard {
+    position: relative;
+    float: left;
+    width: 100%;
+    padding-top: $margin-top;
+    height: 100%;
 }

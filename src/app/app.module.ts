@@ -17,13 +17,17 @@ import { SharedModule } from 'app/shared/shared.module';
 import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
 
 import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard';
+import { PostComponent } from './home/post/post.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 // decorador que define un módulo
 @NgModule({
   declarations: [
     AppComponent,
     AlertComponent,
-    HomeComponent
+    HomeComponent,
+    PostComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

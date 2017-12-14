@@ -1,35 +1,18 @@
-// $red: #CC0B14;
-// @import "~variables.scss";
 @import "src/assets/scss/variables.scss";
-.home-dashboard {
-    position: relative;
-    float: left;
-    width: 100%;
-    margin-top: 20px;
-    height: 100%;
+.refresh {
+    margin-bottom: 10px;
 }
 
 .post {
+    margin-bottom: 25px;
+    margin-bottom: 25px;
     position: relative;
     float: left;
     width: 100%;
-    background: white;
-    display: block;
-    margin-bottom: 25px;
-    border: 1px solid $grayblue;
+    height: 100%;
 }
 
-.message_card {
-    position: relative;
-    float: left;
-    width: 100%;
-    display: block;
-    margin-bottom: 10px;
-    border: 1px solid #e5e5e5;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 1px 1px 30px $lightblue;
-    background: white;
+.card {
     .header {
         position: relative;
         float: left;
@@ -60,6 +43,12 @@
             float: right;
             width: 5%;
             font-size: 16px;
+            .facebook {
+                color: $facebookblue;
+            }
+            .twitter {
+                color: $twitterblue;
+            }
         }
     }
     .body {
@@ -72,8 +61,9 @@
             float: left;
             width: 100%;
             padding: 5px;
-            background-color: #f5f5f5;
+            background-color: #fbfbfb;
             border-radius: 10px;
+            border: 1px solid #f5f5f5;
             margin-bottom: 5px;
         }
     }
@@ -90,15 +80,21 @@
             color: $red;
         }
         .shared {
-            color: $pink;
+            color: $c5;
         }
         .comment {
-            color: $blue;
+            color: $color-2;
         }
     }
     .reply {
         position: relative;
         float: left;
         width: 100%;
+        textarea {
+            border-right: 0;
+        }
+        span {
+            background-color: white;
+        }
     }
 }
