@@ -19,7 +19,8 @@
         "prefix": "app",
         "styles": [
             "../node_modules/bootstrap/scss/bootstrap.scss",
-            "../src/assets/scss/main.scss",
+            "./assets/scss/main.scss",
+            "./assets/scss/variables.scss",
             "styles.css"
         ],
         "scripts": [],

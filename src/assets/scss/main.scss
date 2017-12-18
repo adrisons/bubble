@@ -2,40 +2,40 @@
 @import "variables.scss";
 @import "title.scss";
 .button-right {
-    position: relative;
-    float: right;
-    width: 25%;
+  position: relative;
+  float: right;
+  width: 25%;
 }
 
 .center {
-    position: relative;
-    float: left;
-    width: 80%;
-    padding-left: 20%;
-    text-align: center;
+  position: relative;
+  float: left;
+  width: 80%;
+  padding-left: 20%;
+  text-align: center;
 }
 
 @media (max-width:800px) {
-    .center {
-        position: relative;
-        float: left;
-        width: 100%;
-        padding-left: 0;
-        text-align: center;
-        /*The width is 100%, when the viewport is 800px or smaller*/
-    }
+  .center {
+    position: relative;
+    float: left;
+    width: 100%;
+    padding-left: 15px;
+    text-align: center;
+    /*The width is 100%, when the viewport is 800px or smaller*/
+  }
 }
 
 .selected {
-    font-weight: bold
+  font-weight: bold
 }
 
 a {
-    cursor: pointer;
-    font-family: $typography;
-    &:hover {
-        font-weight: bold;
-    }
+  cursor: pointer;
+  font-family: $typography;
+  &:hover {
+    font-weight: bold;
+  }
 }
 
 textarea,
@@ -44,58 +44,59 @@ input,
 label,
 button,
 span {
-    font-family: $typography;
+  font-family: $typography;
 }
 
 .keyValueList {
-    div {
-        position: relative;
-        float: left;
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    .key {
-        position: relative;
-        float: left;
-        width: 25%;
-        text-align: left;
-        padding-top: 5px;
-    }
-    .value {
-        position: relative;
-        float: left;
-        width: 75%;
-        text-align: left;
-    }
+  div {
+    position: relative;
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .key {
+    position: relative;
+    float: left;
+    width: 25%;
+    text-align: left;
+    padding-top: 5px;
+  }
+  .value {
+    position: relative;
+    float: left;
+    width: 75%;
+    text-align: left;
+  }
 }
 
 button {
-    position: relative;
-    float: left;
-    width: 100%;
-    box-shadow: 1px 1px 5px $color-1;
-    color: white;
-    background: #45ADA8;
-    border: 1px solid #9DE0AD;
+  position: relative;
+  float: left;
+  width: 100%;
+  padding: 15px; // box-shadow: 1px 1px 5px $color-1;
+  color: white;
+  background: #45ADA8;
+  border: 1px solid #9DE0AD;
+  border-radius: 5px;
 }
 
 .card {
-    position: relative;
-    float: left;
-    width: 100%;
-    display: block;
-    margin-bottom: 10px;
-    border: 1px solid #e5e5e5;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 1px 1px 5px $color-1;
-    background: white;
+  position: relative;
+  float: left;
+  width: 100%;
+  display: block;
+  margin-bottom: 10px;
+  border: 1px solid #9DE0AD;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 1px 1px 10px #9DE0AD;
+  background: white;
 }
 
 .dashboard {
-    position: relative;
-    float: left;
-    width: 100%;
-    padding-top: $margin-top;
-    height: 100%;
+  position: relative;
+  float: left;
+  width: 100%;
+  padding-top: $margin-top;
+  height: 100%;
 }

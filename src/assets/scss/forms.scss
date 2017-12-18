@@ -1,10 +1,13 @@
+@import "variables.scss";
 .ng-dirty .ng-valid,
 .ng-dirty .ng-valid {
-    border-left: 5px solid #42A948;
+    // border-left: 5px solid #42A948;
+    border-left: 5px solid $color-3;
     /* green */
 }
 
 .ng-dirty .ng-invalid {
-    border-left: 5px solid #a94442;
+    // border-left: 5px solid #a94442;
+    border-left: 5px solid $c5;
     /* red */
 }

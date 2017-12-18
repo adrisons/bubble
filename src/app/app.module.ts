@@ -18,7 +18,8 @@ import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
 
 import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard';
 import { PostComponent } from './home/post/post.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
+import { SortByPipe } from 'app/shared/_pipes/sortBy.pipe';
+import { FilterPipe, MessagePipe, UserPipe, SocialPipe } from 'app/shared/_pipes/filter.pipe';
 
 // decorador que define un módulo
 @NgModule({
@@ -27,7 +28,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     AlertComponent,
     HomeComponent,
     PostComponent,
-    SidebarComponent
+    FilterPipe, SortByPipe, MessagePipe, UserPipe, SocialPipe
   ],
   imports: [
     BrowserModule,

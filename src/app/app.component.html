@@ -1,32 +1,31 @@
 <nav class="top-bar">
 
-    <div class="brand title">
+  <div class="brand title">
 
-        <a href="#" [routerLink]="['home']">
-            <img class="logo" src="/assets/images/Bubble_Icon.png">
-            <label>{{title}}</label>
-        </a>
-    </div>
+    <a href="#" [routerLink]="['home']">
+      <img class="logo" src="/assets/images/Bubble_Icon.png">
+      <label>{{title}}</label>
+    </a>
+  </div>
 
-    <div class="menu">
+  <div class="menu">
 
-        <a *ngIf="needsLogin" [routerLink]="['user/login']">Log in</a>
+    <a *ngIf="needsLogin" [routerLink]="['user/login']">Log in</a>
 
-        <a *ngIf="!needsLogin" [routerLink]="['user/config']">
-            <label class="user">{{userName}}</label>
-            <span class="fa fa-user-circle fa-2x"></span>
-        </a>
+    <a *ngIf="!needsLogin" [routerLink]="['user/config']">
+      <label class="user">{{userName}}</label>
+      <span class="fa fa-user-circle fa-2x"></span>
+    </a>
 
-    </div>
+  </div>
 
 </nav>
 
 <!-- main app container -->
+<div class="main">
+  <app-alert class="notification"></app-alert>
+  
+  <router-outlet ></router-outlet>
 
-<div class="app-center">
-    <app-sidebar></app-sidebar>
-    <app-alert class="notification"></app-alert>
-
-    <router-outlet></router-outlet>
 
 </div>

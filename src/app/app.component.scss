@@ -45,15 +45,14 @@
     }
 }
 
-.app-center {
+.main {
     position: relative;
     float: left;
     text-align: center;
     width: 100%;
-    height: 100%;
-    // height: 100vh;
+    height: calc(100% - 50px);
     min-width: 400px;
-    background-color: $color-4;
+    // background-color: $color-4;
     .notification {
         position: absolute;
         right: 0px;

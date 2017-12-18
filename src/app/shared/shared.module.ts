@@ -15,6 +15,9 @@ import { SocialService } from 'app/shared/_services/social.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { FacebookService } from 'app/shared/_services/facebook.service';
 import { FacebookModule } from 'ng2-facebook-sdk';
+import { FilterPipe } from 'app/shared/_pipes/filter.pipe';
+import { SortByPipe } from 'app/shared/_pipes/sortBy.pipe';
+
 /**
  * El módulo compartido se importa en todos los demás módulos
  * Con dos propósitos:
