@@ -11,10 +11,13 @@ export class User {
   social: UserSocial[] = [];
 }
 
-export class UserSession implements Session {
-  user?: User;
-  token?: String;
+export class UserSession {
   isLogged?: boolean;
+  token?: String;
+  user?: User;
+}
+export interface DataSession {
+  timeline?;
 }
 
 export class ServerResponseData {
@@ -22,11 +25,6 @@ export class ServerResponseData {
   message?: String;
 }
 
-export interface Session {
-  isLogged?: boolean;
-  token?: String;
-  user?: User;
-}
 
 export interface UserSocial {
   social_id?: String;

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SocialService } from 'app/shared/_services/social.service';
 
 import { message1, message2, message3, message4 } from 'app/shared/_models/mocks';
+import { DataSessionService } from 'app/shared/_services/data-session.service';
+import { Message } from 'app/shared/_models/data';
 
 @Component({
   selector: 'app-home',
@@ -18,17 +20,22 @@ export class HomeComponent implements OnInit {
     }
   };
 
-  // private timeline = [message1, message2, message3, message4];
-private timeline;
-  constructor(private socialService: SocialService) { }
+
+  private timeline: Message[];
+  constructor(private socialService: SocialService, private dataService: DataSessionService) { }
 
   ngOnInit() {
+    this.timeline = this.dataService.getTimeline();
+    if (this.timeline.length === 0) {
+      this.getTimeline();
+    }
   }
 
   getTimeline() {
-    this.socialService.getTimeline().then(t => {
+    this.socialService.getTimeline().then((t: Message[]) => {
       this.timeline = t;
       console.log('home timeline:' + this.timeline);
+      this.dataService.save(this.timeline);
     });
   }
 

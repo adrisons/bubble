@@ -17,6 +17,7 @@ import { FacebookService } from 'app/shared/_services/facebook.service';
 import { FacebookModule } from 'ng2-facebook-sdk';
 import { FilterPipe } from 'app/shared/_pipes/filter.pipe';
 import { SortByPipe } from 'app/shared/_pipes/sortBy.pipe';
+import { DataSessionService } from 'app/shared/_services/data-session.service';
 
 /**
  * El módulo compartido se importa en todos los demás módulos
@@ -37,6 +38,7 @@ import { SortByPipe } from 'app/shared/_pipes/sortBy.pipe';
       useClass: HttpService // con nuestra extensión personalizada
     },
     UserSessionService,
+    DataSessionService,
     AlertService,
     CrudService,
     SocialService,

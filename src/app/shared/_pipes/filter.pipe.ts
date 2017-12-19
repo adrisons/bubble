@@ -65,11 +65,26 @@ export class SocialPipe implements PipeTransform {
 
 
 import { DomSanitizer } from '@angular/platform-browser';
+import { Message } from 'app/shared/_models/data';
 
 @Pipe({ name: 'safeurl' })
 export class SafeUrlPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) { }
   transform(url) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+}
+
+
+
+@Pipe({ name: 'notEmpty' })
+export class NotEmptyPipe implements PipeTransform {
+
+  transform(items: Message[]) {
+    return (items && items.length > 0)
+      ? items.filter((item: Message) =>
+        (item.text || (item.media && item.media.length > 0))
+      )
+      : items;
   }
 }

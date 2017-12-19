@@ -36,7 +36,7 @@
     <button type="button" class="refresh" (click)="getTimeline()">
       <i class="fa fa-refresh" aria-hidden="true"></i>
     </button>
-    <div *ngFor="let message of timeline | user : filters.name | message: filters.message | social: filters.social |  sortBy: 'date'">
+    <div *ngFor="let message of timeline | user : filters.name | message: filters.message | social: filters.social | notEmpty | sortBy: 'date'">
       <div class="card">
         <div class="header">
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserSession, Session } from 'app/shared/_models/data';
+import { UserSession, DataSession } from 'app/shared/_models/data';
 import { Observable } from 'rxjs/Observable';
 import { UserSessionService } from 'app/shared/_services/user-session.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';

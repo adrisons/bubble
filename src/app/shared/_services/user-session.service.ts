@@ -1,6 +1,6 @@
 import { DataStoreService } from './data-store.service';
 import { Injectable } from '@angular/core';
-import { UserSession, User, UserSocial, Session, SocialType } from '../_models/data';
+import { UserSession, User, UserSocial } from '../_models/data';
 
 @Injectable()
 /**
@@ -10,7 +10,7 @@ export class UserSessionService extends DataStoreService {
   // this.data (from parent) is a Session type
 
   constructor() {
-    const session: Session = {
+    const session: UserSession = {
       isLogged: false,
       token: '',
       user: null
