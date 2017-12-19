@@ -1,18 +1,20 @@
 <div *ngIf="true" class="col-lg-3 col-md-3 col-sm-12 sidebar">
-    <div class="content">
-            <div class="title">Filters</div>
-      <div class="list-group">
-        <input class="list-group-item" placeholder="Name" [(ngModel)]="filters.name">
-        <input class="list-group-item" placeholder="Message" [(ngModel)]="filters.message">
-      </div>
-      <div class="btn-group" data-toggle="buttons">
-        <label [ngClass]="{'btn btn-secondary': true, 'active': filters.social.twitter}">
-          <input type="checkbox" [(ngModel)]="filters.social.twitter" autocomplete="off"> <i class="fa fa-twitter"></i>
-        </label>
-        <label [ngClass]="{'btn btn-secondary': true, 'active': filters.social.facebook}">
-          <input type="checkbox" [(ngModel)]="filters.social.facebook" autocomplete="off"> <i class="fa fa-facebook"></i>
-        </label>
-      </div>
+  <div class="content">
+    <div class="title">Filters</div>
+    <div class="list-group">
+      <input class="list-group-item" placeholder="Name" [(ngModel)]="filters.name">
+      <input class="list-group-item" placeholder="Message" [(ngModel)]="filters.message">
+    </div>
+    <div class="btn-group" data-toggle="buttons">
+      <label [ngClass]="{'btn btn-secondary': true, 'active': filters.social.twitter}">
+        <input type="checkbox" [(ngModel)]="filters.social.twitter" autocomplete="off">
+        <i class="fa fa-twitter"></i>
+      </label>
+      <label [ngClass]="{'btn btn-secondary': true, 'active': filters.social.facebook}">
+        <input type="checkbox" [(ngModel)]="filters.social.facebook" autocomplete="off">
+        <i class="fa fa-facebook"></i>
+      </label>
+    </div>
   </div>
   <!-- <button type="submit" [ngClass]="{' btn': true}" [disabled]="!loginForm.form.valid">Filter</button> -->
 
@@ -38,7 +40,9 @@
       <div class="card">
         <div class="header">
 
-          <img class="img" src={{message.user.img}} alt="Card image cap">
+          <a href="{{message.user.url}}" target="_blank">
+            <img class="img" src={{message.user.img}} alt="User">
+          </a>
 
           <div class="info">
             <label class="title user">{{message.user.name}}</label>
@@ -46,13 +50,41 @@
           </div>
 
           <div class="social-logo">
-            <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-facebook fa-1x facebook': message.social.name === 'facebook'}"></a>
-            <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-twitter fa-1x twitter': message.social.name === 'twitter'}"></a>
+            <a href="{{message.link}}" target="_blank" [ngClass]="{'fa fa-facebook fa-1x facebook': message.socialType.name === 'facebook'}"></a>
+            <a href="{{message.link}}" target="_blank" [ngClass]="{'fa fa-twitter fa-1x twitter': message.socialType.name === 'twitter'}"></a>
           </div>
 
         </div>
         <div class="body">
-          <p class="comment">{{message.text}}</p>
+          <p *ngIf="message.text" class="comment">{{message.text}}</p>
+          <!-- <div [ngSwitch]="m.type">
+          </div> -->
+          <div *ngFor="let m of message.media">
+            <div [ngSwitch]="message.type">
+
+              <!-- Video -->
+              <div class="media" *ngSwitchCase="1">
+                <iframe *ngIf="m.video" [src]="m.video | safeurl">
+                </iframe>
+              </div>
+
+              <div class="media" *ngSwitchDefault>
+                <a *ngIf="m.img"  href="{{m.url}}" target="_blank">
+                  <img class="data img"  src={{m.img}}>
+                </a>
+              </div>
+
+            </div>
+            <!-- <a class="data" *ngIf="!m.video" href="{{m.url}}" target="_blank">
+              <img class="img" src={{m.img}}>
+            </a> -->
+            <!-- <video class="data" *ngIf="m.video" class="data"  controls>
+              <source  [src]="m.video | safeurl">
+            </video> -->
+            <!-- <iframe class="data" *ngIf="m.video"  [src]="m.video | safeurl">
+            </iframe> -->
+          </div>
+
         </div>
         <div class="buttons">
           <a class="card-link" (click)="likeToggle(message)">
@@ -60,7 +92,7 @@
           </a>
 
           <a class="card-link" (click)="share(message)">
-            <i [ngClass]="{'shared': message.shared, 'fa fa-retweet': true}" aria-hidden="true"></i>
+            <i [ngClass]="{'shared': message.flags.share, 'fa fa-retweet': true}" aria-hidden="true"></i>
           </a>
           <a class="card-link" (click)="commentToggle(message)">
             <i [ngClass]="{'comment': message.flags.comment, 'fa fa-comment': true}" aria-hidden="true"></i>

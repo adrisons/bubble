@@ -23,7 +23,7 @@ export class SocialService {
 
 
   // Gets the service for the particular social network (strategy pattern)
-  private getStrategy(name: string): SocialServiceInterface {
+  private getStrategy(name: String): SocialServiceInterface {
     switch (name) {
       case 'facebook':
         return this.facebookService;
@@ -34,7 +34,7 @@ export class SocialService {
     }
   }
 
-  login(social_name: string): Promise<{}> {
+  login(social_name: String): Promise<{}> {
     return this.getStrategy(social_name)
       .login()
       .then((userSocial: UserSocial) => this.save(userSocial));
@@ -98,24 +98,26 @@ export class SocialService {
   getTimeline(): Promise<{}> {
     return new Promise((resolve, reject) => {
       const social = this.userService.getProfile().user.social;
-      let promises = [];
+      // let promises = [];
       for (let i = 0; i < social.length; i++) {
         const s: UserSocial = social[i];
-        promises.push(this.getStrategy(s.type.name)
-          .getTimeline(s.social_id));
+        resolve(this.getStrategy(s.type.name)
+        .getTimeline(s.social_id, s.access_token));
+        // promises.push(this.getStrategy(s.type.name)
+        //   .getTimeline(s.social_id, s.access_token));
       }
-      Promise.all(promises)
-        .then(values => {
-          console.log('(getTimeline) values:' + values[0]);
-          // TODO: Aquí pongo esto para las pruebas, pero hay que hacer un 
-          // merge de el array of arrays para convertirlo a array
-          const timeline = values[0].data;
-          console.log('(getTimeline) timeline:' + timeline);
-          resolve(timeline);
-        });
-
-
-      // resolve(timeline);
+      // Promise.all(promises)
+      //   .then(values => {
+      //     console.log('(getTimeline) values:' + values[0]);
+      //     // TODO: Aquí pongo esto para las pruebas, pero hay que hacer un 
+      //     // merge de el array of arrays para convertirlo a array
+      //     const timeline = values[0].data;
+      //     console.log('(getTimeline) timeline:' + timeline);
+      //     resolve(timeline);
+      //   });
+        
+        
+        
     });
 
     // return new Promise((resolve, reject) => {

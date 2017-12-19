@@ -7,10 +7,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FilterPipe implements PipeTransform {
   transform(items: any[], term): any {
     console.log('term', term);
-
-    return term
-      ? items.filter(item => item.title.indexOf(term) !== -1)
-      : items;
+    if ((term && items.length > 0)) {
+      return term
+        ? items.filter(item => item.title.indexOf(term) !== -1)
+        : items;
+    }
   }
 }
 
@@ -20,11 +21,10 @@ export class FilterPipe implements PipeTransform {
 })
 export class UserPipe implements PipeTransform {
   transform(items: any[], term): any {
-    console.log('term', term);
-
-    return term
-      ? items.filter(item => item.user.name.indexOf(term) !== -1)
-      : items;
+    if (term && items.length > 0) {
+      console.log('term', term);
+      return items.filter(item => item.user.name.toLowerCase().indexOf(term.toLowerCase()) !== -1);
+    } else { return items; }
   }
 }
 
@@ -34,13 +34,16 @@ export class UserPipe implements PipeTransform {
 })
 export class MessagePipe implements PipeTransform {
   transform(items: any[], term): any {
-    console.log('term', term);
 
-    return term
-      ? items.filter(item => item.text.indexOf(term) !== -1)
-      : items;
+    if (term && items.length > 0) {
+      console.log('term', term);
+      return items.filter(item => {
+        if (item.text) { return item.text.toLowerCase().indexOf(term.toLowerCase()) !== -1; } else { return false; }
+      });
+    } else { return items; }
   }
 }
+
 
 @Pipe({
   name: 'social',
@@ -55,7 +58,18 @@ export class SocialPipe implements PipeTransform {
       }
     }
     return term && filters.length
-      ? items.filter(item => filters.includes(item.social.name))
+      ? items.filter(item => filters.includes(item.socialType.name))
       : items;
+  }
+}
+
+
+import { DomSanitizer } from '@angular/platform-browser';
+
+@Pipe({ name: 'safeurl' })
+export class SafeUrlPipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) { }
+  transform(url) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }
