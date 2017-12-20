@@ -7,6 +7,7 @@ import { twitter_secret } from 'app/shared/_config/auth';
 @Injectable()
 export class TwitterService implements SocialServiceInterface {
 
+
   private apiEndPoint = '/social/tw';
 
   constructor(private http: AuthHttp) {
@@ -38,10 +39,12 @@ export class TwitterService implements SocialServiceInterface {
   }
 
   getFriends() {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   getTimeline(user_id): Promise<{}> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
-
+  post(user_id: String, access_token: String, message: String) {
+    throw new Error('Method not implemented.');
+  }
 }

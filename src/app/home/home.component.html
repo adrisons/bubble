@@ -63,9 +63,12 @@
             <div [ngSwitch]="message.type">
 
               <!-- Video -->
-              <div class="media" *ngSwitchCase="1">
+              <div class="media" *ngSwitchCase="1" >
                 <iframe *ngIf="m.video" [src]="m.video | safeurl">
                 </iframe>
+                <!-- <video *ngIf="m.video" controls>
+                    <source [src]="m.video | safeurl">
+                </video> -->
               </div>
 
               <div class="media" *ngSwitchDefault>

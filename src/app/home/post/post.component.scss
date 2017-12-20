@@ -2,10 +2,24 @@
 @import "src/assets/scss/main.scss";
 @import "src/assets/scss/forms.scss";
 textarea {
-    resize: none;
-    margin-bottom: 10px;
+  resize: none;
+  margin-bottom: 10px;
 }
 
-.button {
-    background-color: $lightgrey;
+.checkAccounts {
+  position: relative;
+  float: left;
+  overflow: hidden;
+  label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.buttons {
+  position: relative;
+  float: right;
+
+  background-color: $lightgrey;
 }

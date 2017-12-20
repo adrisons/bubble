@@ -2,7 +2,7 @@ import { CrudService } from './../shared/_services/crud.service';
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserSession, User, UserSocial, SocialType } from './../shared/_models/data';
+import { UserSession, User, UserSocial, SocialType, LightUserSocial } from './../shared/_models/data';
 
 import 'rxjs/add/operator/map';
 import { Http } from '@angular/http';
@@ -83,6 +83,24 @@ export class UserService extends CrudService {
    * */
   public getProfile(): UserSession {
     return this.sessionService.getProfile();
+  }
+
+  public getUserSocial(): UserSocial[] {
+    return this.sessionService.getProfile().user.social;
+  }
+
+  public getLightUserSocial(): LightUserSocial[] {
+    return this.sessionService.getProfile().user.social.map(s => {
+
+      return {
+        bd_id: s.bd_id,
+        email: s.email,
+        login: s.login,
+        type: s.type,
+        active: false
+      };
+
+    });
   }
 
   // Check form data to see if its correct

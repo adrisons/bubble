@@ -85,19 +85,8 @@ export class FacebookService implements SocialServiceInterface {
   }
 
 
-  /**
-   * Get the users friends
-   */
-  getFriends() {
-    this.fb.api('/me/friends')
-      .then((res: any) => {
-        console.log('Got the users friends', res);
-        return res;
-      })
-      .catch((error) => console.error('(getfriends-facebook) Error: ', error));
-  }
-
-  getTimeline(user_id, access_token) {
+  // Get the timeline for the user
+  getTimeline(user_id, access_token: string) {
     return new Promise((resolve, reject) => {
       this.fb.api('/' + user_id + '/feed', 'get',
         { access_token: access_token, fields: 'id, created_time, message, from, permalink_url, picture, type, source' })
@@ -115,7 +104,7 @@ export class FacebookService implements SocialServiceInterface {
                   });
               });
             });
-          })
+          });
           Promise.all(requests).then(() => {
             console.log('Got the user timeline', messages);
             resolve(messages);
@@ -129,25 +118,30 @@ export class FacebookService implements SocialServiceInterface {
     });
   }
 
-
-  /**
-  * Show the share dialog
-  */
-  share() {
-
-    const options: UIParams = {
-      method: 'share',
-      href: 'https://github.com/zyramedia/ng2-facebook-sdk'
-    };
-
-    this.fb.ui(options)
-      .then((res: UIResponse) => {
-        console.log('Got the users profile', res);
-      })
-      .catch((error) => console.error('(share-facebook) Error: ', error));
+  // Post message in name of the user
+  post(user_id: String, access_token: String, message: String) {
+    this.fb.api('/' + user_id + '/feed', 'post',
+      {
+        'access_token': access_token,
+        'message': message
+      }).then(res => {
+        console.log(res);
+      });
 
   }
 
+
+  /**
+   * Get the users friends
+   */
+  getFriends() {
+    this.fb.api('/me/friends')
+      .then((res: any) => {
+        console.log('Got the users friends', res);
+        return res;
+      })
+      .catch((error) => console.error('(getfriends-facebook) Error: ', error));
+  }
 
   // =========
   // Converter
@@ -175,15 +169,15 @@ export class FacebookService implements SocialServiceInterface {
         comment: false,
       },
       socialType: this.socialType,
-      type:  this.messageTypeConverter(msg.type)
-    }
+      type: this.messageTypeConverter(msg.type)
+    };
 
     return nemoMsg;
 
   }
-  
 
-  
+
+
   private attachToMedia(msg: FacebookTimelineMsg, attach: FacebookAttach[]): MessageMedia[] {
     const media: MessageMedia[] = [];
 

@@ -25,6 +25,13 @@ export class ServerResponseData {
   message?: String;
 }
 
+export interface LightUserSocial {
+  bd_id?: String;
+  type: SocialType;
+  email?: String;
+  login?: String;
+  active?: Boolean;
+}
 
 export interface UserSocial {
   social_id?: String;

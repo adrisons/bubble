@@ -1,9 +1,23 @@
 <div class="card">
-    <form (ngSubmit)="onPost(postForm)" #postForm="ngForm">
-        <div class="form-group">
-            <textarea type="text" name="comment" class="form-control custom-control" rows="3" placeholder="What are you thinking?" [(ngModel)]="comment" required></textarea>
-            <button type="submit" [ngClass]="{'button-right btn': true}" [disabled]="!postForm.form.valid || !postForm.form.dirty">Save</button>
-        </div>
-    </form>
+  <form (ngSubmit)="onPost(postForm)" #postForm="ngForm">
+    <div class="form-group">
+      <textarea type="text" name="comment" class="form-control custom-control" rows="3" placeholder="What are you thinking?" [(ngModel)]="comment"
+        required></textarea>
+
+      <!-- Social Accounts -->
+      <div *ngFor="let a of postAccounts" class="col-lg-10 checkAccounts" data-toggle="buttons">
+        <label [ngClass]="{'btn btn-secondary col-lg-4 col-sm-6': true, 'active': a.active}" [ngSwitch]="a.type.name">
+          <i class="{{'fa fa-' + a.type.name}}"></i>
+          <input type="checkbox" name="active" [(ngModel)]="a.active" autocomplete="off" /> {{a.login}}
+        </label>
+      </div>
+
+      <!-- Buttons -->
+      <div class="buttons col-lg-2">
+        <button type="submit" class="btn" [disabled]="!postForm.form.valid || !postForm.form.dirty">Save</button>
+      </div>
+    </div>
+
+  </form>
 
 </div>
