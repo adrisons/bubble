@@ -33,14 +33,17 @@ export interface LightUserSocial {
   active?: Boolean;
 }
 
+
 export interface UserSocial {
-  social_id?: String;
-  bd_id?: String;
+  id?: String;
+  social_id: String;
+  user_id: String;
   type: SocialType;
   access_token: String;
-  expires_at: String;
+  expires_at?: String;
   email?: String;
   login?: String;
+  name?: String;
 }
 export interface SocialType {
   id: number;

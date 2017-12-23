@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   };
 
 
-  private timeline: Message[];
+  private timeline: Array<Message> = [];
   constructor(private socialService: SocialService, private dataService: DataSessionService) { }
 
   ngOnInit() {

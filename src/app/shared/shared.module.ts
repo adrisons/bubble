@@ -41,7 +41,6 @@ import { DataSessionService } from 'app/shared/_services/data-session.service';
     DataSessionService,
     AlertService,
     CrudService,
-    SocialService,
     FacebookService,
     TwitterService,
     SocialAuthService,

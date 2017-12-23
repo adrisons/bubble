@@ -34,19 +34,37 @@ export class UserSessionService extends DataStoreService {
   }
 
   // Add social network authentification to the user's social information
-  addSocialNetwork(us: UserSocial) {
-    this.data.user.social.push(us);
-    const session = { user: this.data.user, token: this.data.token, isLogged: this.data.isLogged };
-    super.setData(session);
-    return session;
+  addSocialNetwork(us: UserSocial): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      const exist = this.data.user.social.find(s => (s.user_id === us.user_id
+        && s.type.id === us.type.id
+        && s.social_id === us.social_id));
+
+      if (!exist) {
+        this.data.user.social.push(us);
+        const session = { user: this.data.user, token: this.data.token, isLogged: this.data.isLogged };
+        super.setData(session);
+        resolve();
+      } else {
+        reject();
+      }
+    });
   }
 
   // Delete the social network authentification from the user's social information
   removeSocialNetwork(us: UserSocial) {
-    this.data.user.social = this.data.user.social.filter(s => (s.bd_id !== us.bd_id) );
-    const session = { user: this.data.user, token: this.data.token, isLogged: this.data.isLogged };
-    super.setData(session);
-    return session;
+    return new Promise((resolve, reject) => {
+      const exist = this.data.user.social.find(s => (s.id === us.id));
+      if (!exist) {
+        reject('That account doesn\'t exist')
+      } else {
+
+        this.data.user.social = this.data.user.social.filter(s => (s.id !== us.id));
+        const session = { user: this.data.user, token: this.data.token, isLogged: this.data.isLogged };
+        super.setData(session);
+        resolve();
+      }
+    });
   }
 
 

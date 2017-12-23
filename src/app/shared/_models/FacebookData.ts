@@ -5,8 +5,9 @@ import { UserSocial, SocialType } from 'app/shared/_models/data';
 // -------------------
 
 export class FacebookSocial implements UserSocial {
-    social_id?: String;
+    social_id: String;
     bd_id?: String;
+    user_id: String;
     type: SocialType;
     access_token: String;
     expires_at: String;

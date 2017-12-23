@@ -6,51 +6,84 @@ import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.in
 import { facebook_secret } from 'app/shared/_config/auth';
 import { FacebookService as ngxFbService, LoginResponse, LoginOptions, UIResponse, UIParams } from 'ng2-facebook-sdk';
 import { forEach } from '@angular/router/src/utils/collection';
+import { UserService } from 'app/user/user.service';
 
 
 @Injectable()
 export class FacebookService implements SocialServiceInterface {
-  private apiEndPoint = '/social/fb';
-  private socialType: SocialType = { id: 0, name: 'facebook' };
+  private apiEndPoint = '/social';
+  private socialType: SocialType = { id: 2, name: 'facebook' };
 
   constructor(private http: AuthHttp, private fb: ngxFbService) {
     fb.init(facebook_secret);
   }
 
-  login(): Promise<{}> {
+  login(user_id: String): Promise<UserSocial> {
     return new Promise((resolve, reject) => {
       const loginOptions: LoginOptions = {
         enable_profile_selector: true,
         return_scopes: true,
-        scope: 'public_profile,user_friends,email,pages_show_list'
+        scope: 'public_profile,user_friends,email,pages_show_list,publish_actions'
       };
       this.fb.login(loginOptions)
         .then((res: LoginResponse) => {
           console.log('Logged in', res);
           this.getProfile().then(profile => {
-            const fs: FacebookSocial = {
+            const data: UserSocial = {
               access_token: res.authResponse.accessToken,
-              expires_at: res.authResponse.expiresIn.toString(),
               type: this.socialType,
               social_id: res.authResponse.userID,
-              grantedScopes: res.authResponse.grantedScopes,
-              signedRequest: res.authResponse.signedRequest,
-              login: profile.name
+              login: profile.name,
+              user_id: user_id
             };
-            resolve(fs);
+            this.save(data).then((us: UserSocial) => {
+              resolve(us);
+            });
           });
         })
         .catch((error) => {
           console.error('(login-facebook) Error: ', error);
+          reject(error);
+        });
+    });
+  }
+
+  // Register the social network for the user (BBDD and Session)
+  save(userSocial: UserSocial): Promise<UserSocial> {
+    return new Promise((resolve, reject) => {
+
+      // Save social network in BBDD
+      return this.http.post(this.apiEndPoint, {
+        social_id: userSocial.social_id,
+        social_type_id: userSocial.type.id,
+        access_token: userSocial.access_token,
+        user_id: userSocial.user_id,
+        login: userSocial.login,
+        type_id: this.socialType.id
+      })
+        .toPromise()
+        .then(r => {
+          const res = r.json();
+          if (res.code === 200) {
+            // userSocial.bd_id = res.data.id;
+            resolve(userSocial);
+          }
+          reject();
+        })
+        .catch(error => {
+          console.log('(social login) Error: ' + error);
+          reject();
         });
     });
   }
 
 
-  logout(userId: number, token: string): Promise<{}> {
+  logout(access_id: number): Promise<{}> {
+    // return this.fb.logout();
     return new Promise((resolve, reject) => {
+
       this.fb.logout().then(() => {
-        return this.http.post(this.apiEndPoint + '/rm', { user_id: userId, access_token: token })
+        return this.http.post(this.apiEndPoint + '/rm', { access_id: access_id })
           .toPromise()
           .then(res => {
             console.log('Logged out!');

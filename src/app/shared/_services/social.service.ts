@@ -2,7 +2,7 @@
 // This class acts like proxy between client and specific social network services
 
 import { Injectable } from '@angular/core';
-import { UserSocial, SocialType, User, LightUserSocial } from 'app/shared/_models/data';
+import { UserSocial, SocialType, User, LightUserSocial, Message } from 'app/shared/_models/data';
 import { UserService } from 'app/user/user.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { AuthHttp } from 'angular2-jwt';
@@ -10,18 +10,18 @@ import { FacebookService } from 'app/shared/_services/facebook.service';
 import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.interface';
 import { TwitterService } from 'app/shared/_services/twitter.service';
 import { AlertService } from 'app/shared/_services/alert.service';
+import { RequestOptions } from '@angular/http';
 
 
-const apiEndPoint = '/social';
 @Injectable()
 export class SocialService {
 
-  private user: User;
+  private apiEndPoint = '/social';
 
   constructor(private http: AuthHttp, private userService: UserService, private facebookService: FacebookService,
     private twitterService: TwitterService, private alertService: AlertService) {
-    this.user = this.userService.getProfile().user;
   }
+
 
 
   // Gets the service for the particular social network (strategy pattern)
@@ -29,41 +29,48 @@ export class SocialService {
     switch (name) {
       case 'facebook':
         return this.facebookService;
-      // case 'twitter':
-      // return this.twitterService;
+      case 'twitter':
+        return this.twitterService;
       default:
         break;
     }
   }
 
-  login(social_name: String): Promise<{}> {
+  login(social_name: String) {
     return this.getStrategy(social_name)
-      .login()
-      .then((userSocial: UserSocial) => this.save(userSocial));
+      .login(this.userService.getProfile().user.id.toString())
+
+      // Save in session
+      .then((userSocial: UserSocial) => this.getUserData({ user_id: userSocial.user_id }))
+      .catch(error => this.alertService.error(error));
+
   }
 
-  // Register the social network for the user (BBDD and Session)
-  save(userSocial: UserSocial): Promise<{}> {
+  // Get social data and save it to session
+  getUserData(params): Promise<UserSocial> {
+    console.log('(getuserData) params=' + JSON.stringify(params));
     return new Promise((resolve, reject) => {
-      // Save social network in BBDD
-      return this.http.post(apiEndPoint, {
-        user_id: this.user.id, social_id: userSocial.social_id, type_id: userSocial.type.id,
-        access_token: userSocial.access_token, login: userSocial.login
-      })
+      // Get user data
+      const options = new RequestOptions({ params: params });
+      this.http.get(this.apiEndPoint, options)
         .toPromise()
         .then(r => {
           const res = r.json();
           if (res.code === 200) {
-            userSocial.bd_id = res.data.id;
-            // Save in session
-            this.userService.addSocialNetwork(userSocial);
+
+            for (let i = 0; i < res.data.length; i++) {
+              const social = res.data[i];
+              const socialData: UserSocial = this.convertToUserSocial(res.data[i]);
+              if (socialData !== null) {
+                // Save in session
+                this.userService.addSocialNetwork(socialData)
+                .catch(err => this.alertService.error(err));
+              }
+            }
             resolve();
+          } else {
+            reject();
           }
-          reject();
-        })
-        .catch(error => {
-          console.log('(social login) Error: ' + error);
-          reject();
         });
     });
   }
@@ -73,15 +80,16 @@ export class SocialService {
   // Remove the social network for the user
   remove(userSocial: UserSocial) {
     return new Promise((resolve, reject) => {
-      return this.http.delete(apiEndPoint + '/' + userSocial.bd_id)
+      return this.http.delete(this.apiEndPoint + '/' + userSocial.id)
         .toPromise()
         .then(res => {
           // Social network removed
           if (res.json().code === 200) {
             this.userService.removeSocialNetwork(userSocial);
             resolve();
+          } else {
+            reject();
           }
-          reject();
         })
         .catch(error => {
           console.log('(social logout) Error: ' + error);
@@ -101,46 +109,28 @@ export class SocialService {
   getTimeline(): Promise<{}> {
     return new Promise((resolve, reject) => {
       const social = this.userService.getUserSocial();
-      // let promises = [];
-      for (let i = 0; i < social.length; i++) {
-        const s: UserSocial = social[i];
-        resolve(this.getStrategy(s.type.name)
+      const promises: Promise<{}>[] = [];
+      social.forEach(s => {
+        promises.push(this.getStrategy(s.type.name)
           .getTimeline(s.social_id, s.access_token));
-        // promises.push(this.getStrategy(s.type.name)
-        //   .getTimeline(s.social_id, s.access_token));
-      }
-      // Promise.all(promises)
-      //   .then(values => {
-      //     console.log('(getTimeline) values:' + values[0]);
-      //     // TODO: Aquí pongo esto para las pruebas, pero hay que hacer un 
-      //     // merge de el array of arrays para convertirlo a array
-      //     const timeline = values[0].data;
-      //     console.log('(getTimeline) timeline:' + timeline);
-      //     resolve(timeline);
-      //   });
+      });
 
+      Promise.all(promises)
+        .then((values: Array<Message>[]) => {
+          // Hay que hacer un merge de el array of arrays para convertirlo a array
+          const timeline = new Array<Message>();
+          values.forEach(array => {
+            array.forEach(a => {
+              timeline.push(a);
+            });
+          });
 
+          console.log('(getTimeline) timeline:' + timeline);
+          resolve(timeline);
+        });
 
     });
 
-    // return new Promise((resolve, reject) => {
-    //   const user = this.userService.getProfile().user;
-    //   const promises = [];
-    //   for (let i = 0; i < user.social.length; i++) {
-    //     const s: UserSocial = user.social[i];
-    //     promises.push(this.getStrategy(s.type.name).getTimeline(s.social_id));
-    //   }
-
-    //   Promise.all([promises]).then(timelines => {
-    //     for (const timeline in timelines) {
-    //       if (timeline !== null) {
-    //         console.log('Timeline: ' + timeline);
-    //         resolve(timeline);
-    //       }
-    //     }
-    //   });
-
-    // });
   }
 
   // TODO: hacer para todas las RS del usuario
@@ -153,7 +143,7 @@ export class SocialService {
       const social = this.userService.getUserSocial().filter((s: UserSocial) => {
 
         return accounts.find(a => {
-          return a.bd_id === s.bd_id;
+          return a.bd_id === s.id;
         });
       });
       for (let i = 0; i < social.length; i++) {
@@ -167,5 +157,28 @@ export class SocialService {
     });
   }
 
+
+  private convertToUserSocial(social): UserSocial {
+
+    if (social.id) {
+      const u: UserSocial = {
+        id: social.id,
+        social_id: social.social_id,
+        user_id: social.user_id,
+        login: social.login,
+        access_token: social.access_token,
+        type: {
+          id: social.social_type_id,
+          name: social.social_type_name
+        }
+      };
+      return u;
+
+    } else {
+      console.log('(convertToUserSocial) Error: userSocial=' + social);
+      return null;
+    }
+
+  }
 
 }

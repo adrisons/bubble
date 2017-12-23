@@ -52,6 +52,7 @@ export class ConfigurationComponent implements OnInit {
   addSocial() {
     this.socialAuth.login();
   }
+  
   // Remove social account from user
   removeSocial(us: UserSocial) {
     // this.socialAuth.logout(social);
@@ -59,22 +60,23 @@ export class ConfigurationComponent implements OnInit {
     this.socialService.remove(us)
       .then(() => {
         this.alertService.success(us.type.name + ' logout!');
+        this.updateUser();
       })
       .catch(() => this.alertService.error('Error removing ' + us.type.name));
   }
 
   // Add facebook account to user
-  addFacebook() {
+  private addFacebook() {
     this.socialService.login('facebook')
     .then(() => this.updateUser())
     .catch(() => this.alertService.error('Error linking facebook'));
   }
-  // // Add twitter account to user
-  // private addTwitter() {
-  //   const st: SocialType = { id: 1, name: 'twitter' };
-  //   this.addSocial(st);
-  //   // this.auth.login();
-  // }
+  // Add twitter account to user
+  private addTwitter() {
+    this.socialService.login('twitter')
+    .then(() => this.updateUser())
+    .catch(() => this.alertService.error('Error linking twitter'));
+  }
 
 
   // =================

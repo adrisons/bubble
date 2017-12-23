@@ -10,6 +10,8 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { UserSessionService } from 'app/shared/_services/user-session.service';
+import { SocialService } from 'app/shared/_services/social.service';
+
 
 @Injectable()
 /**
@@ -33,7 +35,8 @@ export class UserService extends CrudService {
         const response = r.json();
         if (response.code === 200) {
           const token = response.data.token;
-          this.sessionService.logIn(response.data, token);
+          const user: User = response.data;
+          this.sessionService.logIn(user, token);
         }
         return response;
       })
@@ -93,7 +96,7 @@ export class UserService extends CrudService {
     return this.sessionService.getProfile().user.social.map(s => {
 
       return {
-        bd_id: s.bd_id,
+        bd_id: s.id,
         email: s.email,
         login: s.login,
         type: s.type,
@@ -124,11 +127,11 @@ export class UserService extends CrudService {
   }
 
 
-  public addSocialNetwork(us: UserSocial): UserSession {
+  public addSocialNetwork(us: UserSocial): Promise<{}> {
     return this.sessionService.addSocialNetwork(us);
   }
 
-  public removeSocialNetwork(us: UserSocial): UserSession {
+  public removeSocialNetwork(us: UserSocial): Promise<{}> {
     return this.sessionService.removeSocialNetwork(us);
   }
 

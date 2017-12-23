@@ -5,11 +5,13 @@
         required></textarea>
 
       <!-- Social Accounts -->
-      <div *ngFor="let a of postAccounts" class="col-lg-10 checkAccounts" data-toggle="buttons">
-        <label [ngClass]="{'btn btn-secondary col-lg-4 col-sm-6': true, 'active': a.active}" [ngSwitch]="a.type.name">
-          <i class="{{'fa fa-' + a.type.name}}"></i>
-          <input type="checkbox" name="active" [(ngModel)]="a.active" autocomplete="off" /> {{a.login}}
-        </label>
+      <div class="col-lg-10 checkAccounts" data-toggle="buttons">
+        <!-- <div > -->
+          <label [ngClass]="{'btn btn-secondary col-lg-4 col-sm-6': true, 'active': a.active}" *ngFor="let a of postAccounts" [ngSwitch]="a.type.name">
+            <i class="{{'fa fa-' + a.type.name}}"></i>
+            <input type="checkbox" name="active" [(ngModel)]="a.active" autocomplete="off" /> {{a.login}}
+          </label>
+        <!-- </div> -->
       </div>
 
       <!-- Buttons -->

@@ -7,6 +7,7 @@ import { SocialService } from 'app/shared/_services/social.service';
 import { UserSocial, SocialAuthResult } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { auth0_secret } from 'app/shared/_config/auth';
+import { UserService } from 'app/user/user.service';
 
 
 @Injectable()
@@ -14,7 +15,8 @@ export class SocialAuthService {
 
   private auth = new auth0.WebAuth(auth0_secret);
 
-  constructor(public router: Router, private alertService: AlertService, private socialService: SocialService) { }
+  constructor(public router: Router, private alertService: AlertService, private socialService: SocialService,
+    private userService: UserService) { }
 
   public login(): void {
     this.auth.authorize();
@@ -34,9 +36,10 @@ export class SocialAuthService {
           },
           login: null,
           email: null,
+          social_id: authResult.id, // Esto deberia ser el id del usuario en la red social
           access_token: authResult.accessToken,
-          // id_token: authResult.idToken,
-          expires_at: expiresAt
+          expires_at: expiresAt,
+          user_id: this.userService.getProfile().user.id.toString()
         };
         // Get user information
         this.auth.client.userInfo(userSocial.access_token, (profile_err, profile) => {
@@ -46,7 +49,7 @@ export class SocialAuthService {
           }
           this.setProfile(userSocial, profile);
 
-          this.socialService.save(userSocial).catch((error) =>
+          this.socialService.getUserData(userSocial).catch((error) =>
             console.log('(social-auth) Error saving auth: ' + error)
           );
         });
@@ -89,6 +92,10 @@ export class SocialAuthService {
 
   // Sets user profile from social network
   private setProfile(userSocial: UserSocial, profile) {
+    const i = profile.sub.indexOf('|');
+    if (i !== -1) {
+      userSocial.social_id = profile.sub.slice(i + 1);
+    }
     switch (userSocial.type.name) {
       case 'facebook':
         userSocial.login = profile.name;
