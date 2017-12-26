@@ -51,34 +51,37 @@ export interface SocialType {
 }
 
 export class Message {
-  bd_id: String;
+  id: String;
   social_id: String;
   user: {
     id: String;
-    name: String;
+    name?: String;
+    login?: String;
     img: String;
     url: String;
   };
   dateStr: String;
   date: Date;
-  link: String;
+  url: String;
   text: String;
   flags: {
     like: Boolean;
+    like_count?: Number;
     share: Boolean;
+    share_count?: Number;
     comment: Boolean;
+    comment_count?: Number;
   };
   socialType: SocialType;
   media: MessageMedia[];
-  code?: String;
-  type: MessageType;
+
 }
 
 export class MessageMedia {
   text: String;
-  img: String;
-  url: String;
-  video: String;
+  url: String; // link to the media
+  src: String; // url for loading resource
+  type: MessageType;
 }
 
 export class SocialAuthResult {

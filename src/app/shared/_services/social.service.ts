@@ -42,7 +42,10 @@ export class SocialService {
 
       // Save in session
       .then((userSocial: UserSocial) => this.getUserData({ user_id: userSocial.user_id }))
-      .catch(error => this.alertService.error(error));
+      .catch(error => {
+        console.log('(login) error:' + error);
+        this.alertService.error('Error logging in');
+      });
 
   }
 
@@ -64,7 +67,7 @@ export class SocialService {
               if (socialData !== null) {
                 // Save in session
                 this.userService.addSocialNetwork(socialData)
-                .catch(err => this.alertService.error(err));
+                  .catch(err => this.alertService.error(err));
               }
             }
             resolve();
@@ -105,22 +108,23 @@ export class SocialService {
         console.log(friends));
   }
 
-  // TODO: hacer para todas las RS del usuario
+
   getTimeline(): Promise<{}> {
     return new Promise((resolve, reject) => {
       const social = this.userService.getUserSocial();
       const promises: Promise<{}>[] = [];
-      social.forEach(s => {
+      Array.prototype.forEach.call(social, s => {
         promises.push(this.getStrategy(s.type.name)
-          .getTimeline(s.social_id, s.access_token));
+          .getTimeline(s));
       });
 
       Promise.all(promises)
-        .then((values: Array<Message>[]) => {
+        .then((values: Message[][]) => {
+          // Un array por cada red social
           // Hay que hacer un merge de el array of arrays para convertirlo a array
           const timeline = new Array<Message>();
-          values.forEach(array => {
-            array.forEach(a => {
+          Array.prototype.forEach.call(values, array => {
+            Array.prototype.forEach.call(array, a => {
               timeline.push(a);
             });
           });
@@ -140,19 +144,26 @@ export class SocialService {
         this.alertService.warn('Please select an account');
         reject();
       }
-      const social = this.userService.getUserSocial().filter((s: UserSocial) => {
 
+      // Get social information from selected accounts
+      const social = this.userService.getUserSocial().filter((s: UserSocial) => {
         return accounts.find(a => {
           return a.bd_id === s.id;
         });
       });
-      for (let i = 0; i < social.length; i++) {
-        const s: UserSocial = social[i];
-        resolve(this.getStrategy(s.type.name)
-          .post(s.social_id, s.access_token, message));
-        // promises.push(this.getStrategy(s.type.name)
-        //   .getTimeline(s.social_id, s.access_token));
-      }
+      const promises: Promise<{}>[] = [];
+      Array.prototype.forEach.call(social, s => {
+        promises.push(this.getStrategy(s.type.name)
+          .post(s, message));
+      });
+
+      Promise.all(promises)
+        .then((values) => {
+          // Hay que hacer un merge de el array of arrays para convertirlo a array
+          Array.prototype.forEach.call(values, login => {
+            this.alertService.success(login + ' posted!')
+          });
+        });
 
     });
   }

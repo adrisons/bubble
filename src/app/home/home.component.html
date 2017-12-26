@@ -24,18 +24,20 @@
 <div class="dashboard col-lg-7 col-md-9 col-sm-12">
 
   <div>
+    <!-- Post -->
     <button type="button" class="post" (click)="showPost = !showPost">
       <i class="fa fa-plus fa-1x" aria-hidden="true"></i>
     </button>
-
     <div *ngIf="showPost" class="post">
       <app-post></app-post>
     </div>
 
-
+    <!-- Refresh -->
     <button type="button" class="refresh" (click)="getTimeline()">
       <i class="fa fa-refresh" aria-hidden="true"></i>
     </button>
+
+    <!-- Messages -->
     <div *ngFor="let message of timeline | user : filters.name | message: filters.message | social: filters.social | notEmpty | sortBy: 'date'">
       <div class="card">
         <div class="header">
@@ -46,49 +48,38 @@
 
           <div class="info">
             <label class="title user">{{message.user.name}}</label>
-            <label class="subtitle date">{{message.date}}</label>
+            <label class="subtitle date">{{message.dateStr}}</label>
           </div>
 
           <div class="social-logo">
-            <a href="{{message.link}}" target="_blank" [ngClass]="{'fa fa-facebook fa-1x facebook': message.socialType.name === 'facebook'}"></a>
-            <a href="{{message.link}}" target="_blank" [ngClass]="{'fa fa-twitter fa-1x twitter': message.socialType.name === 'twitter'}"></a>
+            <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-facebook fa-1x facebook': message.socialType.name === 'facebook'}"></a>
+            <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-twitter fa-1x twitter': message.socialType.name === 'twitter'}"></a>
           </div>
 
         </div>
         <div class="body">
           <p *ngIf="message.text" class="comment">{{message.text}}</p>
-          <!-- <div [ngSwitch]="m.type">
-          </div> -->
           <div *ngFor="let m of message.media">
-            <div [ngSwitch]="message.type">
+            <div [ngSwitch]="m.type">
 
               <!-- Video -->
-              <div class="media" *ngSwitchCase="1" >
-                <iframe *ngIf="m.video" [src]="m.video | safeurl">
+              <div class="media" *ngSwitchCase="1">
+                <iframe *ngIf="m.src" [src]="m.src | safeurl">
                 </iframe>
-                <!-- <video *ngIf="m.video" controls>
-                    <source [src]="m.video | safeurl">
+                <!-- <video *ngIf="m.source" controls>
+                    <source [src]="m.source | safeurl">
                 </video> -->
               </div>
 
               <div class="media" *ngSwitchDefault>
-                <a *ngIf="m.img"  href="{{m.url}}" target="_blank">
-                  <img class="data img"  src={{m.img}}>
+                <a *ngIf="m.src" href="{{m.url}}" target="_blank">
+                  <img class="data img" src={{m.src}}>
                 </a>
               </div>
-
             </div>
-            <!-- <a class="data" *ngIf="!m.video" href="{{m.url}}" target="_blank">
-              <img class="img" src={{m.img}}>
-            </a> -->
-            <!-- <video class="data" *ngIf="m.video" class="data"  controls>
-              <source  [src]="m.video | safeurl">
-            </video> -->
-            <!-- <iframe class="data" *ngIf="m.video"  [src]="m.video | safeurl">
-            </iframe> -->
           </div>
-
         </div>
+        <!-- Buttons -->
         <div class="buttons">
           <a class="card-link" (click)="likeToggle(message)">
             <i [ngClass]="{'liked': message.flags.like, 'fa fa-heart': true}" aria-hidden="true"></i>
@@ -102,6 +93,7 @@
           </a>
 
         </div>
+        <!-- Comment -->
         <div *ngIf="message.flags.comment" class="reply">
           <form (ngSubmit)="onReply(replyForm)" #replyForm="ngForm">
             <div class="form-group input-group">

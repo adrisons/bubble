@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
-import { FacebookSocial, FacebookProfile, FacebookTimelineMsg, FacebookAttach } from 'app/shared/_models/FacebookData';
+import { FacebookSocial, FacebookProfile, FacebookMessage, FacebookAttach } from 'app/shared/_models/FacebookData';
 import { UserSocial, SocialType, Message, MessageMedia, MessageType } from 'app/shared/_models/data';
 import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.interface';
 import { facebook_secret } from 'app/shared/_config/auth';
@@ -119,23 +119,23 @@ export class FacebookService implements SocialServiceInterface {
 
 
   // Get the timeline for the user
-  getTimeline(user_id, access_token: string) {
+  getTimeline(userSocial: UserSocial): Promise<Array<Message>> {
     return new Promise((resolve, reject) => {
-      this.fb.api('/' + user_id + '/feed', 'get',
-        { access_token: access_token, fields: 'id, created_time, message, from, permalink_url, picture, type, source' })
+      this.fb.api('/' + userSocial.social_id + '/feed', 'get',
+        { access_token: userSocial.access_token, fields: 'id, created_time, message, from, permalink_url, picture, type, source' })
         .then((res) => {
           const messages = [];
           const requests = res.data.map((post) => {
             return new Promise((res_msgs) => {
-              this.fb.api('/' + post.from.id, 'get', { access_token: access_token, fields: 'picture, link, name' }).then(user => {
-                this.fb.api('/' + post.id + '/attachments', 'get', { access_token: access_token, fields: 'description, media, url' })
-                  .then(attachments => {
-
-                    messages.push(this.toNemoMessage(post, attachments.data, user));
-                    res_msgs();
-
-                  });
-              });
+              this.fb.api('/' + post.from.id, 'get', { access_token: userSocial.access_token, fields: 'picture, link, name' })
+                .then(user => {
+                  this.fb.api('/' + post.id + '/attachments', 'get',
+                    { access_token: userSocial.access_token, fields: 'description, media, url' })
+                    .then(attachments => {
+                      messages.push(this.toNemoMessage(post, attachments.data, user));
+                      res_msgs();
+                    });
+                });
             });
           });
           Promise.all(requests).then(() => {
@@ -152,15 +152,20 @@ export class FacebookService implements SocialServiceInterface {
   }
 
   // Post message in name of the user
-  post(user_id: String, access_token: String, message: String) {
-    this.fb.api('/' + user_id + '/feed', 'post',
-      {
-        'access_token': access_token,
-        'message': message
-      }).then(res => {
-        console.log(res);
-      });
-
+  post(userSocial: UserSocial, message: String): Promise<UserSocial> {
+    return new Promise((resolve, reject) => {
+      this.fb.api('/' + userSocial.user_id + '/feed', 'post',
+        {
+          'access_token': userSocial.access_token,
+          'message': message
+        }).then(res => {
+          console.log(res);
+          resolve(userSocial);
+        }).catch(err => {
+          console.log(err);
+          reject(userSocial);
+        });
+    });
   }
 
 
@@ -179,16 +184,16 @@ export class FacebookService implements SocialServiceInterface {
   // =========
   // Converter
   // =========
-  private toNemoMessage(msg: FacebookTimelineMsg, attachments, user): Message {
+  private toNemoMessage(msg: FacebookMessage, attachments, user): Message {
     const date = new Date(msg.created_time.toString());
     const media: MessageMedia[] = this.attachToMedia(msg, attachments);
     const nemoMsg: Message = {
-      bd_id: '',
+      id: '',
       social_id: msg.id,
       media: media,
       dateStr: date.toLocaleString(),
       date: date,
-      link: msg.permalink_url,
+      url: msg.permalink_url,
       text: msg.message,
       user: {
         id: user.id,
@@ -199,10 +204,10 @@ export class FacebookService implements SocialServiceInterface {
       flags: {
         like: false,
         share: false,
+        share_count: msg.shares,
         comment: false,
       },
-      socialType: this.socialType,
-      type: this.messageTypeConverter(msg.type)
+      socialType: this.socialType
     };
 
     return nemoMsg;
@@ -211,18 +216,26 @@ export class FacebookService implements SocialServiceInterface {
 
 
 
-  private attachToMedia(msg: FacebookTimelineMsg, attach: FacebookAttach[]): MessageMedia[] {
+  private attachToMedia(msg: FacebookMessage, attach: FacebookAttach[]): MessageMedia[] {
     const media: MessageMedia[] = [];
 
-    attach.forEach(a => {
+    Array.prototype.forEach.call(attach, a => {
       if (!a.media) {
         return;
       }
+      const mType = this.messageTypeConverter(msg.type);
+      let src;
+      if (mType === MessageType.video) {
+        src = msg.source;
+      } else {
+        src = a.media ? a.media.image.src : '';
+      }
       media.push({
         text: a.description,
-        img: a.media ? a.media.image.src : '',
-        video: msg.source,
-        url: a.url
+        src: src,
+        url: a.url,
+        type: mType
+        
       });
     });
     return media;

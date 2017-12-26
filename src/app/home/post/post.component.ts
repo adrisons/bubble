@@ -21,9 +21,10 @@ export class PostComponent implements OnInit {
 
   }
 
-  // User clicks on the register button
+  // User clicks on the post button
   onPost(f: NgForm) {
     if (this.checkForm(f)) {
+      // Get the selected accounts to post to
       const activePostAccounts = this.postAccounts.filter(a => a.active);
       this.socialService.post(this.comment, activePostAccounts).then(data => {
         this.alertService.success('Correctly posted!');

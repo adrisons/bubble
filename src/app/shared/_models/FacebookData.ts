@@ -22,7 +22,7 @@ export class FacebookProfile {
     name: String;
 }
 
-export class FacebookTimelineMsg {
+export class FacebookMessage {
     created_time: String;
     id: String;
     message?: String;
@@ -35,6 +35,7 @@ export class FacebookTimelineMsg {
     media?: String[];
     type: any;
     source: String;
+    shares: Number; // Number of shares for the post
 }
 
 
@@ -47,6 +48,9 @@ export class FacebookAttach {
             width: number;
         }
     };
+    target: {
+        id: String;
+        url: String;
+    };
     url: String;
-    type: String;
 }

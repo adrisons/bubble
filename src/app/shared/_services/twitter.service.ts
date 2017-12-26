@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.interface';
-import { UserSocial, SocialType } from 'app/shared/_models/data';
+import { UserSocial, SocialType, Message, MessageMedia, MessageType } from 'app/shared/_models/data';
 import { AuthHttp } from 'angular2-jwt';
 import { twitter_secret } from 'app/shared/_config/auth';
 import { SocialService } from 'app/shared/_services/social.service';
 import { RequestOptions } from '@angular/http';
+import { TwitterMessage } from 'app/shared/_models/TwitterData';
 
 
 @Injectable()
@@ -12,7 +13,10 @@ export class TwitterService implements SocialServiceInterface {
 
 
   private apiEndPoint = '/social/tw';
-
+  private socialType = {
+    id: 3,
+    name: 'twitter'
+  };
   constructor(private http: AuthHttp) {
 
   }
@@ -98,11 +102,120 @@ export class TwitterService implements SocialServiceInterface {
   getFriends() {
     throw new Error('Method not implemented.');
   }
-  getTimeline(user_id: any, access_token: any): Promise<{}> {
-    throw new Error('Method not implemented.');
+
+
+  getTimeline(userSocial: UserSocial): Promise<Array<Message>> {
+    return new Promise((resolve, reject) => {
+      const options = new RequestOptions({ params: { access_token: userSocial.access_token, user_id: userSocial.user_id } });
+      return this.http.get(this.apiEndPoint + '/timeline', options)
+        .toPromise()
+        .then(data => {
+          const messages = [];
+          const res = data.json();
+          if (res.code === 200) {
+            const requests = res.data.map((post) => {
+              messages.push(this.toNemoMessage(post));
+            });
+            Promise.all(requests).then(() => {
+              console.log('Got the user timeline', messages);
+              resolve(messages);
+            });
+          } else {
+            reject('(twitter-timeline): ' + res.code + ':' + res.message);
+          }
+        }).catch(error => {
+          reject('(twitter-timeline):' + error);
+        });
+    });
   }
 
-  post(user_id: String, access_token: String, message: String) {
-    throw new Error('Method not implemented.');
+  post(userSocial: UserSocial, message: String): Promise<UserSocial> {
+
+    return new Promise((resolve, reject) => {
+      return this.http.post(this.apiEndPoint,
+        {
+          'access_token': userSocial.access_token,
+          'user_id': userSocial.user_id,
+          'message': message
+        }).toPromise()
+        .then(r => {
+          const res = r.json();
+          console.log('(twitter-post) res:' + res);
+          if (res.code === 200) {
+            resolve(userSocial);
+          } else {
+            console.log('(twitter-post): ' + res.code + ':' + res.message);
+            reject(userSocial);
+          }
+        }).catch(err => {
+          console.log(err);
+          reject(userSocial);
+        });
+    });
   }
+
+  // Converter
+  private toNemoMessage(msg: TwitterMessage): Message {
+    const date = new Date(msg.created_at.toString());
+    const media: MessageMedia[] = this.getMedia(msg);
+    const nemoMsg: Message = {
+      id: '',
+      social_id: msg.id_str,
+      media: media,
+      dateStr: date.toLocaleString(),
+      date: date,
+      url: 'https://twitter.com/' + msg.user.screen_name + '/status/' + msg.id_str,
+      text: msg.text,
+      user: {
+        id: msg.user.id_str,
+        name: msg.user.name,
+        login: msg.user.screen_name,
+        img: msg.user.profile_image_url_https, // o profile_image_url
+        url: 'https://twitter.com/' + msg.user.screen_name
+      },
+      flags: {
+        like: msg.favorited,
+        like_count: msg.favourites_count,
+        share: msg.retweeted,
+        share_count: msg.retweet_count,
+        comment: false,
+      },
+      socialType: this.socialType
+    };
+
+    return nemoMsg;
+
+  }
+
+
+  private getMedia(msg: TwitterMessage): MessageMedia[] {
+    const res: MessageMedia[] = [];
+    if (msg.entities.media) {
+      Array.prototype.forEach.call(msg.entities.media, m => {
+        res.push(
+          {
+            text: m.display_url,
+            url: m.expanded_url,
+            src: m.media_url_https, // url for loading resource
+            type: this.messageTypeConverter(m.type)
+          });
+      });
+    }
+    return res;
+  }
+
+  private messageTypeConverter(twitterType): MessageType {
+
+    switch (twitterType) {
+
+      case 'photo':
+        return MessageType.photo;
+      case 'video':
+        return MessageType.video;
+      default:
+        return MessageType.text;
+
+    }
+  }
+
 }
