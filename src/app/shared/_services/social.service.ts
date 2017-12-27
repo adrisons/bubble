@@ -132,8 +132,9 @@ export class SocialService {
   }
 
   share(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    const scope = this;
     const callback = function (user) {
-      this.alertService.success(user.login + ' shared!');
+      scope.alertService.success(user.login + ' shared!');
     };
     return this.forEachLightSocial(accounts, callback, 'share', m, text);
   }

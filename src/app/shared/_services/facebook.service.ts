@@ -23,7 +23,7 @@ export class FacebookService implements SocialServiceInterface {
       const loginOptions: LoginOptions = {
         enable_profile_selector: true,
         return_scopes: true,
-        scope: 'public_profile,user_friends,email,pages_show_list,publish_actions'
+        scope: 'public_profile,user_friends,email,pages_show_list,publish_actions,user_posts'
       };
       this.fb.login(loginOptions)
         .then((res: LoginResponse) => {
@@ -122,7 +122,7 @@ export class FacebookService implements SocialServiceInterface {
   getTimeline(userSocial: UserSocial): Promise<Array<Message>> {
     return new Promise((resolve, reject) => {
       this.fb.api('/' + userSocial.social_id + '/feed', 'get',
-        { access_token: userSocial.access_token, fields: 'id, created_time, message, from, permalink_url, picture, type, source' })
+        { access_token: userSocial.access_token, fields: 'id, created_time, message, from, permalink_url, type' })
         .then((res) => {
           const messages = [];
           const requests = res.data.map((post) => {
@@ -171,25 +171,24 @@ export class FacebookService implements SocialServiceInterface {
 
   share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
     return new Promise((resolve, reject) => {
-      const params: UIParams = {
-        href: m.url.toString(),
-        method: 'share'
-      };
-
-      this.fb.ui(params)
-        .then((res: UIResponse) => {
-          if (res.post_id) {
-            resolve();
-          } else {
-            reject();
-          }
-        })
-        .catch((e: any) => {
-          console.error(e);
-          reject();
+      this.fb.api('/' + userSocial.social_id + '/feed', 'post',
+        {
+          'access_token': userSocial.access_token,
+          'link': m.url,
+          'message': text
+        }).then(res => {
+          console.log(res);
+          resolve(userSocial);
+        }).catch(err => {
+          console.log(err);
+          reject(userSocial);
         });
     });
   }
+
+
+
+
 
   // =================
   // Private functions
@@ -213,9 +212,11 @@ export class FacebookService implements SocialServiceInterface {
       },
       flags: {
         like: false,
+        // like_count?: Number;
         share: false,
         share_count: msg.shares,
         comment: false,
+        // comment_count?: Number;
       },
       socialType: this.socialType
     };

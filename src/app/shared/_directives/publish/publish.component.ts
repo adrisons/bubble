@@ -29,14 +29,16 @@ export class PublishComponent implements OnInit {
       // Get the selected accounts to post to
       const activePostAccounts = this.postAccounts.filter(a => a.active);
       this.customFunction(activePostAccounts, this.message, this.comment)
-        .then(data => f.reset())
+        .then(data => {
+          f.reset();
+        })
         .catch(err => console.log('(publish-onSave) err:' + JSON.stringify(err)));
     }
   }
 
   private checkForm(f: NgForm): boolean {
     const formData = f.form['_value'];
-    if (!formData.comment || formData.comment.lenght < 1) {
+    if (this.commentRequired && (!formData.comment || formData.comment.lenght < 1)) {
       this.alertService.error('Comment can not be empty');
       return false;
     } else if (this.postAccounts.length === 0) {

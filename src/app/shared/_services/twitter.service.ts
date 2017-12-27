@@ -157,7 +157,6 @@ export class TwitterService implements SocialServiceInterface {
         {
           'access_token': userSocial.access_token,
           'user_id': userSocial.user_id,
-          // 'social_id': m.social_id,
           'message': text
         }).toPromise()
         .then(r => {
