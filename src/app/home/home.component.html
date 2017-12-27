@@ -29,7 +29,9 @@
       <i class="fa fa-plus fa-1x" aria-hidden="true"></i>
     </button>
     <div *ngIf="showPost" class="post">
-      <app-post></app-post>
+      <div class="card">
+        <app-publish [commentRequired]=true [message]="" [customFunction]="post"></app-publish>
+      </div>
     </div>
 
     <!-- Refresh -->
@@ -79,32 +81,29 @@
             </div>
           </div>
         </div>
+
         <!-- Buttons -->
         <div class="buttons">
           <a class="card-link" (click)="likeToggle(message)">
             <i [ngClass]="{'liked': message.flags.like, 'fa fa-heart': true}" aria-hidden="true"></i>
           </a>
 
-          <a class="card-link" (click)="share(message)">
+          <a class="card-link" (click)="shareToggle(message)">
             <i [ngClass]="{'shared': message.flags.share, 'fa fa-retweet': true}" aria-hidden="true"></i>
           </a>
           <a class="card-link" (click)="commentToggle(message)">
             <i [ngClass]="{'comment': message.flags.comment, 'fa fa-comment': true}" aria-hidden="true"></i>
           </a>
-
         </div>
-        <!-- Comment -->
-        <div *ngIf="message.flags.comment" class="reply">
-          <form (ngSubmit)="onReply(replyForm)" #replyForm="ngForm">
-            <div class="form-group input-group">
-              <textarea type="text" name="comment" class="form-control custom-control" style="resize:none" rows="3" placeholder="Message"
-                [(ngModel)]="comment" required></textarea>
-              <span class="input-group-addon">
-                <button type="submit" class="button-right btn" [disabled]="!replyForm.form.valid || !replyForm.form.dirty">Reply</button>
-              </span>
-            </div>
 
-          </form>
+        <!-- Reply -->
+        <div *ngIf="message.flags.comment" class="reply">
+          <app-publish [commentRequired]=true [message]="message" [customFunction]="reply"></app-publish>
+        </div>
+
+        <!-- Share -->
+        <div *ngIf="message.flags.share" class="reply">
+          <app-publish [commentRequired]=false [message]="message" [customFunction]="share"></app-publish>
         </div>
 
       </div>

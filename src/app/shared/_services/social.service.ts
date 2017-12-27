@@ -22,20 +22,6 @@ export class SocialService {
     private twitterService: TwitterService, private alertService: AlertService) {
   }
 
-
-
-  // Gets the service for the particular social network (strategy pattern)
-  private getStrategy(name: String): SocialServiceInterface {
-    switch (name) {
-      case 'facebook':
-        return this.facebookService;
-      case 'twitter':
-        return this.twitterService;
-      default:
-        break;
-    }
-  }
-
   login(social_name: String) {
     return this.getStrategy(social_name)
       .login(this.userService.getProfile().user.id.toString())
@@ -66,8 +52,7 @@ export class SocialService {
               const socialData: UserSocial = this.convertToUserSocial(res.data[i]);
               if (socialData !== null) {
                 // Save in session
-                this.userService.addSocialNetwork(socialData)
-                  .catch(err => this.alertService.error(err));
+                this.userService.addSocialNetwork(socialData);
               }
             }
             resolve();
@@ -101,13 +86,6 @@ export class SocialService {
     });
   }
 
-  getFriends(socialType: string) {
-    return this.getStrategy(socialType)
-      .getFriends()
-      .then(friends =>
-        console.log(friends));
-  }
-
 
   getTimeline(): Promise<{}> {
     return new Promise((resolve, reject) => {
@@ -137,8 +115,48 @@ export class SocialService {
 
   }
 
-  // TODO: hacer para todas las RS del usuario
-  post(message: String, accounts: LightUserSocial[]): Promise<{}> {
+
+  post(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    const callback = function (user) {
+      this.alertService.success(user.login + ' posted!');
+    };
+    return this.forEachLightSocial(accounts, callback, 'post', m, text);
+  }
+
+  reply(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    // const callback = function (user) {
+    //   this.alertService.success(user.login + ' replied!');
+    // };
+    // return this.forEachLightSocial(accounts, callback, 'reply', m);
+    return null;
+  }
+
+  share(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    const callback = function (user) {
+      this.alertService.success(user.login + ' shared!');
+    };
+    return this.forEachLightSocial(accounts, callback, 'share', m, text);
+  }
+
+  // =================
+  // Private functions
+  // =================
+
+  // Gets the service for the particular social network (strategy pattern)
+  private getStrategy(name: String): SocialServiceInterface {
+    switch (name) {
+      case 'facebook':
+        return this.facebookService;
+      case 'twitter':
+        return this.twitterService;
+      default:
+        break;
+    }
+  }
+
+
+  private forEachLightSocial(accounts: LightUserSocial[], callback: Function, func: string, ...args) {
+    console.log('(foreachLightSocial) args:' + JSON.stringify(arguments));
     return new Promise((resolve, reject) => {
       if (!accounts || accounts.length === 0) {
         this.alertService.warn('Please select an account');
@@ -152,19 +170,20 @@ export class SocialService {
         });
       });
       const promises: Promise<{}>[] = [];
-      Array.prototype.forEach.call(social, s => {
-        promises.push(this.getStrategy(s.type.name)
-          .post(s, message));
+      const scope = this;
+      Array.prototype.forEach.call(social, function (s) {
+        promises.push(scope.getStrategy(s.type.name)[func](s, ...args));
       });
 
       Promise.all(promises)
         .then((values) => {
           // Hay que hacer un merge de el array of arrays para convertirlo a array
-          Array.prototype.forEach.call(values, login => {
-            this.alertService.success(login + ' posted!')
+          Array.prototype.forEach.call(values, user => {
+            callback(user);
           });
-        });
-
+          resolve(values);
+        })
+        .catch(err => reject(err));
     });
   }
 

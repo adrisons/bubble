@@ -99,10 +99,6 @@ export class TwitterService implements SocialServiceInterface {
     });
   }
 
-  getFriends() {
-    throw new Error('Method not implemented.');
-  }
-
 
   getTimeline(userSocial: UserSocial): Promise<Array<Message>> {
     return new Promise((resolve, reject) => {
@@ -129,22 +125,48 @@ export class TwitterService implements SocialServiceInterface {
     });
   }
 
-  post(userSocial: UserSocial, message: String): Promise<UserSocial> {
+  post(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
 
     return new Promise((resolve, reject) => {
       return this.http.post(this.apiEndPoint,
         {
           'access_token': userSocial.access_token,
           'user_id': userSocial.user_id,
-          'message': message
+          'message': text
         }).toPromise()
         .then(r => {
           const res = r.json();
-          console.log('(twitter-post) res:' + res);
+          console.log('(twitter-post) res:' + JSON.stringify(res));
           if (res.code === 200) {
             resolve(userSocial);
           } else {
             console.log('(twitter-post): ' + res.code + ':' + res.message);
+            reject(userSocial);
+          }
+        }).catch(err => {
+          console.log(err);
+          reject(userSocial);
+        });
+    });
+  }
+
+  // Retweet
+  share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      return this.http.post(this.apiEndPoint + '/retweet/' + m.social_id,
+        {
+          'access_token': userSocial.access_token,
+          'user_id': userSocial.user_id,
+          // 'social_id': m.social_id,
+          'message': text
+        }).toPromise()
+        .then(r => {
+          const res = r.json();
+          console.log('(twitter-retweet) res:' + JSON.stringify(res));
+          if (res.code === 200) {
+            resolve(userSocial);
+          } else {
+            console.log('(twitter-retweet): ' + res.code + ':' + res.message);
             reject(userSocial);
           }
         }).catch(err => {

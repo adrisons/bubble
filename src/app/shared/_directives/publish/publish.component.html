@@ -1,0 +1,21 @@
+<form (ngSubmit)="onSave(customForm)" #customForm="ngForm">
+  <div class="form-group block">
+    <div class="input-group ">
+      <textarea type="text" name="comment" class="form-control custom-control" rows="3" placeholder="What are you thinking?" [(ngModel)]="comment"
+        required></textarea>
+
+      <span class="input-group-addon">
+        <button type="submit" class="button-right btn" [disabled]="!customForm.form.valid && commentRequired">Publish</button>
+      </span>
+
+    </div>
+    <!-- Social Accounts -->
+    <div class="checkAccounts" data-toggle="buttons">
+      <!-- <div > -->
+      <label [ngClass]="{'btn btn-secondary col-lg-3 col-sm-4 col-xm-6': true, 'active': a.active}" *ngFor="let a of postAccounts" [ngSwitch]="a.type.name">
+        <i class="{{'fa fa-' + a.type.name}}"></i>
+        <input type="checkbox" name="active" [(ngModel)]="a.active" autocomplete="off" /> {{a.login}}
+      </label>
+    </div>
+  </div>
+</form>

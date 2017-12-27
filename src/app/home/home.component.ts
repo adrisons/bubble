@@ -3,7 +3,7 @@ import { SocialService } from 'app/shared/_services/social.service';
 
 import { message1, message2, message3, message4 } from 'app/shared/_models/mocks';
 import { DataSessionService } from 'app/shared/_services/data-session.service';
-import { Message } from 'app/shared/_models/data';
+import { Message, UserSocial, LightUserSocial } from 'app/shared/_models/data';
 
 @Component({
   selector: 'app-home',
@@ -43,14 +43,27 @@ export class HomeComponent implements OnInit {
   likeToggle(m) {
     m.flags.like = !m.flags.like;
   }
-  share(m) {
-    m.shared = true;
+
+  shareToggle(m) {
+    m.flags.comment = false;
+    m.flags.share = !m.flags.share;
   }
+
   commentToggle(m) {
+    m.flags.share = false;
     m.flags.comment = !m.flags.comment;
   }
-  onReply(m) {
 
+  share(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    return this.socialService.share(accounts, m, text);
+  }
+
+  reply(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    return this.socialService.reply(accounts, m, text);
+  }
+
+  post(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    return this.socialService.post(accounts, m, text);
   }
 
 

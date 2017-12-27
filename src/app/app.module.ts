@@ -11,30 +11,27 @@ import { HomeComponent } from './home/home.component';
 // Importación de elementos de bootstrap
 import { AppBootstrapModule } from './bootstrap/bootstrap.module';
 import { UserModule } from 'app/user/user.module';
-
-
 import { SharedModule } from 'app/shared/shared.module';
-import { AlertComponent } from 'app/shared/_directives/alert/alert.component';
+
 
 import { OnlyLoggedInUsersGuard } from 'app/shared/_utils/onlyLoggedInUsersGuard';
-import { PostComponent } from './home/post/post.component';
-import { SortByPipe } from 'app/shared/_pipes/sortBy.pipe';
-import { MessagePipe, UserPipe, SocialPipe, SafeUrlPipe, NotEmptyPipe } from 'app/shared/_pipes/filter.pipe';
+// import { SortByPipe } from 'app/shared/_pipes/sortBy.pipe';
+// import { MessagePipe, UserPipe, SocialPipe, SafeUrlPipe, NotEmptyPipe } from 'app/shared/_pipes/filter.pipe';
+// import { PublishComponent } from 'app/shared/_directives/publish/publish.component';
+
 
 // decorador que define un módulo
 @NgModule({
   declarations: [
     AppComponent,
-    AlertComponent,
     HomeComponent,
-    PostComponent,
-    SortByPipe, MessagePipe, UserPipe, SocialPipe, SafeUrlPipe, NotEmptyPipe
+    // SortByPipe, MessagePipe, UserPipe, SocialPipe, SafeUrlPipe, NotEmptyPipe, PublishComponent
   ],
   imports: [
     BrowserModule,
     AppBootstrapModule,
-    FormsModule,
-    HttpModule,
+    // FormsModule,
+    // HttpModule,
     UserModule,
     SharedModule,
     AppRoutingModule // el módulo de rutas ya configurado

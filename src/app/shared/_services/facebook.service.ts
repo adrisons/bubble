@@ -152,12 +152,12 @@ export class FacebookService implements SocialServiceInterface {
   }
 
   // Post message in name of the user
-  post(userSocial: UserSocial, message: String): Promise<UserSocial> {
+  post(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
     return new Promise((resolve, reject) => {
-      this.fb.api('/' + userSocial.user_id + '/feed', 'post',
+      this.fb.api('/' + userSocial.social_id + '/feed', 'post',
         {
           'access_token': userSocial.access_token,
-          'message': message
+          'message': text
         }).then(res => {
           console.log(res);
           resolve(userSocial);
@@ -169,21 +169,31 @@ export class FacebookService implements SocialServiceInterface {
   }
 
 
-  /**
-   * Get the users friends
-   */
-  getFriends() {
-    this.fb.api('/me/friends')
-      .then((res: any) => {
-        console.log('Got the users friends', res);
-        return res;
-      })
-      .catch((error) => console.error('(getfriends-facebook) Error: ', error));
+  share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      const params: UIParams = {
+        href: m.url.toString(),
+        method: 'share'
+      };
+
+      this.fb.ui(params)
+        .then((res: UIResponse) => {
+          if (res.post_id) {
+            resolve();
+          } else {
+            reject();
+          }
+        })
+        .catch((e: any) => {
+          console.error(e);
+          reject();
+        });
+    });
   }
 
-  // =========
-  // Converter
-  // =========
+  // =================
+  // Private functions
+  // =================
   private toNemoMessage(msg: FacebookMessage, attachments, user): Message {
     const date = new Date(msg.created_time.toString());
     const media: MessageMedia[] = this.attachToMedia(msg, attachments);
@@ -235,7 +245,7 @@ export class FacebookService implements SocialServiceInterface {
         src: src,
         url: a.url,
         type: mType
-        
+
       });
     });
     return media;

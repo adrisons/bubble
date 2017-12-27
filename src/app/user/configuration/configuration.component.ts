@@ -40,7 +40,8 @@ export class ConfigurationComponent implements OnInit {
           .subscribe(this.httpResCtrl);
       })
       .catch(error => {
-        this.alertService.warn(error);
+        this.alertService.warn('Error saving user');
+        console.log('(config-onSave) error:' + error);
       })
       ;
   }
@@ -52,7 +53,7 @@ export class ConfigurationComponent implements OnInit {
   addSocial() {
     this.socialAuth.login();
   }
-  
+
   // Remove social account from user
   removeSocial(us: UserSocial) {
     // this.socialAuth.logout(social);
@@ -68,14 +69,14 @@ export class ConfigurationComponent implements OnInit {
   // Add facebook account to user
   private addFacebook() {
     this.socialService.login('facebook')
-    .then(() => this.updateUser())
-    .catch(() => this.alertService.error('Error linking facebook'));
+      .then(() => this.updateUser())
+      .catch(() => this.alertService.error('Error linking facebook'));
   }
   // Add twitter account to user
   private addTwitter() {
     this.socialService.login('twitter')
-    .then(() => this.updateUser())
-    .catch(() => this.alertService.error('Error linking twitter'));
+      .then(() => this.updateUser())
+      .catch(() => this.alertService.error('Error linking twitter'));
   }
 
 

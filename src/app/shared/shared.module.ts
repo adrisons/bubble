@@ -15,9 +15,10 @@ import { SocialService } from 'app/shared/_services/social.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { FacebookService } from 'app/shared/_services/facebook.service';
 import { FacebookModule } from 'ng2-facebook-sdk';
-import { FilterPipe } from 'app/shared/_pipes/filter.pipe';
+import { FilterPipe, MessagePipe, UserPipe, SocialPipe, SafeUrlPipe, NotEmptyPipe } from 'app/shared/_pipes/filter.pipe';
 import { SortByPipe } from 'app/shared/_pipes/sortBy.pipe';
 import { DataSessionService } from 'app/shared/_services/data-session.service';
+import { PublishComponent } from 'app/shared/_directives/publish/publish.component';
 
 /**
  * El módulo compartido se importa en todos los demás módulos
@@ -48,8 +49,13 @@ import { DataSessionService } from 'app/shared/_services/data-session.service';
   ],
   exports: [// Lo que aquí se exporte se importará en los módulos funcionales
     CommonModule,
-    FormsModule
+    FormsModule,
+    AlertComponent,
+    SortByPipe, MessagePipe, UserPipe, SocialPipe, SafeUrlPipe, NotEmptyPipe, PublishComponent
   ],
-  declarations: []
+  declarations: [
+    AlertComponent,
+    SortByPipe, MessagePipe, UserPipe, SocialPipe, SafeUrlPipe, NotEmptyPipe, PublishComponent
+  ]
 })
 export class SharedModule { }
