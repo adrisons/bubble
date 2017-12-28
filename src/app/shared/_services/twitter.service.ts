@@ -6,6 +6,7 @@ import { twitter_secret } from 'app/shared/_config/auth';
 import { SocialService } from 'app/shared/_services/social.service';
 import { RequestOptions } from '@angular/http';
 import { TwitterMessage } from 'app/shared/_models/TwitterData';
+import { AlertService } from 'app/shared/_services/alert.service';
 
 
 @Injectable()
@@ -17,7 +18,7 @@ export class TwitterService implements SocialServiceInterface {
     id: 3,
     name: 'twitter'
   };
-  constructor(private http: AuthHttp) {
+  constructor(private http: AuthHttp, private alertService: AlertService) {
 
   }
 
@@ -87,6 +88,7 @@ export class TwitterService implements SocialServiceInterface {
     });
   }
 
+  // Not used
   logout(userId: number, token: string) {
     return new Promise((resolve, reject) => {
       //     return this.http.post(this.apiEndPoint + '/rm', { user_id: userId, access_token: token })
@@ -153,27 +155,43 @@ export class TwitterService implements SocialServiceInterface {
   // Retweet
   share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
     return new Promise((resolve, reject) => {
-      return this.http.post(this.apiEndPoint + '/retweet/' + m.social_id,
-        {
-          'access_token': userSocial.access_token,
-          'user_id': userSocial.user_id,
-          'message': text
-        }).toPromise()
-        .then(r => {
-          const res = r.json();
-          console.log('(twitter-retweet) res:' + JSON.stringify(res));
-          if (res.code === 200) {
-            resolve(userSocial);
-          } else {
-            console.log('(twitter-retweet): ' + res.code + ':' + res.message);
+      if (!this.isTwitterMessage(m)) {
+        reject();
+      } else {
+
+        return this.http.post(this.apiEndPoint + '/retweet/' + m.social_id,
+          {
+            'access_token': userSocial.access_token,
+            'user_id': userSocial.user_id,
+            'message': text
+          }).toPromise()
+          .then(r => {
+            const res = r.json();
+            console.log('(twitter-retweet) res:' + JSON.stringify(res));
+            if (res.code === 200) {
+              resolve(userSocial);
+            } else {
+              console.log('(twitter-retweet): ' + res.code + ':' + res.message);
+              reject(userSocial);
+            }
+          }).catch(err => {
+            console.log(err);
             reject(userSocial);
-          }
-        }).catch(err => {
-          console.log(err);
-          reject(userSocial);
-        });
+          });
+      }
     });
   }
+
+  private isTwitterMessage(m: Message) {
+    if (m.socialType.id !== this.socialType.id) {
+      this.alertService.warn('Cannot publish ' + m.socialType.name + ' message in Twitter');
+      return false;
+    } else {
+      return true;
+    }
+
+  }
+
 
   // Converter
   private toNemoMessage(msg: TwitterMessage): Message {
@@ -196,7 +214,7 @@ export class TwitterService implements SocialServiceInterface {
       },
       flags: {
         like: msg.favorited,
-        like_count: msg.favourites_count,
+        like_count: msg.favorite_count,
         share: msg.retweeted,
         share_count: msg.retweet_count,
         comment: false,

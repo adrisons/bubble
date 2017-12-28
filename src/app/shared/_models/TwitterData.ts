@@ -37,9 +37,9 @@ export class TwitterMessage {
         media: TWMediaObject[];
     };
     retweeted: Boolean; // The actual user has retweeted
-    retweet_count: Number; // Number of retweets
+    retweet_count: number; // number of retweets
     favorited: Boolean; // The actual user has favorited
-    favourites_count: Number;
+    favorite_count: number;
 }
 
 

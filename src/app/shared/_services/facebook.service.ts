@@ -7,6 +7,7 @@ import { facebook_secret } from 'app/shared/_config/auth';
 import { FacebookService as ngxFbService, LoginResponse, LoginOptions, UIResponse, UIParams } from 'ng2-facebook-sdk';
 import { forEach } from '@angular/router/src/utils/collection';
 import { UserService } from 'app/user/user.service';
+import { AlertService } from 'app/shared/_services/alert.service';
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class FacebookService implements SocialServiceInterface {
   private apiEndPoint = '/social';
   private socialType: SocialType = { id: 2, name: 'facebook' };
 
-  constructor(private http: AuthHttp, private fb: ngxFbService) {
+  constructor(private http: AuthHttp, private fb: ngxFbService, private alertService: AlertService) {
     fb.init(facebook_secret);
   }
 
@@ -77,25 +78,24 @@ export class FacebookService implements SocialServiceInterface {
     });
   }
 
-
+  // Not used
   logout(access_id: number): Promise<{}> {
-    // return this.fb.logout();
+
     return new Promise((resolve, reject) => {
 
-      this.fb.logout().then(() => {
-        return this.http.post(this.apiEndPoint + '/rm', { access_id: access_id })
-          .toPromise()
-          .then(res => {
-            console.log('Logged out!');
-            resolve(res.json());
-          })
-          .catch((error) => {
-            console.error('(logout-facebook) Error: ', error);
+      // this.fb.logout().then(() => {
+      //   return this.http.post(this.apiEndPoint + '/rm', { access_id: access_id })
+      //     .toPromise()
+      //     .then(res => {
+      //       console.log('Logged out!');
+      //       resolve(res.json());
+      //     })
+      //     .catch((error) => {
+      //       console.error('(logout-facebook) Error: ', error);
             reject();
-          });
-      });
+      //     });
+      // });
     });
-
   }
 
 
@@ -185,9 +185,6 @@ export class FacebookService implements SocialServiceInterface {
         });
     });
   }
-
-
-
 
 
   // =================

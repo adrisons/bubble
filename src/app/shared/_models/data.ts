@@ -66,11 +66,11 @@ export class Message {
   text: String;
   flags: {
     like: Boolean;
-    like_count?: Number;
+    like_count?: number;
     share: Boolean;
-    share_count?: Number;
+    share_count?: number;
     comment: Boolean;
-    comment_count?: Number;
+    comment_count?: number;
   };
   socialType: SocialType;
   media: MessageMedia[];

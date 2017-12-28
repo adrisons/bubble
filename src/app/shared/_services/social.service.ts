@@ -123,18 +123,30 @@ export class SocialService {
     return this.forEachLightSocial(accounts, callback, 'post', m, text);
   }
 
+  // like(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+  //   const callback = function (user) {
+  //     this.alertService.success(user.login + ' liked!');
+  //     m.flags.like = true;
+  //     m.flags.like_count ++;
+  //   };
+  //   return this.forEachLightSocial(accounts, callback, 'like', m);
+  // }
+
   reply(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
-    // const callback = function (user) {
-    //   this.alertService.success(user.login + ' replied!');
-    // };
-    // return this.forEachLightSocial(accounts, callback, 'reply', m);
-    return null;
+    const callback = function (user) {
+      this.alertService.success(user.login + ' replied!');
+      m.flags.comment = true;
+      m.flags.comment_count ++;
+    };
+    return this.forEachLightSocial(accounts, callback, 'reply', m);
   }
 
   share(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
     const scope = this;
     const callback = function (user) {
       scope.alertService.success(user.login + ' shared!');
+      m.flags.share = true;
+      m.flags.share_count ++;
     };
     return this.forEachLightSocial(accounts, callback, 'share', m, text);
   }

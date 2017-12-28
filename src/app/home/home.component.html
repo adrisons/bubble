@@ -44,7 +44,7 @@
       <div class="card">
         <div class="header">
 
-          <a href="{{message.user.url}}" target="_blank">
+          <a href="{{message.user.url}}" target="_blank" title="Link to the user">
             <img class="img" src={{message.user.img}} alt="User">
           </a>
 
@@ -53,8 +53,8 @@
             <label class="subtitle date">{{message.dateStr}}</label>
           </div>
 
-          <div class="social-logo">
-            <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-facebook fa-1x facebook': message.socialType.name === 'facebook'}"></a>
+          <div class="social-logo"  title="Link to the post">
+            <a href="{{message.url}}" target="_blank"  [ngClass]="{'fa fa-facebook fa-1x facebook': message.socialType.name === 'facebook'}"></a>
             <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-twitter fa-1x twitter': message.socialType.name === 'twitter'}"></a>
           </div>
 
@@ -74,7 +74,7 @@
               </div>
 
               <div class="media" *ngSwitchDefault>
-                <a *ngIf="m.src" href="{{m.url}}" target="_blank">
+                <a *ngIf="m.src" href="{{m.url}}" target="_blank" title="Link to the image">
                   <img class="data img" src={{m.src}}>
                 </a>
               </div>
@@ -84,14 +84,14 @@
 
         <!-- Buttons -->
         <div class="buttons">
-          <a class="card-link" (click)="likeToggle(message)">
-            <i [ngClass]="{'liked': message.flags.like, 'fa fa-heart': true}" aria-hidden="true"></i>
+          <a class="card-link" (click)="likeToggle(message)" title="Like">
+            <i [ngClass]="{'liked': message.flags.like, 'fa fa-heart': true}" aria-hidden="true"> {{message.flags.like_count}}</i>
           </a>
 
-          <a class="card-link" (click)="shareToggle(message)">
-            <i [ngClass]="{'shared': message.flags.share, 'fa fa-retweet': true}" aria-hidden="true"></i>
+          <a class="card-link" (click)="shareToggle(message)" title="Share">
+            <i [ngClass]="{'shared': message.flags.share, 'fa fa-retweet': true}" aria-hidden="true"> {{message.flags.share_count}}</i>
           </a>
-          <a class="card-link" (click)="commentToggle(message)">
+          <a class="card-link" (click)="commentToggle(message)" title="Comment">
             <i [ngClass]="{'comment': message.flags.comment, 'fa fa-comment': true}" aria-hidden="true"></i>
           </a>
         </div>
