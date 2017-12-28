@@ -116,41 +116,54 @@ export class SocialService {
   }
 
 
-  post(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+  post(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
     const scope = this;
-    const callback = function (user) {
+    const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' posted!');
     };
-    return this.forEachLightSocial(accounts, callback, 'post', null, text);
+    return this.forEachLightSocial(accounts, forEachCallback, 'post', null, text).then(data => callback(data));
   }
 
-  // like(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
-  //   const callback = function (user) {
-  //     this.alertService.success(user.login + ' liked!');
-  //     m.flags.like = true;
-  //     m.flags.like_count ++;
-  //   };
-  //   return this.forEachLightSocial(accounts, callback, 'like', m, text);
-  // }
-
-  reply(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+  like(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
     const scope = this;
-    const callback = function (user) {
+    const forEachCallback = function (user) {
+      scope.alertService.success(user.login + ' liked!');
+      m.flags.like_count ? m.flags.like_count++ : m.flags.like_count = 1;
+      m.liked = true;
+    };
+    return this.forEachLightSocial(accounts, forEachCallback, 'like', m, text).then(data => callback(data));
+  }
+
+  unlike(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
+    const scope = this;
+    const forEachCallback = function (user) {
+      scope.alertService.success(user.login + ' unliked!');
+      m.flags.like_count ? m.flags.like_count-- : m.flags.like_count = 0;
+      m.liked = false;
+    };
+    return this.forEachLightSocial(accounts, forEachCallback, 'unlike', m, text).then(data => callback(data));
+  }
+
+  reply(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
+    const scope = this;
+    const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' replied!');
       m.flags.comment = true;
-      m.flags.comment_count ++;
+      m.flags.comment_count ? m.flags.comment_count++ : m.flags.comment_count = 1;
     };
-    return this.forEachLightSocial(accounts, callback, 'reply', m, text);
+    return this.forEachLightSocial(accounts, forEachCallback, 'reply', m, text).then(data => callback(data));
   }
 
-  share(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+  share(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
     const scope = this;
-    const callback = function (user) {
+    const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' shared!');
       m.flags.share = true;
-      m.flags.share_count ++;
+      m.flags.share_count ? m.flags.share_count++ : m.flags.share_count = 1;
+
+      m.shared = true;
     };
-    return this.forEachLightSocial(accounts, callback, 'share', m, text);
+    return this.forEachLightSocial(accounts, forEachCallback, 'share', m, text).then(data => callback(data));
   }
 
   // =================
@@ -186,14 +199,14 @@ export class SocialService {
       });
       const promises: Promise<{}>[] = [];
       const scope = this;
-      Array.prototype.forEach.call(social, function (s) {
+      social.map(function (s) {
         promises.push(scope.getStrategy(s.type.name)[func](s, ...args));
       });
 
       Promise.all(promises)
         .then((values) => {
           // Hay que hacer un merge de el array of arrays para convertirlo a array
-          Array.prototype.forEach.call(values, user => {
+          values.map(user => {
             callback(user);
           });
           resolve(values);

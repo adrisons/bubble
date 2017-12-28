@@ -65,16 +65,17 @@ export class Message {
   url: String;
   text: String;
   flags: {
-    like: Boolean;
+    like?: Boolean;
     like_count?: number;
-    share: Boolean;
+    share?: Boolean;
     share_count?: number;
-    comment: Boolean;
+    comment?: Boolean;
     comment_count?: number;
   };
   socialType: SocialType;
   media: MessageMedia[];
-
+  liked?: Boolean;
+  shared?: Boolean;
 }
 
 export class MessageMedia {

@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   };
 
 
-  private timeline: Array<Message> = [];
+  private timeline: Message[] = [];
   constructor(private socialService: SocialService, private dataService: DataSessionService, private userService: UserService) { }
 
   ngOnInit() {
@@ -43,29 +43,48 @@ export class HomeComponent implements OnInit {
 
 
   likeToggle(m: Message) {
+    m.flags.share = false;
+    m.flags.comment = false;
     m.flags.like = !m.flags.like;
   }
 
   shareToggle(m: Message) {
     m.flags.comment = false;
+    m.flags.like = false;
     m.flags.share = !m.flags.share;
   }
 
   commentToggle(m: Message) {
     m.flags.share = false;
+    m.flags.like = false;
     m.flags.comment = !m.flags.comment;
   }
 
-  share(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
-    return this.socialService.share(accounts, m, text);
+  share(accounts: LightUserSocial[], m: Message, text: String) {
+
+    return this.socialService.share(accounts, m, text, () => {
+      this.shareToggle(m);
+    });
   }
 
-  reply(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
-    return this.socialService.reply(accounts, m, text);
+  reply(accounts: LightUserSocial[], m: Message, text: String) {
+
+    return this.socialService.reply(accounts, m, text, () => { this.commentToggle(m); });
   }
 
-  post(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
-    return this.socialService.post(accounts, m, text);
+  post(accounts: LightUserSocial[], m: Message, text: String) {
+    return this.socialService.post(accounts, m, text, () => {});
+  }
+
+  like(accounts: LightUserSocial[], m: Message, text: String) {
+
+    if (m.liked) {
+      return this.socialService.unlike(accounts, m, text, () =>
+        this.likeToggle(m));
+    } else {
+      return this.socialService.like(accounts, m, text, () =>
+        this.likeToggle(m));
+    }
   }
 
 }

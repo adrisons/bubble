@@ -13,7 +13,8 @@ import { SocialService } from 'app/shared/_services/social.service';
 })
 export class PublishComponent implements OnInit {
   @Input() message: Message;
-  @Input() commentRequired: boolean;
+  @Input() commentRequired: boolean = false;
+  @Input() showText: boolean = true;
   @Input() customFunction: Function;
   @Input() restricted: Boolean = false;
 
@@ -38,7 +39,10 @@ export class PublishComponent implements OnInit {
           f.reset();
         })
         .catch(err => {
-          console.log('(publish-onSave) err:' + JSON.stringify(err));
+          if (err) {
+            console.log('(publish-onSave) err:' + JSON.stringify(err));
+            this.alertService.error('Error: ' + err);
+          }
         });
     }
   }

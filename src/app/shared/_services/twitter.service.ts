@@ -180,12 +180,68 @@ export class TwitterService implements SocialServiceInterface {
             if (res.code === 200) {
               resolve(userSocial);
             } else {
-              console.log('(twitter-retweet): ' + res.code + ':' + res.message);
+              reject(res.message);
+            }
+          }).catch(err => {
+            console.log(err);
+            reject(err);
+          });
+      }
+    });
+  }
+
+
+  like(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      if (!this.isTwitterMessage(m)) {
+        reject();
+      } else {
+
+        return this.http.post(this.apiEndPoint + '/like/' + m.social_id,
+          {
+            'access_token': userSocial.access_token,
+            'user_id': userSocial.user_id,
+            'message': text
+          }).toPromise()
+          .then(r => {
+            const res = r.json();
+            if (res.code === 200) {
+              resolve(userSocial);
+            } else {
+              console.log('(twitter-like): ' + res.code + ':' + res.message);
               reject(userSocial);
             }
           }).catch(err => {
             console.log(err);
-            reject(userSocial);
+            reject(err);
+          });
+      }
+    });
+  }
+
+  unlike(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      if (!this.isTwitterMessage(m)) {
+        reject();
+      } else {
+
+        return this.http.post(this.apiEndPoint + '/unlike/' + m.social_id,
+          {
+            'access_token': userSocial.access_token,
+            'user_id': userSocial.user_id,
+            'message': text
+          }).toPromise()
+          .then(r => {
+            const res = r.json();
+            if (res.code === 200) {
+              resolve(userSocial);
+            } else {
+              console.log('(twitter-unlike): ' + res.code + ':' + res.message);
+              reject(userSocial);
+            }
+          }).catch(err => {
+            console.log(err);
+            reject(err);
           });
       }
     });
@@ -222,13 +278,12 @@ export class TwitterService implements SocialServiceInterface {
         url: 'https://twitter.com/' + msg.user.screen_name
       },
       flags: {
-        like: msg.favorited,
         like_count: msg.favorite_count,
-        share: msg.retweeted,
         share_count: msg.retweet_count,
-        comment: false,
       },
-      socialType: this.socialType
+      socialType: this.socialType,
+      shared: msg.retweeted,
+      liked: msg.favorited
     };
 
     return nemoMsg;
@@ -239,7 +294,7 @@ export class TwitterService implements SocialServiceInterface {
   private getMedia(msg: TwitterMessage): MessageMedia[] {
     const res: MessageMedia[] = [];
     if (msg.entities.media) {
-      Array.prototype.forEach.call(msg.entities.media, m => {
+      msg.entities.media.map( m => {
         res.push(
           {
             text: m.display_url,

@@ -29,7 +29,7 @@
     </button>
     <div *ngIf="showPost" class="post">
       <div class="card">
-        <app-publish [commentRequired]=true [message]="" [customFunction]="post"></app-publish>
+        <app-publish [commentRequired]="true" [customFunction]="post"></app-publish>
       </div>
     </div>
 
@@ -84,11 +84,11 @@
         <!-- Buttons -->
         <div class="buttons">
           <a class="card-link" (click)="likeToggle(message)" title="Like">
-            <i [ngClass]="{'liked': message.flags.like, 'fa fa-heart': true}" aria-hidden="true"> {{message.flags.like_count}}</i>
+            <i [ngClass]="{'liked': message.flags.like || message.liked, 'fa fa-heart': true}" aria-hidden="true"> {{message.flags.like_count}}</i>
           </a>
 
           <a class="card-link" (click)="shareToggle(message)" title="Share">
-            <i [ngClass]="{'shared': message.flags.share, 'fa fa-retweet': true}" aria-hidden="true"> {{message.flags.share_count}}</i>
+            <i [ngClass]="{'shared': message.flags.share || message.shared , 'fa fa-retweet': true}" aria-hidden="true"> {{message.flags.share_count}}</i>
           </a>
 
           <a class="card-link" (click)="commentToggle(message)" title="Comment">
@@ -96,15 +96,21 @@
           </a>
         </div>
 
-        <!-- Reply -->
-        <div *ngIf="message.flags.comment" class="reply">
-          <app-publish [commentRequired]=true [message]="message" [customFunction]="reply" [restricted]="true"></app-publish>
-        </div>
-
+        <!-- Like -->
+        <div *ngIf="message.flags.like" class="reply">
+            <app-publish [commentRequired]="false" [message]="message" [showText]="false" [customFunction]="like.bind(this)" [restricted]="true"></app-publish>
+          </div>
+        
         <!-- Share -->
         <div *ngIf="message.flags.share" class="reply">
-          <app-publish [commentRequired]=false [message]="message" [customFunction]="share"></app-publish>
+          <app-publish [commentRequired]="false" [message]="message" [customFunction]="share.bind(this)"></app-publish>
         </div>
+
+        <!-- Reply -->
+        <div *ngIf="message.flags.comment" class="reply">
+          <app-publish [commentRequired]="true" [message]="message" [customFunction]="reply.bind(this)" [restricted]="true"></app-publish>
+        </div>
+
 
       </div>
 

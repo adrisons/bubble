@@ -25,10 +25,23 @@
     float: left;
     width: 100%;
     label {
+      position: relative;
+      float: left;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
+}
 
+.no-padding {
+  padding: 0;
+  button {
+    padding: 6px;
+  }
+}
+
+.like {
+  position: relative;
+  float: right;
 }

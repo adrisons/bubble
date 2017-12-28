@@ -146,7 +146,7 @@ export class FacebookService implements SocialServiceInterface {
         })
         .catch((error) => {
           console.error('(gettimeline-facebook) Error: ', error);
-          reject(error);
+          reject(error.message);
         });
     });
   }
@@ -163,7 +163,7 @@ export class FacebookService implements SocialServiceInterface {
           resolve(userSocial);
         }).catch(err => {
           console.log(err);
-          reject(userSocial);
+          reject(err.message);
         });
     });
   }
@@ -182,7 +182,7 @@ export class FacebookService implements SocialServiceInterface {
           resolve(userSocial);
         }).catch(err => {
           console.log(err);
-          reject(userSocial);
+          reject(err.message);
         });
     });
   }
@@ -201,11 +201,40 @@ export class FacebookService implements SocialServiceInterface {
           resolve(userSocial);
         }).catch(err => {
           console.log(err);
-          reject(userSocial);
+          reject(err.message);
         });
     });
   }
 
+  like(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      this.fb.api('/' + m.social_id + '/likes', 'post',
+        {
+          'access_token': userSocial.access_token
+        }).then(res => {
+          console.log(res);
+          resolve(res);
+        }).catch(err => {
+          console.log(err);
+          reject(err.message);
+        });
+    });
+  }
+
+  unlike(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      this.fb.api('/' + m.social_id + '/likes', 'delete',
+        {
+          'access_token': userSocial.access_token
+        }).then(res => {
+          console.log(res);
+          resolve(res);
+        }).catch(err => {
+          console.log(err);
+          reject(err.message);
+        });
+    });
+  }
 
   // =================
   // Private functions
@@ -247,7 +276,7 @@ export class FacebookService implements SocialServiceInterface {
   private attachToMedia(msg: FacebookMessage, attach: FacebookAttach[]): MessageMedia[] {
     const media: MessageMedia[] = [];
 
-    Array.prototype.forEach.call(attach, a => {
+    attach.map(a => {
       if (!a.media) {
         return;
       }

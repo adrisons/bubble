@@ -32,6 +32,9 @@
       padding-left: 15px;
       padding-top: 5px;
       .user {
+        position: relative;
+        float: left;
+        width: auto;
         font-size: 18px;
       }
       .date {
