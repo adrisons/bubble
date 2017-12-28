@@ -86,10 +86,8 @@
       }
       .data {
         position: relative; // float: left;
-        border: none;
-        // width: 100%;
-        vertical-align: middle;
-        // max-width: 50%;
+        border: none; // width: 100%;
+        vertical-align: middle; // max-width: 50%;
         // max-height: 50%;
         border-radius: 5px;
         white-space: nowrap;
@@ -145,39 +143,22 @@
   }
 }
 
-.sidebar {
-  padding-top: 20px;
-  .content {
-    .title {
-      position: relative;
-      float: left;
-      width: 100%;
-      height: 100%;
-      font: 20px $typography;
-      text-transform: uppercase;
-      text-align: center;
-      width: 100%;
-      color: #594F4F;
-      margin-bottom: 15px;
-    }
-    box-shadow: 1px 1px 2px #9DE0AD;
-    position: relative;
-    float: left;
-    width: 100%;
-    display: block; // margin-bottom: 10px;
-    border: 1px solid #9DE0AD;
-    border-radius: 5px;
-    padding: 10px;
-    /* box-shadow: 1px 1px 15px #9DE0AD; */
-    background: white;
-    input {
-      margin-bottom: 10px;
-    }
-  }
-  .list-group {
-    position: relative;
-    float: left;
-    width: 100%;
-    height: 100%;
-  }
+.title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  font: 20px $typography;
+  text-transform: uppercase;
+  text-align: center;
+  width: 100%;
+  color: #594F4F;
+  margin-bottom: 15px;
+}
+
+.list-group {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }

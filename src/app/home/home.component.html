@@ -1,11 +1,11 @@
-<div *ngIf="true" class="col-lg-3 col-md-3 col-sm-12 sidebar">
-  <div class="content">
+<div class="col-lg-3 col-md-3 col-sm-12">
+  <div class="card mt-3">
     <div class="title">Filters</div>
     <div class="list-group">
       <input class="list-group-item" placeholder="Name" [(ngModel)]="filters.name">
       <input class="list-group-item" placeholder="Message" [(ngModel)]="filters.message">
     </div>
-    <div class="btn-group" data-toggle="buttons">
+    <div class="btn-group mt-1" data-toggle="buttons">
       <label [ngClass]="{'btn btn-secondary': true, 'active': filters.social.twitter}">
         <input type="checkbox" [(ngModel)]="filters.social.twitter" autocomplete="off">
         <i class="fa fa-twitter"></i>
@@ -16,12 +16,11 @@
       </label>
     </div>
   </div>
-  <!-- <button type="submit" [ngClass]="{' btn': true}" [disabled]="!loginForm.form.valid">Filter</button> -->
 
 </div>
 
 
-<div class="dashboard col-lg-7 col-md-9 col-sm-12">
+<div class="col-lg-7 col-md-9 col-sm-12 mt-3">
 
   <div>
     <!-- Post -->
@@ -53,8 +52,8 @@
             <label class="subtitle date">{{message.dateStr}}</label>
           </div>
 
-          <div class="social-logo"  title="Link to the post">
-            <a href="{{message.url}}" target="_blank"  [ngClass]="{'fa fa-facebook fa-1x facebook': message.socialType.name === 'facebook'}"></a>
+          <div class="social-logo" title="Link to the post">
+            <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-facebook fa-1x facebook': message.socialType.name === 'facebook'}"></a>
             <a href="{{message.url}}" target="_blank" [ngClass]="{'fa fa-twitter fa-1x twitter': message.socialType.name === 'twitter'}"></a>
           </div>
 
