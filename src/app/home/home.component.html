@@ -91,6 +91,7 @@
           <a class="card-link" (click)="shareToggle(message)" title="Share">
             <i [ngClass]="{'shared': message.flags.share, 'fa fa-retweet': true}" aria-hidden="true"> {{message.flags.share_count}}</i>
           </a>
+
           <a class="card-link" (click)="commentToggle(message)" title="Comment">
             <i [ngClass]="{'comment': message.flags.comment, 'fa fa-comment': true}" aria-hidden="true"></i>
           </a>
@@ -98,7 +99,7 @@
 
         <!-- Reply -->
         <div *ngIf="message.flags.comment" class="reply">
-          <app-publish [commentRequired]=true [message]="message" [customFunction]="reply"></app-publish>
+          <app-publish [commentRequired]=true [message]="message" [customFunction]="reply" [restricted]="true"></app-publish>
         </div>
 
         <!-- Share -->

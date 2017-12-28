@@ -127,15 +127,20 @@ export class TwitterService implements SocialServiceInterface {
     });
   }
 
+  // in_reply_to_status_id: This parameter will be ignored unless the author of the
+  // Tweet this parameter references is mentioned within the status text. Therefore,
+  // you must include @username , where username is the author of the referenced Tweet,
+  // within the update.
   post(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
+    const params = {
+      'access_token': userSocial.access_token,
+      'user_id': userSocial.user_id,
+      'message': text,
+      'in_reply_to_status_id': m ? m.social_id : ''
+    };
 
     return new Promise((resolve, reject) => {
-      return this.http.post(this.apiEndPoint,
-        {
-          'access_token': userSocial.access_token,
-          'user_id': userSocial.user_id,
-          'message': text
-        }).toPromise()
+      return this.http.post(this.apiEndPoint, params).toPromise()
         .then(r => {
           const res = r.json();
           console.log('(twitter-post) res:' + JSON.stringify(res));
@@ -146,10 +151,14 @@ export class TwitterService implements SocialServiceInterface {
             reject(userSocial);
           }
         }).catch(err => {
-          console.log(err);
+          console.log('(twitter-post): ' + err.code + ':' + err.message);
           reject(userSocial);
         });
     });
+  }
+
+  reply(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
+    return this.post(userSocial, m, text);
   }
 
   // Retweet

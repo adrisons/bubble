@@ -4,6 +4,7 @@ import { SocialService } from 'app/shared/_services/social.service';
 import { message1, message2, message3, message4 } from 'app/shared/_models/mocks';
 import { DataSessionService } from 'app/shared/_services/data-session.service';
 import { Message, UserSocial, LightUserSocial } from 'app/shared/_models/data';
+import { UserService } from 'app/user/user.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,7 @@ import { Message, UserSocial, LightUserSocial } from 'app/shared/_models/data';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+  
   private comment: String;
   private filters = {
     social: {
@@ -22,13 +23,14 @@ export class HomeComponent implements OnInit {
 
 
   private timeline: Array<Message> = [];
-  constructor(private socialService: SocialService, private dataService: DataSessionService) { }
+  constructor(private socialService: SocialService, private dataService: DataSessionService, private userService: UserService) { }
 
   ngOnInit() {
     this.timeline = this.dataService.getTimeline();
     if (this.timeline.length === 0) {
       this.getTimeline();
     }
+
   }
 
   getTimeline() {
@@ -40,16 +42,16 @@ export class HomeComponent implements OnInit {
   }
 
 
-  likeToggle(m) {
+  likeToggle(m: Message) {
     m.flags.like = !m.flags.like;
   }
 
-  shareToggle(m) {
+  shareToggle(m: Message) {
     m.flags.comment = false;
     m.flags.share = !m.flags.share;
   }
 
-  commentToggle(m) {
+  commentToggle(m: Message) {
     m.flags.share = false;
     m.flags.comment = !m.flags.comment;
   }
@@ -65,6 +67,5 @@ export class HomeComponent implements OnInit {
   post(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
     return this.socialService.post(accounts, m, text);
   }
-
 
 }

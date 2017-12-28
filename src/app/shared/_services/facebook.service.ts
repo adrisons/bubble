@@ -92,7 +92,7 @@ export class FacebookService implements SocialServiceInterface {
       //     })
       //     .catch((error) => {
       //       console.error('(logout-facebook) Error: ', error);
-            reject();
+      reject();
       //     });
       // });
     });
@@ -167,6 +167,26 @@ export class FacebookService implements SocialServiceInterface {
         });
     });
   }
+
+
+  // Post message in name of the user
+  reply(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
+    return new Promise((resolve, reject) => {
+      this.fb.api('/' + userSocial.social_id + '/feed', 'post',
+        {
+          'access_token': userSocial.access_token,
+          'message': text,
+          'link': m.url
+        }).then(res => {
+          console.log(res);
+          resolve(userSocial);
+        }).catch(err => {
+          console.log(err);
+          reject(userSocial);
+        });
+    });
+  }
+
 
 
   share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {

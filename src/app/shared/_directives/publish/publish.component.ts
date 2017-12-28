@@ -15,11 +15,16 @@ export class PublishComponent implements OnInit {
   @Input() message: Message;
   @Input() commentRequired: boolean;
   @Input() customFunction: Function;
+  @Input() restricted: Boolean = false;
+
+  private accounts: LightUserSocial[] = this.userService.getLightUserSocial();
   private comment: String;
-  private postAccounts: LightUserSocial[] = this.userService.getLightUserSocial();
   constructor(private alertService: AlertService, private userService: UserService, private socialService: SocialService) { }
 
   ngOnInit() {
+    if (this.restricted) {
+      this.accounts = this.accounts.filter(a => a.type.id === this.message.socialType.id);
+    }
   }
 
 
@@ -27,12 +32,14 @@ export class PublishComponent implements OnInit {
   onSave(f: NgForm) {
     if (this.checkForm(f)) {
       // Get the selected accounts to post to
-      const activePostAccounts = this.postAccounts.filter(a => a.active);
+      const activePostAccounts = this.accounts.filter(a => a.active);
       this.customFunction(activePostAccounts, this.message, this.comment)
         .then(data => {
           f.reset();
         })
-        .catch(err => console.log('(publish-onSave) err:' + JSON.stringify(err)));
+        .catch(err => {
+          console.log('(publish-onSave) err:' + JSON.stringify(err));
+        });
     }
   }
 
@@ -41,11 +48,12 @@ export class PublishComponent implements OnInit {
     if (this.commentRequired && (!formData.comment || formData.comment.lenght < 1)) {
       this.alertService.error('Comment can not be empty');
       return false;
-    } else if (this.postAccounts.length === 0) {
+    } else if (this.accounts.length === 0) {
       this.alertService.error('No account selected');
       return false;
     } else {
       return true;
     }
   }
+
 }

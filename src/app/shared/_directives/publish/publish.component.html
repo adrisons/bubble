@@ -10,9 +10,9 @@
 
     </div>
     <!-- Social Accounts -->
-    <div class="checkAccounts" data-toggle="buttons">
+    <div class="checkAccounts mt-1" data-toggle="buttons">
       <!-- <div > -->
-      <label [ngClass]="{'btn btn-secondary col-lg-3 col-sm-4 col-xm-6': true, 'active': a.active}" *ngFor="let a of postAccounts" [ngSwitch]="a.type.name">
+      <label [ngClass]="{'btn btn-secondary col-lg-3 col-sm-4 col-xm-6 mr-1': true, 'active': a.active}" *ngFor="let a of accounts" [ngSwitch]="a.type.name">
         <i class="{{'fa fa-' + a.type.name}}"></i>
         <input type="checkbox" name="active" [(ngModel)]="a.active" autocomplete="off" /> {{a.login}}
       </label>

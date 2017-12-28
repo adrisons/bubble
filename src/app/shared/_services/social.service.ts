@@ -117,10 +117,11 @@ export class SocialService {
 
 
   post(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    const scope = this;
     const callback = function (user) {
-      this.alertService.success(user.login + ' posted!');
+      scope.alertService.success(user.login + ' posted!');
     };
-    return this.forEachLightSocial(accounts, callback, 'post', m, text);
+    return this.forEachLightSocial(accounts, callback, 'post', null, text);
   }
 
   // like(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
@@ -129,16 +130,17 @@ export class SocialService {
   //     m.flags.like = true;
   //     m.flags.like_count ++;
   //   };
-  //   return this.forEachLightSocial(accounts, callback, 'like', m);
+  //   return this.forEachLightSocial(accounts, callback, 'like', m, text);
   // }
 
   reply(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
+    const scope = this;
     const callback = function (user) {
-      this.alertService.success(user.login + ' replied!');
+      scope.alertService.success(user.login + ' replied!');
       m.flags.comment = true;
       m.flags.comment_count ++;
     };
-    return this.forEachLightSocial(accounts, callback, 'reply', m);
+    return this.forEachLightSocial(accounts, callback, 'reply', m, text);
   }
 
   share(accounts: LightUserSocial[], m: Message, text: String): Promise<{}> {
@@ -196,7 +198,9 @@ export class SocialService {
           });
           resolve(values);
         })
-        .catch(err => reject(err));
+        .catch(err => {
+          reject(err);
+        });
     });
   }
 
