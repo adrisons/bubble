@@ -179,7 +179,7 @@ export class FacebookService implements SocialServiceInterface {
           reject(error.message);
         });
       } else {
-        reject('Can not fetch more messages. No link');
+        reject('Facebook can not fetch more messages. No link');
       }
     });
   }

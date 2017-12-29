@@ -7,6 +7,7 @@ import { SocialService } from 'app/shared/_services/social.service';
 import { RequestOptions } from '@angular/http';
 import { TwitterMessage } from 'app/shared/_models/TwitterData';
 import { AlertService } from 'app/shared/_services/alert.service';
+import { UserService } from 'app/user/user.service';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class TwitterService implements SocialServiceInterface {
     id: 3,
     name: 'twitter'
   };
-  constructor(private http: AuthHttp, private alertService: AlertService) {
+  constructor(private http: AuthHttp, private alertService: AlertService, private userService: UserService) {
 
   }
 
@@ -101,29 +102,54 @@ export class TwitterService implements SocialServiceInterface {
     });
   }
 
+  private getMinId(messages: Message[]): String {
+    if (messages.length > 0) {
+      return messages.reduce((min, m) => Number(m.social_id) < min ? Number(m.social_id) : min, Number(messages[0].social_id)).toString();
+    } else {
+      return '';
+    }
+  }
+
+  callGetTimeline(userSocial: UserSocial, params, resolve, reject) {
+    return this.http.get(this.apiEndPoint + '/timeline', params)
+      .toPromise()
+      .then(data => {
+        const messages: Message[] = [];
+        const res = data.json();
+        if (res.code === 200) {
+          const requests = res.data.map((post) => {
+            messages.push(this.toNemoMessage(post));
+          });
+          Promise.all(requests).then(() => {
+            console.log('Got the user timeline', messages);
+            // Add the next page to the session
+            this.userService.addSocialNextTimeline(userSocial, this.getMinId(messages));
+
+            resolve(messages);
+          });
+        } else {
+          reject('(twitter-timeline): ' + res.code + ':' + res.message);
+        }
+      }).catch(error => {
+        reject('(twitter-timeline):' + error);
+      });
+  }
 
   getTimeline(userSocial: UserSocial): Promise<Array<Message>> {
     return new Promise((resolve, reject) => {
-      const options = new RequestOptions({ params: { access_token: userSocial.access_token, user_id: userSocial.user_id } });
-      return this.http.get(this.apiEndPoint + '/timeline', options)
-        .toPromise()
-        .then(data => {
-          const messages = [];
-          const res = data.json();
-          if (res.code === 200) {
-            const requests = res.data.map((post) => {
-              messages.push(this.toNemoMessage(post));
-            });
-            Promise.all(requests).then(() => {
-              console.log('Got the user timeline', messages);
-              resolve(messages);
-            });
-          } else {
-            reject('(twitter-timeline): ' + res.code + ':' + res.message);
-          }
-        }).catch(error => {
-          reject('(twitter-timeline):' + error);
-        });
+      const params = new RequestOptions({ params: { access_token: userSocial.access_token, user_id: userSocial.user_id } });
+      this.callGetTimeline(userSocial, params, resolve, reject);
+    });
+  }
+
+  getNextTimeline(userSocial: UserSocial): Promise<Array<Message>> {
+    return new Promise((resolve, reject) => {
+      if (userSocial.next) {
+        const params = new RequestOptions({ params: { access_token: userSocial.access_token, user_id: userSocial.user_id, max_id: userSocial.next } });
+        this.callGetTimeline(userSocial, params, resolve, reject);
+      } else {
+        reject('Twitter can not fetch more messages. No link');
+      }
     });
   }
 
@@ -294,7 +320,7 @@ export class TwitterService implements SocialServiceInterface {
   private getMedia(msg: TwitterMessage): MessageMedia[] {
     const res: MessageMedia[] = [];
     if (msg.entities.media) {
-      msg.entities.media.map( m => {
+      msg.entities.media.map(m => {
         res.push(
           {
             text: m.display_url,
