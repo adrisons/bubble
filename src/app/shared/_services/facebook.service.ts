@@ -15,7 +15,7 @@ export class FacebookService implements SocialServiceInterface {
   private apiEndPoint = '/social';
   private socialType: SocialType = { id: 2, name: 'facebook' };
 
-  constructor(private http: AuthHttp, private fb: ngxFbService, private alertService: AlertService) {
+  constructor(private http: AuthHttp, private fb: ngxFbService, private alertService: AlertService, private userService: UserService) {
     fb.init(facebook_secret);
   }
 
@@ -117,32 +117,44 @@ export class FacebookService implements SocialServiceInterface {
 
   }
 
+  private parseTimeline(results, access_token, resolve, reject) {
+    const messages = [];
+    const requests = results.data.map((post) => {
+      return new Promise((res_msgs) => {
+        this.fb.api('/' + post.from.id, 'get', { access_token: access_token, fields: 'picture, link, name' })
+          .then(user => {
+            this.fb.api('/' + post.id + '/attachments', 'get',
+              { access_token: access_token, fields: 'description, media, url' })
+              .then(attachments => {
+                messages.push(this.toNemoMessage(post, attachments.data, user));
+                res_msgs();
+              });
+          });
+      });
+    });
+    Promise.all(requests).then(() => {
+      console.log('Got the user timeline', messages);
+      resolve(messages);
+    });
+  }
 
+  parseNextStr(userSocial: UserSocial, next: string) {
+    const idx = next.indexOf(userSocial.social_id.toString());
+    if (idx !== -1) {
+      return next.substring(idx - 1);
+    } else {
+      return '';
+    }
+  }
   // Get the timeline for the user
   getTimeline(userSocial: UserSocial): Promise<Array<Message>> {
     return new Promise((resolve, reject) => {
       this.fb.api('/' + userSocial.social_id + '/feed', 'get',
         { access_token: userSocial.access_token, fields: 'id, created_time, message, from, permalink_url, type' })
         .then((res) => {
-          const messages = [];
-          const requests = res.data.map((post) => {
-            return new Promise((res_msgs) => {
-              this.fb.api('/' + post.from.id, 'get', { access_token: userSocial.access_token, fields: 'picture, link, name' })
-                .then(user => {
-                  this.fb.api('/' + post.id + '/attachments', 'get',
-                    { access_token: userSocial.access_token, fields: 'description, media, url' })
-                    .then(attachments => {
-                      messages.push(this.toNemoMessage(post, attachments.data, user));
-                      res_msgs();
-                    });
-                });
-            });
-          });
-          Promise.all(requests).then(() => {
-            console.log('Got the user timeline', messages);
-            resolve(messages);
-          });
-
+          // Add the next page to the session
+          this.userService.addSocialNextTimeline(userSocial, res.paging.next);
+          this.parseTimeline(res, userSocial.access_token, resolve, reject);
         })
         .catch((error) => {
           console.error('(gettimeline-facebook) Error: ', error);
@@ -150,6 +162,28 @@ export class FacebookService implements SocialServiceInterface {
         });
     });
   }
+
+  // Get the next messages of timeline for the user
+  getNextTimeline(userSocial: UserSocial): Promise<Array<Message>> {
+    return new Promise((resolve, reject) => {
+      if (userSocial.next) {
+        const url = this.parseNextStr(userSocial, userSocial.next.toString());
+        this.fb.api(url, 'get')
+        .then((res) => {
+          // Add the next page to the session
+          this.userService.addSocialNextTimeline(userSocial, res.paging.next);
+          this.parseTimeline(res, userSocial.access_token, resolve, reject);
+        })
+        .catch((error) => {
+          console.error('(getnexttimeline-facebook) Error: ', error);
+          reject(error.message);
+        });
+      } else {
+        reject('Can not fetch more messages. No link');
+      }
+    });
+  }
+
 
   // Post message in name of the user
   post(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
@@ -187,23 +221,8 @@ export class FacebookService implements SocialServiceInterface {
     });
   }
 
-
-
   share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
-    return new Promise((resolve, reject) => {
-      this.fb.api('/' + userSocial.social_id + '/feed', 'post',
-        {
-          'access_token': userSocial.access_token,
-          'link': m.url,
-          'message': text
-        }).then(res => {
-          console.log(res);
-          resolve(userSocial);
-        }).catch(err => {
-          console.log(err);
-          reject(err.message);
-        });
-    });
+    return this.reply(userSocial, m, text);
   }
 
   like(userSocial: UserSocial, m: Message, text: String): Promise<{}> {

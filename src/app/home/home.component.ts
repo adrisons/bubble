@@ -12,7 +12,7 @@ import { UserService } from 'app/user/user.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  
+
   private comment: String;
   private filters = {
     social: {
@@ -37,6 +37,13 @@ export class HomeComponent implements OnInit {
     this.socialService.getTimeline().then((t: Message[]) => {
       this.timeline = t;
       console.log('home timeline:' + this.timeline);
+      this.dataService.save(this.timeline);
+    });
+  }
+  getNextTimeline() {
+    this.socialService.getNextTimeline().then((t: Message[]) => {
+      console.log('next timeline:' + t);
+      this.timeline = this.timeline.concat(t);
       this.dataService.save(this.timeline);
     });
   }
@@ -73,7 +80,7 @@ export class HomeComponent implements OnInit {
   }
 
   post(accounts: LightUserSocial[], m: Message, text: String) {
-    return this.socialService.post(accounts, m, text, () => {});
+    return this.socialService.post(accounts, m, text, () => { });
   }
 
   like(accounts: LightUserSocial[], m: Message, text: String) {

@@ -87,34 +87,41 @@ export class SocialService {
   }
 
 
-  getTimeline(): Promise<{}> {
+
+  private getMessages(func: string): Promise<{}> {
     return new Promise((resolve, reject) => {
       const social = this.userService.getUserSocial();
       const promises: Promise<{}>[] = [];
       Array.prototype.forEach.call(social, s => {
-        promises.push(this.getStrategy(s.type.name)
-          .getTimeline(s));
+        promises.push(this.getStrategy(s.type.name)[func](s));
       });
 
       Promise.all(promises)
         .then((values: Message[][]) => {
           // Un array por cada red social
-          // Hay que hacer un merge de el array of arrays para convertirlo a array
-          const timeline = new Array<Message>();
+          // Hay que hacer un merge del array of arrays para convertirlo a array
+          const messages = new Array<Message>();
           Array.prototype.forEach.call(values, array => {
             Array.prototype.forEach.call(array, a => {
-              timeline.push(a);
+              messages.push(a);
             });
           });
 
-          console.log('(getTimeline) timeline:' + timeline);
-          resolve(timeline);
+          console.log('(getMessages-' + func + ') messages:' + messages);
+          resolve(messages);
         });
 
     });
-
   }
 
+
+  getTimeline(): Promise<{}> {
+    return this.getMessages('getTimeline');
+  }
+
+  getNextTimeline(): Promise<{}> {
+    return this.getMessages('getNextTimeline');
+  }
 
   post(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
     const scope = this;

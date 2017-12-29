@@ -46,7 +46,24 @@ export class UserSessionService extends DataStoreService {
         super.setData(session);
         resolve();
       } else {
-        reject();
+        resolve();
+      }
+    });
+  }
+
+  addSocialNextTimeline(us: UserSocial, next): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      const exist = this.data.user.social.find(s => (s.user_id === us.user_id
+        && s.type.id === us.type.id
+        && s.social_id === us.social_id));
+
+      if (exist) {
+        exist['next'] = next;
+        const session = { user: this.data.user, token: this.data.token, isLogged: this.data.isLogged };
+        super.setData(session);
+        resolve();
+      } else {
+        resolve();
       }
     });
   }

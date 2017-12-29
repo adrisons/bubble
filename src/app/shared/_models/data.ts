@@ -44,6 +44,7 @@ export interface UserSocial {
   email?: String;
   login?: String;
   name?: String;
+  next?: Object;
 }
 export interface SocialType {
   id: number;

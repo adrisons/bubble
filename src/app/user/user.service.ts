@@ -131,6 +131,10 @@ export class UserService extends CrudService {
     return this.sessionService.addSocialNetwork(us);
   }
 
+  public addSocialNextTimeline(us: UserSocial, next): Promise<{}> {
+    return this.sessionService.addSocialNextTimeline(us, next);
+  }
+
   public removeSocialNetwork(us: UserSocial): Promise<{}> {
     return this.sessionService.removeSocialNetwork(us);
   }

@@ -24,7 +24,7 @@
 
   <div>
     <!-- Post -->
-    <button type="button" class="post" (click)="showPost = !showPost">
+    <button type="button" class="post" (click)="showPost = !showPost" title="New post">
       <i class="fa fa-plus fa-1x" aria-hidden="true"></i>
     </button>
     <div *ngIf="showPost" class="post">
@@ -98,9 +98,9 @@
 
         <!-- Like -->
         <div *ngIf="message.flags.like" class="reply">
-            <app-publish [commentRequired]="false" [message]="message" [showText]="false" [customFunction]="like.bind(this)" [restricted]="true"></app-publish>
-          </div>
-        
+          <app-publish [commentRequired]="false" [message]="message" [showText]="false" [customFunction]="like.bind(this)" [restricted]="true"></app-publish>
+        </div>
+
         <!-- Share -->
         <div *ngIf="message.flags.share" class="reply">
           <app-publish [commentRequired]="false" [message]="message" [customFunction]="share.bind(this)"></app-publish>
@@ -115,6 +115,13 @@
       </div>
 
     </div>
+
+
+    <!-- More -->
+    <button type="button" class="refresh" title="Load more messages" (click)="getNextTimeline()" >
+      <i class="fa fa-caret-down" aria-hidden="true"></i>
+      
+    </button>
   </div>
 
 </div>
