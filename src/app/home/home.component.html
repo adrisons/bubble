@@ -75,12 +75,18 @@
 
             </div> -->
             <!-- <div class="media" *ngSwitchDefault> -->
-            <a class="data" *ngIf="m.src" href="{{m.url}}" target="_blank" title="Link to the media">
-              <img class="img" src={{m.src}}>
-              
-              <label>{{m.text}}</label>
+            <div class="data" *ngIf="m.src">
+              <div class="image">
+                <a href="{{m.url}}" target="_blank" title="Link to the media">
+                  <img [ngClass]="{'darken': m.type===1}" src={{m.src}}>
+                  <!-- Video -->
+                  <i *ngIf="m.type===1" class="fa fa-play fa-5x video-icon"></i>
+                </a>
+              </div>
 
-            </a>
+              <label class="media-desc">{{m.text}}</label>
+
+            </div>
             <!-- </div> -->
             <!-- </div> -->
           </div>
