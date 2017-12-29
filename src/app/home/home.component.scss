@@ -88,22 +88,27 @@
         border-radius: 5px;
       }
       .data {
-        position: relative; // float: left;
-        border: none; // width: 100%;
-        vertical-align: middle; // max-width: 50%;
-        // max-height: 50%;
-        border-radius: 5px;
-        white-space: nowrap;
-        /* this is required unless you put the helper span closely near the img */
-        text-align: center;
-      }
-      img {
+        position: relative;
+        float: left;
+        border: none;
         vertical-align: middle;
-        width: auto;
-        height: auto;
-        max-width: 100%;
-        max-height: 100%;
-        border-radius: 5px;
+        text-align: center;
+        margin: 0px 30px 0 30px;
+        width: calc(100% - 60px);
+        img {
+          vertical-align: middle;
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
+          border-radius: 5px;
+        }
+        label {
+          position: relative;
+          float: left;
+          width: 100%;
+          color: #45ADA8;
+        }
       }
     }
   }

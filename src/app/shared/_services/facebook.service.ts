@@ -169,15 +169,15 @@ export class FacebookService implements SocialServiceInterface {
       if (userSocial.next) {
         const url = this.parseNextStr(userSocial, userSocial.next.toString());
         this.fb.api(url, 'get')
-        .then((res) => {
-          // Add the next page to the session
-          this.userService.addSocialNextTimeline(userSocial, res.paging.next);
-          this.parseTimeline(res, userSocial.access_token, resolve, reject);
-        })
-        .catch((error) => {
-          console.error('(getnexttimeline-facebook) Error: ', error);
-          reject(error.message);
-        });
+          .then((res) => {
+            // Add the next page to the session
+            this.userService.addSocialNextTimeline(userSocial, res.paging.next);
+            this.parseTimeline(res, userSocial.access_token, resolve, reject);
+          })
+          .catch((error) => {
+            console.error('(getnexttimeline-facebook) Error: ', error);
+            reject(error.message);
+          });
       } else {
         reject('Facebook can not fetch more messages. No link');
       }
@@ -301,13 +301,15 @@ export class FacebookService implements SocialServiceInterface {
       }
       const mType = this.messageTypeConverter(msg.type);
       let src;
-      if (mType === MessageType.video) {
-        src = msg.source;
-      } else {
-        src = a.media ? a.media.image.src : '';
-      }
+      // if (mType === MessageType.video) {
+
+      //   src = a.url;
+      // } else {
+      src = a.media ? a.media.image.src : '';
+      // }
+
       media.push({
-        text: a.description,
+        text: a.description !== msg.message ? a.description : '',
         src: src,
         url: a.url,
         type: mType
@@ -316,6 +318,7 @@ export class FacebookService implements SocialServiceInterface {
     });
     return media;
   }
+
 
   private messageTypeConverter(facebookType): MessageType {
 

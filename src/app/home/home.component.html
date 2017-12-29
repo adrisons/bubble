@@ -60,24 +60,29 @@
         </div>
         <div class="body">
           <p *ngIf="message.text" class="comment">{{message.text}}</p>
-          <div *ngFor="let m of message.media">
-            <div [ngSwitch]="m.type">
+          <div class="media" *ngFor="let m of message.media">
+            <!-- <div [ngSwitch]="m.type"> -->
 
-              <!-- Video -->
-              <div class="media" *ngSwitchCase="1">
-                <iframe *ngIf="m.src" [src]="m.src | safeurl">
-                </iframe>
-                <!-- <video *ngIf="m.source" controls>
-                    <source [src]="m.source | safeurl">
+            <!-- Video -->
+            <!-- <div class="media" *ngSwitchCase="1"> -->
+            <!-- <iframe *ngIf="m.src" [src]="m.src | safeurl"  frameborder="0" allowfullscreen>
+                </iframe> -->
+            <!-- <video *ngIf="m.src" controls>
+                    <source [src]="m.src | safeurl">
                 </video> -->
-              </div>
+            <!-- </div> -->
+            <!-- <div *ngIf="m.type===1">
 
-              <div class="media" *ngSwitchDefault>
-                <a *ngIf="m.src" href="{{m.url}}" target="_blank" title="Link to the image">
-                  <img class="data img" src={{m.src}}>
-                </a>
-              </div>
-            </div>
+            </div> -->
+            <!-- <div class="media" *ngSwitchDefault> -->
+            <a class="data" *ngIf="m.src" href="{{m.url}}" target="_blank" title="Link to the media">
+              <img class="img" src={{m.src}}>
+              
+              <label>{{m.text}}</label>
+
+            </a>
+            <!-- </div> -->
+            <!-- </div> -->
           </div>
         </div>
 
@@ -118,9 +123,9 @@
 
 
     <!-- More -->
-    <button type="button" class="refresh" title="Load more messages" (click)="getNextTimeline()" >
+    <button type="button" class="refresh" title="Load more messages" (click)="getNextTimeline()">
       <i class="fa fa-caret-down" aria-hidden="true"></i>
-      
+
     </button>
   </div>
 
