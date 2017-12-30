@@ -80,10 +80,15 @@ export class Message {
 }
 
 export class MessageMedia {
-  text: String;
+  text?: String;
   url: String; // link to the media
   src: String; // url for loading resource
-  type: MessageType;
+  type?: MessageType;
+}
+
+export class UserPost {
+  text: String;
+  media?: MessageMedia;
 }
 
 export class SocialAuthResult {

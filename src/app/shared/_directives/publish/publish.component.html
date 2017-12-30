@@ -9,14 +9,24 @@
       </span>
 
     </div>
+    <!-- Media Attach -->
+    <div *ngIf="showAttach" class="input-group  mt-1">
+      <div class="input-group-addon">
+        <i class="fa fa-picture-o"></i>
+      </div>
+      <input type="text" class="form-control media-input" placeholder="Url to file" [(ngModel)]="media" name="media">
+      <a (click)="removeMedia()" class="input-group-addon btn btn-light">
+        <i class="fa fa-trash"></i>
+      </a>
+    </div>
+
     <!-- Social Accounts -->
     <div [ngClass]="{'col-lg-12': showText, 'col-lg-9': !showText, 'checkAccounts mt-1 no-padding':true }" data-toggle="buttons">
-      <label [ngClass]="{'btn btn-secondary  mr-1': true, 'active': a.active}" *ngFor="let a of accounts"
-        [ngSwitch]="a.type.name">
+      <label [ngClass]="{'btn btn-secondary  mr-1': true, 'active': a.active}" *ngFor="let a of accounts" [ngSwitch]="a.type.name">
         <i class="{{'fa fa-' + a.type.name}}"></i>
         <input type="checkbox" name="active" [(ngModel)]="a.active" autocomplete="off" /> {{a.login}}
       </label>
-      
+
     </div>
     <div *ngIf="!showText" class="mt-1 col-lg-2 no-padding like">
       <button type="submit" class="btn" [disabled]="!customForm.form.valid && commentRequired">Publish</button>

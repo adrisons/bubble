@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 import { FacebookSocial, FacebookProfile, FacebookMessage, FacebookAttach } from 'app/shared/_models/FacebookData';
-import { UserSocial, SocialType, Message, MessageMedia, MessageType } from 'app/shared/_models/data';
+import { UserSocial, SocialType, Message, MessageMedia, MessageType, UserPost } from 'app/shared/_models/data';
 import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.interface';
 import { facebook_secret } from 'app/shared/_config/auth';
 import { FacebookService as ngxFbService, LoginResponse, LoginOptions, UIResponse, UIParams } from 'ng2-facebook-sdk';
@@ -184,32 +184,43 @@ export class FacebookService implements SocialServiceInterface {
     });
   }
 
-
+  private postPost(userSocial: UserSocial, m: Message, post: UserPost, params, resolve, reject) {
+    this.fb.api('/' + userSocial.social_id + '/feed', 'post',
+      params).then(res => {
+        console.log(res);
+        resolve(userSocial);
+      }).catch(err => {
+        console.log(err);
+        reject(err.message);
+      });
+  };
   // Post message in name of the user
-  post(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
+  post(userSocial: UserSocial, m: Message, post: UserPost): Promise<UserSocial> {
     return new Promise((resolve, reject) => {
-      this.fb.api('/' + userSocial.social_id + '/feed', 'post',
-        {
-          'access_token': userSocial.access_token,
-          'message': text
-        }).then(res => {
-          console.log(res);
-          resolve(userSocial);
-        }).catch(err => {
-          console.log(err);
-          reject(err.message);
+      const params = {
+        'access_token': userSocial.access_token,
+        'message': post.text
+      };
+      // Upload media
+      if (post.media.url) {
+        this.uploadMedia(userSocial, m, post).then((res: { id, post_id }) => {
+          params['object_attachment'] = res.id;
+          this.postPost(userSocial, m, post, params, resolve, reject);
         });
+      } else {
+        this.postPost(userSocial, m, post, params, resolve, reject);
+      }
     });
   }
 
 
   // Post message in name of the user
-  reply(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
+  reply(userSocial: UserSocial, m: Message, post: UserPost): Promise<UserSocial> {
     return new Promise((resolve, reject) => {
       this.fb.api('/' + userSocial.social_id + '/feed', 'post',
         {
           'access_token': userSocial.access_token,
-          'message': text,
+          'message': post.text,
           'link': m.url
         }).then(res => {
           console.log(res);
@@ -221,11 +232,11 @@ export class FacebookService implements SocialServiceInterface {
     });
   }
 
-  share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
-    return this.reply(userSocial, m, text);
+  share(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
+    return this.reply(userSocial, m, post);
   }
 
-  like(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+  like(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
     return new Promise((resolve, reject) => {
       this.fb.api('/' + m.social_id + '/likes', 'post',
         {
@@ -240,7 +251,7 @@ export class FacebookService implements SocialServiceInterface {
     });
   }
 
-  unlike(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+  unlike(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
     return new Promise((resolve, reject) => {
       this.fb.api('/' + m.social_id + '/likes', 'delete',
         {
@@ -255,6 +266,27 @@ export class FacebookService implements SocialServiceInterface {
     });
   }
 
+
+  uploadMedia(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
+    // 1. Upload media -> get the media url
+    // 2. Publish media
+
+    return new Promise((resolve, reject) => {
+      this.fb.api('/' + userSocial.social_id + '/photos', 'post',
+        {
+          'url': post.media.url,
+          // 'caption': post.media.text,
+          'access_token': userSocial.access_token
+        }).then(res => {
+          console.log(res);
+          resolve(res);
+        }).catch(err => {
+          console.log(err);
+          reject(err.message);
+        });
+    });
+
+  }
   // =================
   // Private functions
   // =================

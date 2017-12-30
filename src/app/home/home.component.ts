@@ -3,7 +3,7 @@ import { SocialService } from 'app/shared/_services/social.service';
 
 import { message1, message2, message3, message4 } from 'app/shared/_models/mocks';
 import { DataSessionService } from 'app/shared/_services/data-session.service';
-import { Message, UserSocial, LightUserSocial } from 'app/shared/_models/data';
+import { Message, UserSocial, LightUserSocial, UserPost } from 'app/shared/_models/data';
 import { UserService } from 'app/user/user.service';
 
 @Component({
@@ -67,29 +67,29 @@ export class HomeComponent implements OnInit {
     m.flags.comment = !m.flags.comment;
   }
 
-  share(accounts: LightUserSocial[], m: Message, text: String) {
+  share(accounts: LightUserSocial[], m: Message, post: UserPost) {
 
-    return this.socialService.share(accounts, m, text, () => {
+    return this.socialService.share(accounts, m, post, () => {
       this.shareToggle(m);
     });
   }
 
-  reply(accounts: LightUserSocial[], m: Message, text: String) {
+  reply(accounts: LightUserSocial[], m: Message, post: UserPost) {
 
-    return this.socialService.reply(accounts, m, text, () => { this.commentToggle(m); });
+    return this.socialService.reply(accounts, m, post, () => { this.commentToggle(m); });
   }
 
-  post(accounts: LightUserSocial[], m: Message, text: String) {
-    return this.socialService.post(accounts, m, text, () => { });
+  post(accounts: LightUserSocial[], m: Message, post: UserPost) {
+    return this.socialService.post(accounts, m, post, () => { });
   }
 
-  like(accounts: LightUserSocial[], m: Message, text: String) {
+  like(accounts: LightUserSocial[], m: Message, post: UserPost) {
 
     if (m.liked) {
-      return this.socialService.unlike(accounts, m, text, () =>
+      return this.socialService.unlike(accounts, m, post, () =>
         this.likeToggle(m));
     } else {
-      return this.socialService.like(accounts, m, text, () =>
+      return this.socialService.like(accounts, m, post, () =>
         this.likeToggle(m));
     }
   }

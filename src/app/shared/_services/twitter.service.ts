@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { SocialServiceInterface } from 'app/shared/_interfaces/social-service.interface';
-import { UserSocial, SocialType, Message, MessageMedia, MessageType } from 'app/shared/_models/data';
+import { UserSocial, SocialType, Message, MessageMedia, MessageType, UserPost } from 'app/shared/_models/data';
 import { AuthHttp } from 'angular2-jwt';
 import { twitter_secret } from 'app/shared/_config/auth';
 import { SocialService } from 'app/shared/_services/social.service';
-import { RequestOptions } from '@angular/http';
+import { RequestOptions, ResponseContentType } from '@angular/http';
 import { TwitterMessage } from 'app/shared/_models/TwitterData';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { UserService } from 'app/user/user.service';
+import { Observable } from 'rxjs/Observable';
 
 
 @Injectable()
@@ -152,43 +153,57 @@ export class TwitterService implements SocialServiceInterface {
       }
     });
   }
-
+  private postPost(userSocial: UserSocial, params, resolve, reject) {
+    this.http.post(this.apiEndPoint, params).toPromise()
+      .then(r => {
+        const res = r.json();
+        console.log('(twitter-post) res:' + JSON.stringify(res));
+        if (res.code === 200) {
+          resolve(userSocial);
+        } else {
+          console.log('(twitter-post): ' + res.code + ':' + res.message);
+          reject(res.message);
+        }
+      }).catch(err => {
+        console.log('(twitter-post): ' + err.code + ':' + err.message);
+        reject(err.message);
+      });
+  }
   // in_reply_to_status_id: This parameter will be ignored unless the author of the
   // Tweet this parameter references is mentioned within the status text. Therefore,
   // you must include @username , where username is the author of the referenced Tweet,
   // within the update.
-  post(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
-    const params = {
-      'access_token': userSocial.access_token,
-      'user_id': userSocial.user_id,
-      'message': text,
-      'in_reply_to_status_id': m ? m.social_id : ''
-    };
-
+  post(userSocial: UserSocial, m: Message, post: UserPost): Promise<UserSocial> {
     return new Promise((resolve, reject) => {
-      return this.http.post(this.apiEndPoint, params).toPromise()
-        .then(r => {
-          const res = r.json();
-          console.log('(twitter-post) res:' + JSON.stringify(res));
-          if (res.code === 200) {
-            resolve(userSocial);
-          } else {
-            console.log('(twitter-post): ' + res.code + ':' + res.message);
-            reject(userSocial);
-          }
-        }).catch(err => {
-          console.log('(twitter-post): ' + err.code + ':' + err.message);
-          reject(userSocial);
-        });
+      const params = {
+        'access_token': userSocial.access_token,
+        'user_id': userSocial.user_id,
+        'message': post.text,
+        'in_reply_to_status_id': m ? m.social_id : ''
+      };
+      if (post.media.url) {
+        this.fetchImage(post.media.url.toString()).then((base64img: string) => {
+          params['media'] = base64img.substr(base64img.indexOf('base64,') + 'base64,'.length);
+          params['isBase64'] = true; // Set to true, if media contains base64 encoded data 
+          this.postPost(userSocial, params, resolve, reject);
+        })
+          .catch(err => {
+            this.alertService.error('Incorrect url');
+            reject(err.message);
+          });
+      } else {
+        this.postPost(userSocial, params, resolve, reject);
+      }
+
     });
   }
 
-  reply(userSocial: UserSocial, m: Message, text: String): Promise<UserSocial> {
-    return this.post(userSocial, m, text);
+  reply(userSocial: UserSocial, m: Message, post: UserPost): Promise<UserSocial> {
+    return this.post(userSocial, m, post);
   }
 
   // Retweet
-  share(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+  share(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
     return new Promise((resolve, reject) => {
       if (!this.isTwitterMessage(m)) {
         reject();
@@ -198,7 +213,7 @@ export class TwitterService implements SocialServiceInterface {
           {
             'access_token': userSocial.access_token,
             'user_id': userSocial.user_id,
-            'message': text
+            'message': post.text
           }).toPromise()
           .then(r => {
             const res = r.json();
@@ -217,7 +232,7 @@ export class TwitterService implements SocialServiceInterface {
   }
 
 
-  like(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+  like(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
     return new Promise((resolve, reject) => {
       if (!this.isTwitterMessage(m)) {
         reject();
@@ -227,7 +242,7 @@ export class TwitterService implements SocialServiceInterface {
           {
             'access_token': userSocial.access_token,
             'user_id': userSocial.user_id,
-            'message': text
+            'message': post.text
           }).toPromise()
           .then(r => {
             const res = r.json();
@@ -245,7 +260,7 @@ export class TwitterService implements SocialServiceInterface {
     });
   }
 
-  unlike(userSocial: UserSocial, m: Message, text: String): Promise<{}> {
+  unlike(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
     return new Promise((resolve, reject) => {
       if (!this.isTwitterMessage(m)) {
         reject();
@@ -255,7 +270,7 @@ export class TwitterService implements SocialServiceInterface {
           {
             'access_token': userSocial.access_token,
             'user_id': userSocial.user_id,
-            'message': text
+            'message': post.text
           }).toPromise()
           .then(r => {
             const res = r.json();
@@ -345,6 +360,32 @@ export class TwitterService implements SocialServiceInterface {
         return MessageType.text;
 
     }
+  }
+
+
+  private fetchImage(url: string): Promise<{}> {
+
+    return new Promise((resolve, reject) => {
+      fetch(url)
+        .then(res => {
+          // Gets the response and returns it as a blob
+          res.blob().then(blob => {
+
+            const reader = new FileReader();
+            reader.addEventListener('load', function () {
+              resolve(reader.result);
+            }, false);
+
+            reader.onerror = (err) => {
+              reject(err);
+            };
+            reader.readAsDataURL(blob);
+          });
+        }).catch(err => {
+          console.log('Error fetching image: ' + err);
+          reject(err);
+        });
+    });
   }
 
 }

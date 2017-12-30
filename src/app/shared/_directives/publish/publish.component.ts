@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { LightUserSocial, Message } from 'app/shared/_models/data';
+import { LightUserSocial, Message, UserPost } from 'app/shared/_models/data';
 import { AlertService } from 'app/shared/_services/alert.service';
 import { UserService } from 'app/user/user.service';
 import { SocialService } from 'app/shared/_services/social.service';
@@ -15,11 +15,13 @@ export class PublishComponent implements OnInit {
   @Input() message: Message;
   @Input() commentRequired: boolean = false;
   @Input() showText: boolean = true;
+  @Input() showAttach: boolean = false;
   @Input() customFunction: Function;
   @Input() restricted: Boolean = false;
 
   private accounts: LightUserSocial[] = this.userService.getLightUserSocial();
   private comment: String;
+  private media: String;
   constructor(private alertService: AlertService, private userService: UserService, private socialService: SocialService) { }
 
   ngOnInit() {
@@ -34,7 +36,15 @@ export class PublishComponent implements OnInit {
     if (this.checkForm(f)) {
       // Get the selected accounts to post to
       const activePostAccounts = this.accounts.filter(a => a.active);
-      this.customFunction(activePostAccounts, this.message, this.comment)
+      const post: UserPost = {
+        text: this.comment,
+        media: {
+          text: '',
+          url: this.media, // link to the media
+          src: '' // url for loading resource
+        }
+      }
+      this.customFunction(activePostAccounts, this.message, post)
         .then(data => {
           f.reset();
         })
@@ -58,6 +68,10 @@ export class PublishComponent implements OnInit {
     } else {
       return true;
     }
+  }
+
+  removeMedia() {
+    this.media = null;
   }
 
 }

@@ -2,7 +2,7 @@
 // This class acts like proxy between client and specific social network services
 
 import { Injectable } from '@angular/core';
-import { UserSocial, SocialType, User, LightUserSocial, Message } from 'app/shared/_models/data';
+import { UserSocial, SocialType, User, LightUserSocial, Message, UserPost } from 'app/shared/_models/data';
 import { UserService } from 'app/user/user.service';
 import { SocialAuthService } from 'app/shared/_services/social-auth.service';
 import { AuthHttp } from 'angular2-jwt';
@@ -123,45 +123,45 @@ export class SocialService {
     return this.getMessages('getNextTimeline');
   }
 
-  post(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
+  post(accounts: LightUserSocial[], m: Message, post: UserPost, callback: Function) {
     const scope = this;
     const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' posted!');
     };
-    return this.forEachLightSocial(accounts, forEachCallback, 'post', null, text).then(data => callback(data));
+    return this.forEachLightSocial(accounts, forEachCallback, 'post', null, post).then(data => callback(data));
   }
 
-  like(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
+  like(accounts: LightUserSocial[], m: Message, post: UserPost, callback: Function) {
     const scope = this;
     const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' liked!');
       m.flags.like_count ? m.flags.like_count++ : m.flags.like_count = 1;
       m.liked = true;
     };
-    return this.forEachLightSocial(accounts, forEachCallback, 'like', m, text).then(data => callback(data));
+    return this.forEachLightSocial(accounts, forEachCallback, 'like', m, post).then(data => callback(data));
   }
 
-  unlike(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
+  unlike(accounts: LightUserSocial[], m: Message, post: UserPost, callback: Function) {
     const scope = this;
     const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' unliked!');
       m.flags.like_count ? m.flags.like_count-- : m.flags.like_count = 0;
       m.liked = false;
     };
-    return this.forEachLightSocial(accounts, forEachCallback, 'unlike', m, text).then(data => callback(data));
+    return this.forEachLightSocial(accounts, forEachCallback, 'unlike', m, post).then(data => callback(data));
   }
 
-  reply(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
+  reply(accounts: LightUserSocial[], m: Message, post: UserPost, callback: Function) {
     const scope = this;
     const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' replied!');
       m.flags.comment = true;
       m.flags.comment_count ? m.flags.comment_count++ : m.flags.comment_count = 1;
     };
-    return this.forEachLightSocial(accounts, forEachCallback, 'reply', m, text).then(data => callback(data));
+    return this.forEachLightSocial(accounts, forEachCallback, 'reply', m, post).then(data => callback(data));
   }
 
-  share(accounts: LightUserSocial[], m: Message, text: String, callback: Function) {
+  share(accounts: LightUserSocial[], m: Message, post: UserPost, callback: Function) {
     const scope = this;
     const forEachCallback = function (user) {
       scope.alertService.success(user.login + ' shared!');
@@ -170,7 +170,7 @@ export class SocialService {
 
       m.shared = true;
     };
-    return this.forEachLightSocial(accounts, forEachCallback, 'share', m, text).then(data => callback(data));
+    return this.forEachLightSocial(accounts, forEachCallback, 'share', m, post).then(data => callback(data));
   }
 
   // =================
