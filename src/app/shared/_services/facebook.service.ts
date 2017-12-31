@@ -121,13 +121,21 @@ export class FacebookService implements SocialServiceInterface {
     const messages = [];
     const requests = results.data.map((post) => {
       return new Promise((res_msgs) => {
+        // Get user image and link
         this.fb.api('/' + post.from.id, 'get', { access_token: access_token, fields: 'picture, link, name' })
           .then(user => {
+            // Get attachments
             this.fb.api('/' + post.id + '/attachments', 'get',
               { access_token: access_token, fields: 'description, media, url' })
               .then(attachments => {
-                messages.push(this.toNemoMessage(post, attachments.data, user));
-                res_msgs();
+                // Get likes
+                this.fb.api('/' + post.id + '/likes', 'get',
+                  { access_token: access_token, fields: 'total_count' })
+                  .then(likes => {
+                    post.likes = likes.data.length;
+                    messages.push(this.toNemoMessage(post, attachments.data, user));
+                    res_msgs();
+                  });
               });
           });
       });
@@ -150,7 +158,7 @@ export class FacebookService implements SocialServiceInterface {
   getTimeline(userSocial: UserSocial): Promise<Array<Message>> {
     return new Promise((resolve, reject) => {
       this.fb.api('/' + userSocial.social_id + '/feed', 'get',
-        { access_token: userSocial.access_token, fields: 'id, created_time, message, from, permalink_url, type' })
+        { access_token: userSocial.access_token, fields: 'id, created_time, message, from, permalink_url, type, shares' })
         .then((res) => {
           // Add the next page to the session
           this.userService.addSocialNextTimeline(userSocial, res.paging.next);
@@ -309,9 +317,9 @@ export class FacebookService implements SocialServiceInterface {
       },
       flags: {
         like: false,
-        // like_count?: Number;
+        like_count: msg.likes,
         share: false,
-        share_count: msg.shares,
+        share_count: msg.shares ? msg.shares.count : 0,
         comment: false,
         // comment_count?: Number;
       },

@@ -35,7 +35,8 @@ export class FacebookMessage {
     media?: String[];
     type: any;
     source: String;
-    shares: number; // Number of shares for the post
+    shares?; // Number of shares for the post
+    likes?;
 }
 
 
