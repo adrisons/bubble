@@ -109,6 +109,9 @@ export class SocialService {
 
           console.log('(getMessages-' + func + ') messages:' + messages);
           resolve(messages);
+        })
+        .catch(err => {
+          reject(err);
         });
 
     });

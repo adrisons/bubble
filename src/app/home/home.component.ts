@@ -5,6 +5,7 @@ import { message1, message2, message3, message4 } from 'app/shared/_models/mocks
 import { DataSessionService } from 'app/shared/_services/data-session.service';
 import { Message, UserSocial, LightUserSocial, UserPost } from 'app/shared/_models/data';
 import { UserService } from 'app/user/user.service';
+import { AlertService } from 'app/shared/_services/alert.service';
 
 @Component({
   selector: 'app-home',
@@ -21,9 +22,11 @@ export class HomeComponent implements OnInit {
     }
   };
 
-
+  private refreshLoading = false;
+  private loadMoreLoading = false;
   private timeline: Message[] = [];
-  constructor(private socialService: SocialService, private dataService: DataSessionService, private userService: UserService) { }
+  constructor(private socialService: SocialService, private dataService: DataSessionService, private userService: UserService,
+    private alertService: AlertService) { }
 
   ngOnInit() {
     this.timeline = this.dataService.getTimeline();
@@ -34,18 +37,31 @@ export class HomeComponent implements OnInit {
   }
 
   getTimeline() {
+    this.refreshLoading = true;
     this.socialService.getTimeline().then((t: Message[]) => {
       this.timeline = t;
       console.log('home timeline:' + this.timeline);
       this.dataService.save(this.timeline);
-    });
+      this.refreshLoading = false;
+    })
+      .catch(err => {
+        this.alertService.error(err);
+        this.refreshLoading = false;
+      });
   }
   getNextTimeline() {
+    this.loadMoreLoading = true;
     this.socialService.getNextTimeline().then((t: Message[]) => {
       console.log('next timeline:' + t);
       this.timeline = this.timeline.concat(t);
       this.dataService.save(this.timeline);
-    });
+      this.loadMoreLoading = false;
+    })
+      .catch(err => {
+        this.alertService.error(err);
+        this.loadMoreLoading = false;
+      });
+
   }
 
 

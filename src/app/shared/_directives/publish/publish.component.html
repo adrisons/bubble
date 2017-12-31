@@ -5,7 +5,10 @@
         required="commentRequired"></textarea>
 
       <span class="input-group-addon">
-        <button type="submit" class="button-right btn" [disabled]="!customForm.form.valid && commentRequired">Publish</button>
+        <button *ngIf="!loading" type="submit" class="button-right btn" [disabled]="!customForm.form.valid && commentRequired">Publish</button>
+        <button *ngIf="loading" class="btn" disabled>
+            <i class="fa fa-refresh fa-spin"></i> Publishing
+          </button>
       </span>
 
     </div>
@@ -28,8 +31,13 @@
       </label>
 
     </div>
+    <!-- Button -->
     <div *ngIf="!showText" class="mt-1 col-lg-2 no-padding like">
-      <button type="submit" class="btn" [disabled]="!customForm.form.valid && commentRequired">Publish</button>
+      <button *ngIf="!loading" type="submit" class="btn" [disabled]="(!customForm.form.valid && commentRequired) || loading">
+        Publish</button>
+      <button *ngIf="loading" class="btn" disabled>
+        <i class="fa fa-refresh fa-spin"></i> Publishing
+      </button>
     </div>
   </div>
 </form>

@@ -22,6 +22,7 @@ export class PublishComponent implements OnInit {
   private accounts: LightUserSocial[] = this.userService.getLightUserSocial();
   private comment: String;
   private media: String;
+  private loading = false;
   constructor(private alertService: AlertService, private userService: UserService, private socialService: SocialService) { }
 
   ngOnInit() {
@@ -33,6 +34,7 @@ export class PublishComponent implements OnInit {
 
   // User clicks on the post button
   onSave(f: NgForm) {
+    this.loading = true;
     if (this.checkForm(f)) {
       // Get the selected accounts to post to
       const activePostAccounts = this.accounts.filter(a => a.active);
@@ -47,13 +49,17 @@ export class PublishComponent implements OnInit {
       this.customFunction(activePostAccounts, this.message, post)
         .then(data => {
           f.reset();
+          this.loading = false;
         })
         .catch(err => {
           if (err) {
             console.log('(publish-onSave) err:' + JSON.stringify(err));
             this.alertService.error('Error: ' + err);
           }
+          this.loading = false;
         });
+    } else {
+      this.loading = false;
     }
   }
 

@@ -34,8 +34,10 @@
     </div>
 
     <!-- Refresh -->
-    <button type="button" class="refresh" (click)="getTimeline()">
-      <i class="fa fa-refresh" aria-hidden="true"></i>
+    <button type="button" class="refresh" (click)="getTimeline()" [disabled]="refreshLoading">
+      <i *ngIf="!refreshLoading" class="fa fa-refresh" aria-hidden="true"></i>
+      <i *ngIf="refreshLoading" class="fa fa-refresh fa-spin"></i>
+
     </button>
 
     <!-- Messages -->
@@ -61,20 +63,7 @@
         <div class="body">
           <p *ngIf="message.text" class="comment">{{message.text}}</p>
           <div class="media" *ngFor="let m of message.media">
-            <!-- <div [ngSwitch]="m.type"> -->
 
-            <!-- Video -->
-            <!-- <div class="media" *ngSwitchCase="1"> -->
-            <!-- <iframe *ngIf="m.src" [src]="m.src | safeurl"  frameborder="0" allowfullscreen>
-                </iframe> -->
-            <!-- <video *ngIf="m.src" controls>
-                    <source [src]="m.src | safeurl">
-                </video> -->
-            <!-- </div> -->
-            <!-- <div *ngIf="m.type===1">
-
-            </div> -->
-            <!-- <div class="media" *ngSwitchDefault> -->
             <div class="data" *ngIf="m.src">
               <div class="image">
                 <a href="{{m.url}}" target="_blank" title="Link to the media">
@@ -84,11 +73,8 @@
                 </a>
               </div>
 
-              <label class="media-desc">{{m.text}}</label>
 
             </div>
-            <!-- </div> -->
-            <!-- </div> -->
           </div>
         </div>
 
@@ -129,9 +115,9 @@
 
 
     <!-- More -->
-    <button type="button" class="refresh" title="Load more messages" (click)="getNextTimeline()">
-      <i class="fa fa-caret-down" aria-hidden="true"></i>
-
+    <button type="button" class="refresh" title="Load more messages" (click)="getNextTimeline()" [disabled]="loadMoreLoading">
+      <i *ngIf="!loadMoreLoading" class="fa fa-caret-down" aria-hidden="true"></i>
+      <i *ngIf="loadMoreLoading" class="fa fa-refresh fa-spin"></i>
     </button>
   </div>
 
