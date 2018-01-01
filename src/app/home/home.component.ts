@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit {
     this.refreshLoading = true;
     this.socialService.getTimeline().then((t: Message[]) => {
       this.timeline = t;
-      console.log('home timeline:' + this.timeline);
       this.dataService.save(this.timeline);
       this.refreshLoading = false;
     })
@@ -52,7 +51,6 @@ export class HomeComponent implements OnInit {
   getNextTimeline() {
     this.loadMoreLoading = true;
     this.socialService.getNextTimeline().then((t: Message[]) => {
-      console.log('next timeline:' + t);
       this.timeline = this.timeline.concat(t);
       this.dataService.save(this.timeline);
       this.loadMoreLoading = false;
@@ -101,13 +99,15 @@ export class HomeComponent implements OnInit {
 
   like(accounts: LightUserSocial[], m: Message, post: UserPost) {
 
-    if (m.liked) {
-      return this.socialService.unlike(accounts, m, post, () =>
-        this.likeToggle(m));
-    } else {
-      return this.socialService.like(accounts, m, post, () =>
-        this.likeToggle(m));
-    }
+    // if (m.liked) {
+    //   return this.socialService.unlike(accounts, m, post, () =>
+    //     this.likeToggle(m));
+    // } else {
+    return this.socialService.like(accounts, m, post, msg => {
+      m = msg;
+      this.likeToggle(m);
+    });
+    // }
   }
 
 }

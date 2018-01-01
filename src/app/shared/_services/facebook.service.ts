@@ -132,7 +132,8 @@ export class FacebookService implements SocialServiceInterface {
                 this.fb.api('/' + post.id + '/likes', 'get',
                   { access_token: access_token, fields: 'total_count' })
                   .then(likes => {
-                    post.likes = likes.data.length;
+                    post.likes = [];
+                    likes.data.map(d => post.likes.push(d.id));
                     messages.push(this.toNemoMessage(post, attachments.data, user));
                     res_msgs();
                   });
@@ -245,18 +246,24 @@ export class FacebookService implements SocialServiceInterface {
   }
 
   like(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
-    return new Promise((resolve, reject) => {
-      this.fb.api('/' + m.social_id + '/likes', 'post',
-        {
-          'access_token': userSocial.access_token
-        }).then(res => {
-          console.log(res);
-          resolve(res);
-        }).catch(err => {
-          console.log(err);
-          reject(err.message);
-        });
-    });
+    if (m.liked.indexOf(userSocial.social_id) !== -1) {
+      return this.unlike(userSocial, m, post);
+    } else {
+      return new Promise((resolve, reject) => {
+        this.fb.api('/' + m.social_id + '/likes', 'post',
+          {
+            'access_token': userSocial.access_token
+          }).then(res => {
+            console.log(res);
+            m.flags.like_count ? m.flags.like_count++ : m.flags.like_count = 1;
+            m.liked.push(userSocial.social_id);
+            resolve({ user: userSocial, message: m });
+          }).catch(err => {
+            console.log(err);
+            reject(err.message);
+          });
+      });
+    }
   }
 
   unlike(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
@@ -266,7 +273,9 @@ export class FacebookService implements SocialServiceInterface {
           'access_token': userSocial.access_token
         }).then(res => {
           console.log(res);
-          resolve(res);
+          m.flags.like_count ? m.flags.like_count-- : m.flags.like_count = 0;
+          m.liked = m.liked.filter(id => id !== userSocial.social_id);
+          resolve({ user: userSocial, message: m });
         }).catch(err => {
           console.log(err);
           reject(err.message);
@@ -317,13 +326,14 @@ export class FacebookService implements SocialServiceInterface {
       },
       flags: {
         like: false,
-        like_count: msg.likes,
+        like_count: msg.likes.length,
         share: false,
         share_count: msg.shares ? msg.shares.count : 0,
         comment: false,
         // comment_count?: Number;
       },
-      socialType: this.socialType
+      socialType: this.socialType,
+      liked: msg.likes
     };
 
     return nemoMsg;

@@ -119,7 +119,7 @@ export class TwitterService implements SocialServiceInterface {
         const res = data.json();
         if (res.code === 200) {
           const requests = res.data.map((post) => {
-            messages.push(this.toNemoMessage(post));
+            messages.push(this.toNemoMessage(post, userSocial));
           });
           Promise.all(requests).then(() => {
             console.log('Got the user timeline', messages);
@@ -233,31 +233,38 @@ export class TwitterService implements SocialServiceInterface {
 
 
   like(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
-    return new Promise((resolve, reject) => {
-      if (!this.isTwitterMessage(m)) {
-        reject();
-      } else {
+    if (m.liked.indexOf(userSocial.social_id) !== -1) {
+      return this.unlike(userSocial, m, post);
+    } else {
 
-        return this.http.post(this.apiEndPoint + '/like/' + m.social_id,
-          {
-            'access_token': userSocial.access_token,
-            'user_id': userSocial.user_id,
-            'message': post.text
-          }).toPromise()
-          .then(r => {
-            const res = r.json();
-            if (res.code === 200) {
-              resolve(userSocial);
-            } else {
-              console.log('(twitter-like): ' + res.code + ':' + res.message);
-              reject(userSocial);
-            }
-          }).catch(err => {
-            console.log(err);
-            reject(err);
-          });
-      }
-    });
+      return new Promise((resolve, reject) => {
+        if (!this.isTwitterMessage(m)) {
+          reject();
+        } else {
+
+          return this.http.post(this.apiEndPoint + '/like/' + m.social_id,
+            {
+              'access_token': userSocial.access_token,
+              'user_id': userSocial.user_id,
+              'message': post.text
+            }).toPromise()
+            .then(r => {
+              const res = r.json();
+              if (res.code === 200) {
+                m.flags.like_count ? m.flags.like_count++ : m.flags.like_count = 1;
+                m.liked.push(userSocial.social_id);
+                resolve({ user: userSocial, message: m });
+              } else {
+                console.log('(twitter-like): ' + res.code + ':' + res.message);
+                reject(userSocial);
+              }
+            }).catch(err => {
+              console.log(err);
+              reject(err);
+            });
+        }
+      });
+    }
   }
 
   unlike(userSocial: UserSocial, m: Message, post: UserPost): Promise<{}> {
@@ -275,10 +282,12 @@ export class TwitterService implements SocialServiceInterface {
           .then(r => {
             const res = r.json();
             if (res.code === 200) {
-              resolve(userSocial);
+              m.flags.like_count ? m.flags.like_count-- : m.flags.like_count = 0;
+              m.liked = m.liked.filter(id => id !== userSocial.social_id);
+              resolve({ user: userSocial, message: m });
             } else {
               console.log('(twitter-unlike): ' + res.code + ':' + res.message);
-              reject(userSocial);
+              reject(res.message);
             }
           }).catch(err => {
             console.log(err);
@@ -300,7 +309,7 @@ export class TwitterService implements SocialServiceInterface {
 
 
   // Converter
-  private toNemoMessage(msg: TwitterMessage): Message {
+  private toNemoMessage(msg: TwitterMessage, userSocial: UserSocial): Message {
     const date = new Date(msg.created_at.toString());
     const media: MessageMedia[] = this.getMedia(msg);
     const nemoMsg: Message = {
@@ -324,7 +333,7 @@ export class TwitterService implements SocialServiceInterface {
       },
       socialType: this.socialType,
       shared: msg.retweeted,
-      liked: msg.favorited
+      liked: msg.favorited ? [userSocial.social_id] : []
     };
 
     return nemoMsg;

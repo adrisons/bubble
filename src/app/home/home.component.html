@@ -81,7 +81,7 @@
         <!-- Buttons -->
         <div class="buttons">
           <a class="card-link" (click)="likeToggle(message)" title="Like">
-            <i [ngClass]="{'liked': message.flags.like || message.liked, 'fa fa-heart': true}" aria-hidden="true"> {{message.flags.like_count}}</i>
+            <i [ngClass]="{'liked': message.flags.like || message.liked.length>0, 'fa fa-heart': true}" aria-hidden="true"> {{message.flags.like_count}}</i>
           </a>
 
           <a class="card-link" (click)="shareToggle(message)" title="Share">
@@ -95,7 +95,8 @@
 
         <!-- Like -->
         <div *ngIf="message.flags.like" class="reply">
-          <app-publish [commentRequired]="false" [message]="message" [showText]="false" [customFunction]="like.bind(this)" [restricted]="true"></app-publish>
+          <app-publish [commentRequired]="false" [message]="message" [showText]="false" [customFunction]="like.bind(this)" [restricted]="true"
+            [showLiked]="true"></app-publish>
         </div>
 
         <!-- Share -->

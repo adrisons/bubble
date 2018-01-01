@@ -27,6 +27,7 @@ export class ServerResponseData {
 
 export interface LightUserSocial {
   bd_id?: String;
+  social_id?: String;
   type: SocialType;
   email?: String;
   login?: String;
@@ -75,7 +76,7 @@ export class Message {
   };
   socialType: SocialType;
   media: MessageMedia[];
-  liked?: Boolean;
+  liked?: Array<String>;
   shared?: Boolean;
 }
 

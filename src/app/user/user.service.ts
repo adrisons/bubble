@@ -97,6 +97,7 @@ export class UserService extends CrudService {
 
       return {
         bd_id: s.id,
+        social_id: s.social_id,
         email: s.email,
         login: s.login,
         type: s.type,

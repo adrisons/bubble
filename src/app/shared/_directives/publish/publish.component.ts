@@ -16,6 +16,7 @@ export class PublishComponent implements OnInit {
   @Input() commentRequired: boolean = false;
   @Input() showText: boolean = true;
   @Input() showAttach: boolean = false;
+  @Input() showLiked: boolean = false;
   @Input() customFunction: Function;
   @Input() restricted: Boolean = false;
 
@@ -74,6 +75,10 @@ export class PublishComponent implements OnInit {
     } else {
       return true;
     }
+  }
+
+  private hasLiked(a: LightUserSocial) {
+    return this.message.liked.indexOf(a.social_id) !== -1;
   }
 
   removeMedia() {

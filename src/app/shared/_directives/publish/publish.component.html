@@ -7,8 +7,8 @@
       <span class="input-group-addon">
         <button *ngIf="!loading" type="submit" class="button-right btn" [disabled]="!customForm.form.valid && commentRequired">Publish</button>
         <button *ngIf="loading" class="btn" disabled>
-            <i class="fa fa-refresh fa-spin"></i> Publishing
-          </button>
+          <i class="fa fa-refresh fa-spin"></i> Publishing
+        </button>
       </span>
 
     </div>
@@ -25,7 +25,8 @@
 
     <!-- Social Accounts -->
     <div [ngClass]="{'col-lg-12': showText, 'col-lg-9': !showText, 'checkAccounts mt-1 no-padding':true }" data-toggle="buttons">
-      <label [ngClass]="{'btn btn-secondary  mr-1': true, 'active': a.active}" *ngFor="let a of accounts" [ngSwitch]="a.type.name">
+      <label [ngClass]="{'btn btn-secondary  mr-1': true, 'active': a.active, 'liked': showLiked && hasLiked(a)}" *ngFor="let a of accounts"
+        [ngSwitch]="a.type.name">
         <i class="{{'fa fa-' + a.type.name}}"></i>
         <input type="checkbox" name="active" [(ngModel)]="a.active" autocomplete="off" /> {{a.login}}
       </label>
